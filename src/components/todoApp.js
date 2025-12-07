@@ -41,6 +41,7 @@ export default function TodoApp() {
   }
   return (
     <div className="todoContainer">
+      <h1>Lista de Tareas</h1>
       <form className="todoCreateForm" onSubmit={handleSubmit}>
         <input onChange={handleChange} className="todoInput" value={title} />
         <input
