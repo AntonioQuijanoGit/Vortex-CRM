@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
-import Sidebar from "./components/Sidebar";
-import PageContent from "./components/PageContent";
-import Onboarding from "./components/Onboarding";
-import HelpButton from "./components/HelpButton";
-import QuickSearch from "./components/QuickSearch";
+import { Sidebar } from "./components/Sidebar";
+import { PageContent } from "./components/Page";
+import { Onboarding, HelpButton, QuickSearch } from "./components/shared";
 import { usePages } from "./hooks/usePages";
 import "./App.css";
 
