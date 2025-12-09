@@ -89,18 +89,19 @@
   flex-direction: column;
   gap: var(--spacing-sm);
   width: 100%;
-  margin-bottom: var(--spacing-lg);
+  margin-bottom: var(--spacing-xl);
   background: var(--color-panel);
-  padding: var(--spacing-md);
+  padding: var(--spacing-lg);
   border: var(--border-medium);
   border-radius: var(--radius-md);
   transition: all var(--transition-base);
   position: relative;
   opacity: 1 !important;
   transform: none !important;
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-md);
   visibility: visible !important;
-  z-index: 1;
+  z-index: 10;
+  margin-top: 0;
 }
 
 .formRow {
@@ -193,7 +194,7 @@
 }
 
 .todoInput:hover {
-  border-color: var(--color-stroke-strong);
+  border-color: var(--color-ink);
   background: var(--color-panel);
 }
 

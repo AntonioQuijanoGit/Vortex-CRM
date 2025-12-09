@@ -32,6 +32,7 @@
   --spacing-lg: 1.5rem;
   --spacing-xl: 2rem;
   --spacing-xxl: 3rem;
+  --spacing-3xl: 4rem;
 
   /* Refined Borders */
   --border-thin: 1px solid var(--color-stroke);
