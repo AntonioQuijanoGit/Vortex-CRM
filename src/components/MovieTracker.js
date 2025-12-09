@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import { useMovies } from "../hooks/useMovies";
+import { Icons } from "../utils/icons";
 import "./MovieTracker.css";
 
 export default function MovieTracker({ pageId }) {
-  const { movies, addMovie, updateMovie, deleteMovie, toggleWatched } = useMovies(pageId);
+  const { movies, addMovie, updateMovie, deleteMovie, toggleWatched } =
+    useMovies(pageId);
   const [newMovie, setNewMovie] = useState("");
   const [filter, setFilter] = useState("all"); // all, watched, unwatched
 
-  const filteredMovies = movies.filter(movie => {
+  const filteredMovies = movies.filter((movie) => {
     if (filter === "watched") return movie.watched;
     if (filter === "unwatched") return !movie.watched;
     return true;
@@ -52,13 +54,13 @@ export default function MovieTracker({ pageId }) {
           className={`filter-btn ${filter === "watched" ? "active" : ""}`}
           onClick={() => setFilter("watched")}
         >
-          Watched ({movies.filter(m => m.watched).length})
+          Watched ({movies.filter((m) => m.watched).length})
         </button>
         <button
           className={`filter-btn ${filter === "unwatched" ? "active" : ""}`}
           onClick={() => setFilter("unwatched")}
         >
-          To Watch ({movies.filter(m => !m.watched).length})
+          To Watch ({movies.filter((m) => !m.watched).length})
         </button>
       </div>
 
@@ -67,13 +69,18 @@ export default function MovieTracker({ pageId }) {
           <div className="movie-empty">No movies yet. Add one above!</div>
         ) : (
           filteredMovies.map((movie) => (
-            <div key={movie.id} className={`movie-card ${movie.watched ? "watched" : ""}`}>
+            <div
+              key={movie.id}
+              className={`movie-card ${movie.watched ? "watched" : ""}`}
+            >
               <button
                 className="movie-checkbox"
                 onClick={() => toggleWatched(movie.id)}
-                aria-label={movie.watched ? "Mark as unwatched" : "Mark as watched"}
+                aria-label={
+                  movie.watched ? "Mark as unwatched" : "Mark as watched"
+                }
               >
-                {movie.watched ? "✓" : ""}
+                {movie.watched ? Icons.check : ""}
               </button>
               <span className="movie-title">{movie.title}</span>
               <div className="movie-actions">
@@ -92,4 +99,3 @@ export default function MovieTracker({ pageId }) {
     </div>
   );
 }
-

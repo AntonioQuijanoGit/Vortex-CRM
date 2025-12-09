@@ -1,11 +1,11 @@
 import React from "react";
-import { useTodos } from "../hooks/useTodos";
 import { usePages } from "../hooks/usePages";
 import DashboardCalendar from "./DashboardCalendar";
+import { Icons } from "../utils/icons";
 import "./Dashboard.css";
 
 export default function Dashboard({ onNavigate }) {
-  const { pages, getRootPages } = usePages();
+  const { getRootPages } = usePages();
 
   const rootPages = getRootPages();
 
@@ -15,7 +15,7 @@ export default function Dashboard({ onNavigate }) {
     // Check legacy "todos" key for backward compatibility
     const legacyTodos = JSON.parse(localStorage.getItem("todos") || "[]");
     allTodos = [...legacyTodos];
-    
+
     // Get all todos from pages (keys like "todos-{pageId}")
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
@@ -28,10 +28,9 @@ export default function Dashboard({ onNavigate }) {
   };
 
   const allTodos = getAllTodos();
-  const tasks = allTodos.filter(t => t.type === "task");
-  const habits = allTodos.filter(t => t.type === "habit");
-  const completedTasks = tasks.filter(t => t.completed).length;
-  const activeStreaks = habits.filter(h => (h.streak || 0) > 0).length;
+  const tasks = allTodos.filter((t) => t.type === "task");
+  const habits = allTodos.filter((t) => t.type === "habit");
+  const completedTasks = tasks.filter((t) => t.completed).length;
   const totalStreaks = habits.reduce((sum, h) => sum + (h.streak || 0), 0);
 
   // Sum all movies from all pages
@@ -40,7 +39,7 @@ export default function Dashboard({ onNavigate }) {
     // Check legacy "movies" key for backward compatibility
     const legacyMovies = JSON.parse(localStorage.getItem("movies") || "[]");
     allMovies = [...legacyMovies];
-    
+
     // Get all movies from pages (keys like "movies-{pageId}")
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
@@ -51,9 +50,8 @@ export default function Dashboard({ onNavigate }) {
     }
     return allMovies;
   };
-  
+
   const allMovies = getAllMovies();
-  const watchedMovies = allMovies.filter(m => m.watched).length;
   const totalMovies = allMovies.length;
 
   // Only show stats that have content
@@ -61,122 +59,161 @@ export default function Dashboard({ onNavigate }) {
     {
       label: "Total Pages",
       value: rootPages.length,
-      icon: "📄",
-      color: "var(--color-accent)"
+      icon: Icons.page,
+      color: "var(--color-accent)",
     },
-    ...(tasks.length > 0 ? [{
-      label: "Total Tasks",
-      value: tasks.length,
-      icon: "✓",
-      color: "var(--color-accent)"
-    }] : []),
-    ...(completedTasks > 0 ? [{
-      label: "Completed",
-      value: completedTasks,
-      icon: "✓",
-      color: "var(--color-success)"
-    }] : []),
-    ...(habits.length > 0 ? [{
-      label: "Active Habits",
-      value: habits.length,
-      icon: "↻",
-      color: "var(--color-accent)"
-    }] : []),
-    ...(totalStreaks > 0 ? [{
-      label: "Total Streaks",
-      value: totalStreaks,
-      icon: "🔥",
-      color: "var(--color-warning)"
-    }] : []),
-    ...(totalMovies > 0 ? [{
-      label: "Movies",
-      value: totalMovies,
-      icon: "🎬",
-      color: "var(--color-accent)"
-    }] : [])
+    ...(tasks.length > 0
+      ? [
+          {
+            label: "Total Tasks",
+            value: tasks.length,
+            icon: Icons.task,
+            color: "var(--color-accent)",
+          },
+        ]
+      : []),
+    ...(completedTasks > 0
+      ? [
+          {
+            label: "Completed",
+            value: completedTasks,
+            icon: Icons.completed,
+            color: "var(--color-success)",
+          },
+        ]
+      : []),
+    ...(habits.length > 0
+      ? [
+          {
+            label: "Active Habits",
+            value: habits.length,
+            icon: Icons.habit,
+            color: "var(--color-accent)",
+          },
+        ]
+      : []),
+    ...(totalStreaks > 0
+      ? [
+          {
+            label: "Total Streaks",
+            value: totalStreaks,
+            icon: Icons.streak,
+            color: "var(--color-warning)",
+          },
+        ]
+      : []),
+    ...(totalMovies > 0
+      ? [
+          {
+            label: "Movies",
+            value: totalMovies,
+            icon: Icons.movie,
+            color: "var(--color-accent)",
+          },
+        ]
+      : []),
   ];
 
-  const quickLinks = rootPages.slice(0, 6).map(page => ({
+  const quickLinks = rootPages.slice(0, 6).map((page) => ({
     ...page,
-    onClick: () => onNavigate(page.id)
+    onClick: () => onNavigate(page.id),
   }));
 
   return (
     <div className="dashboard-container">
-      <div className="dashboard-header">
-        <h1 className="dashboard-title">Dashboard</h1>
-        <p className="dashboard-subtitle">Overview of your workspace</p>
+      <div className="dashboard-hero">
+        <div className="dashboard-hero-content">
+          <h1 className="dashboard-title">Welcome back</h1>
+          <p className="dashboard-subtitle">
+            Here's what's happening in your workspace
+          </p>
+        </div>
+        <div className="dashboard-hero-stats">
+          {stats.slice(0, 3).map((stat) => (
+            <div key={stat.label} className="hero-stat">
+              <div className="hero-stat-value">{stat.value}</div>
+              <div className="hero-stat-label">{stat.label}</div>
+            </div>
+          ))}
+        </div>
       </div>
 
-      {/* Calendar first - most important */}
-      <section 
-        className="dashboard-section dashboard-calendar-section dashboard-calendar-first"
-        style={{ display: 'block', visibility: 'visible', opacity: 1, width: '100%' }}
-      >
+      {stats.length > 3 && (
+        <div className="dashboard-stats-grid">
+          {stats.slice(3).map((stat) => (
+            <div key={stat.label} className="stat-card-modern">
+              <div className="stat-card-icon" style={{ color: stat.color }}>
+                {stat.icon}
+              </div>
+              <div className="stat-card-content">
+                <div className="stat-card-value">{stat.value}</div>
+                <div className="stat-card-label">{stat.label}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      <div className="dashboard-main-content">
+        {quickLinks.length > 0 && (
+          <section className="dashboard-section-modern">
+            <div className="section-header">
+              <h2 className="section-title-modern">Quick Access</h2>
+              <p className="section-subtitle">Jump to your pages</p>
+            </div>
+            <div className="quick-links-modern">
+              {quickLinks.map((page) => (
+                <button
+                  key={page.id}
+                  className="quick-link-modern"
+                  onClick={page.onClick}
+                >
+                  <div className="quick-link-info">
+                    <div className="quick-link-title-modern">{page.title}</div>
+                  </div>
+                  <div className="quick-link-arrow">{Icons.arrowRight}</div>
+                </button>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {allTodos.length > 0 && (
+          <section className="dashboard-section-modern">
+            <div className="section-header">
+              <h2 className="section-title-modern">Recent Activity</h2>
+              <p className="section-subtitle">Your latest updates</p>
+            </div>
+            <div className="activity-list-modern">
+              {allTodos.slice(0, 5).map((todo) => (
+                <div key={todo.id} className="activity-item-modern">
+                  <div className="activity-icon-modern">
+                    {todo.type === "task" ? Icons.task : Icons.habit}
+                  </div>
+                  <div className="activity-content">
+                    <div className="activity-text-modern">
+                      {todo.completed ? "Completed" : "Created"}{" "}
+                      <strong>{todo.title}</strong>
+                    </div>
+                    <div className="activity-meta">
+                      <span className="activity-type-modern">{todo.type}</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+      </div>
+
+      {/* Calendar at the bottom */}
+      <section className="dashboard-section-modern dashboard-calendar-section">
+        <div className="section-header">
+          <h2 className="section-title-modern">Calendar</h2>
+          <p className="section-subtitle">Your schedule and events</p>
+        </div>
         <DashboardCalendar todos={allTodos} onNavigate={onNavigate} />
       </section>
-
-      <div className="dashboard-stats">
-        {stats.map((stat, index) => (
-          <div 
-            key={stat.label} 
-            className="stat-card"
-            style={{ animationDelay: `${index * 0.1}s` }}
-          >
-            <div className="stat-icon" style={{ color: stat.color }}>
-              {stat.icon}
-            </div>
-            <div className="stat-content">
-              <div className="stat-value">{stat.value}</div>
-              <div className="stat-label">{stat.label}</div>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      <div className="dashboard-sections">
-
-        <section className="dashboard-section">
-          <h2 className="section-title">Quick Access</h2>
-          <div className="quick-links-grid">
-            {quickLinks.map((page) => (
-              <button
-                key={page.id}
-                className="quick-link-card"
-                onClick={page.onClick}
-              >
-                <span className="quick-link-icon">{page.icon}</span>
-                <span className="quick-link-title">{page.title}</span>
-                {page.type === "database" && (
-                  <span className="quick-link-badge">{page.viewType}</span>
-                )}
-              </button>
-            ))}
-          </div>
-        </section>
-
-        <section className="dashboard-section">
-          <h2 className="section-title">Recent Activity</h2>
-          <div className="activity-list">
-            {allTodos.length > 0 ? (
-              allTodos.slice(0, 5).map((todo) => (
-                <div key={todo.id} className="activity-item">
-                  <span className="activity-icon">
-                    {todo.type === "task" ? "✓" : "↻"}
-                  </span>
-                  <span className="activity-text">
-                    {todo.completed ? "Completed" : "Created"} {todo.title}
-                  </span>
-                  <span className="activity-type">{todo.type}</span>
-                </div>
-              ))
-            ) : (
-              <p className="activity-empty">No recent activity</p>
-            )}
-          </div>
-        </section>
-      </div>
     </div>
   );
 }
-

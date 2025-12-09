@@ -17,6 +17,17 @@
   transition: all var(--transition-base);
   box-shadow: var(--shadow-md);
   z-index: 100;
+  animation: subtlePulse 3s ease-in-out infinite;
+}
+
+@keyframes subtlePulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
 }
 
 .help-button:hover {
@@ -40,4 +51,3 @@
     font-size: 18px;
   }
 }
-

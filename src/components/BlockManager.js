@@ -4,6 +4,7 @@ import MovieBlock from "./blocks/MovieBlock";
 import NoteBlock from "./blocks/NoteBlock";
 import TaskBlock from "./blocks/TaskBlock";
 import CalendarBlock from "./blocks/CalendarBlock";
+import { Icons } from "../utils/icons";
 import "./BlockManager.css";
 
 export default function BlockManager({ pageId, blocks = [], onUpdateBlocks }) {
@@ -23,7 +24,9 @@ export default function BlockManager({ pageId, blocks = [], onUpdateBlocks }) {
   const updateBlock = (blockId, updates) => {
     onUpdateBlocks(
       blocks.map((block) =>
-        block.id === blockId ? { ...block, data: { ...block.data, ...updates } } : block
+        block.id === blockId
+          ? { ...block, data: { ...block.data, ...updates } }
+          : block
       )
     );
   };
@@ -40,16 +43,18 @@ export default function BlockManager({ pageId, blocks = [], onUpdateBlocks }) {
     if (newIndex < 0 || newIndex >= blocks.length) return;
 
     const newBlocks = [...blocks];
-    [newBlocks[index], newBlocks[newIndex]] = [newBlocks[newIndex], newBlocks[index]];
+    [newBlocks[index], newBlocks[newIndex]] = [
+      newBlocks[newIndex],
+      newBlocks[index],
+    ];
     onUpdateBlocks(newBlocks);
   };
 
   const blockTypes = [
-    { type: "text", icon: "📝", label: "Text" },
-    { type: "movies", icon: "🎬", label: "Movies" },
-    { type: "notes", icon: "📄", label: "Notes" },
-    { type: "tasks", icon: "✓", label: "Tasks" },
-    { type: "calendar", icon: "📅", label: "Calendar" },
+    { type: "text", icon: Icons.text, label: "Text" },
+    { type: "notes", icon: Icons.note, label: "Notes" },
+    { type: "tasks", icon: Icons.task, label: "Tasks" },
+    { type: "calendar", icon: Icons.calendar, label: "Calendar" },
   ];
 
   return (
@@ -89,7 +94,7 @@ export default function BlockManager({ pageId, blocks = [], onUpdateBlocks }) {
               onClick={() => setShowAddMenu(false)}
               aria-label="Close menu"
             >
-              ×
+              {Icons.close}
             </button>
             <div className="block-types-grid">
               {blockTypes.map(({ type, icon, label }) => (
@@ -111,7 +116,7 @@ export default function BlockManager({ pageId, blocks = [], onUpdateBlocks }) {
             onClick={() => setShowAddMenu(true)}
             aria-label="Add block"
           >
-            <span className="add-block-icon">+</span>
+            <span className="add-block-icon">{Icons.add}</span>
             <span className="add-block-text">Add block</span>
           </button>
         )}
@@ -125,19 +130,34 @@ function BlockRenderer({ block, pageId, onUpdate }) {
     case "text":
       return <TextBlock data={block.data} onUpdate={onUpdate} />;
     case "movies":
-      return <MovieBlock pageId={pageId} data={block.data} onUpdate={onUpdate} />;
+      return (
+        <MovieBlock pageId={pageId} data={block.data} onUpdate={onUpdate} />
+      );
     case "notes":
-      return <NoteBlock pageId={pageId} data={block.data} onUpdate={onUpdate} />;
+      return (
+        <NoteBlock pageId={pageId} data={block.data} onUpdate={onUpdate} />
+      );
     case "tasks":
-      return <TaskBlock pageId={pageId} data={block.data} onUpdate={onUpdate} />;
+      return (
+        <TaskBlock pageId={pageId} data={block.data} onUpdate={onUpdate} />
+      );
     case "calendar":
-      return <CalendarBlock pageId={pageId} data={block.data} onUpdate={onUpdate} />;
+      return (
+        <CalendarBlock pageId={pageId} data={block.data} onUpdate={onUpdate} />
+      );
     default:
       return <div>Unknown block type: {block.type}</div>;
   }
 }
 
-function BlockControls({ blockId, canMoveUp, canMoveDown, onMoveUp, onMoveDown, onDelete }) {
+function BlockControls({
+  blockId,
+  canMoveUp,
+  canMoveDown,
+  onMoveUp,
+  onMoveDown,
+  onDelete,
+}) {
   const [showControls, setShowControls] = useState(false);
 
   return (
@@ -196,4 +216,3 @@ function getDefaultBlockData(type) {
       return {};
   }
 }
-

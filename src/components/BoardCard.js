@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Icons } from "../utils/icons";
 import "./BoardCard.css";
 
 export default function BoardCard({
@@ -50,7 +51,7 @@ export default function BoardCard({
         )}
         {item.type === "habit" && item.streak > 0 && (
           <span className="card-streak">
-            🔥 {item.streak}
+            {Icons.streak} {item.streak}
           </span>
         )}
       </div>

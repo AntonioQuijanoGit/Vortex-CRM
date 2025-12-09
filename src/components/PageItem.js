@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Icons } from "../utils/icons";
 import "./PageItem.css";
 
 export default function PageItem({
@@ -37,7 +38,7 @@ export default function PageItem({
   };
 
   const handleAddSubpage = () => {
-    onAddChild("Untitled", page.id, "page", "📄");
+    onAddChild("Untitled", page.id, "page");
     setShowOptions(false);
   };
 
@@ -80,7 +81,7 @@ export default function PageItem({
               aria-label={isExpanded ? "Collapse subpages" : "Expand subpages"}
               aria-expanded={isExpanded}
             >
-              {isExpanded ? "▼" : "▶"}
+              {isExpanded ? Icons.expand : Icons.collapse}
             </button>
           )}
 
@@ -90,7 +91,6 @@ export default function PageItem({
             style={{ marginLeft: hasChildren ? "0" : "20px" }}
             aria-label={`Open ${page.title}`}
           >
-            <span className="page-icon">{page.icon}</span>
             {isEditing ? (
               <input
                 type="text"
@@ -111,9 +111,6 @@ export default function PageItem({
             ) : (
               <span className="page-title">{page.title}</span>
             )}
-            {page.type === "database" && (
-              <span className="page-type-badge">{page.viewType}</span>
-            )}
           </button>
 
           {showOptions && !isEditing && (
@@ -127,7 +124,7 @@ export default function PageItem({
                 title="Add subpage"
                 aria-label="Add subpage"
               >
-                +
+                {Icons.add}
               </button>
               <button
                 className="option-button"
@@ -138,7 +135,7 @@ export default function PageItem({
                 title="Rename"
                 aria-label="Rename page"
               >
-                ✎
+                {Icons.edit}
               </button>
               <button
                 className="option-button delete"
@@ -149,7 +146,7 @@ export default function PageItem({
                 title="Delete"
                 aria-label="Delete page"
               >
-                ×
+                {Icons.delete}
               </button>
             </div>
           )}

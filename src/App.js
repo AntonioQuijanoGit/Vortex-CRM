@@ -3,6 +3,7 @@ import Sidebar from "./components/Sidebar";
 import PageContent from "./components/PageContent";
 import Onboarding from "./components/Onboarding";
 import HelpButton from "./components/HelpButton";
+import QuickSearch from "./components/QuickSearch";
 import { usePages } from "./hooks/usePages";
 import "./App.css";
 
@@ -26,6 +27,7 @@ function App() {
   const breadcrumbs = activePage ? getBreadcrumbs(activePage) : [];
 
   const [showOnboarding, setShowOnboarding] = useState(false);
+  const [showQuickSearch, setShowQuickSearch] = useState(false);
 
   useEffect(() => {
     const hasSeenTutorial = localStorage.getItem("has-seen-tutorial");
@@ -34,6 +36,24 @@ function App() {
       setTimeout(() => setShowOnboarding(true), 500);
     }
   }, []);
+
+  // Keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      // Cmd/Ctrl + K for quick search
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        setShowQuickSearch(true);
+      }
+      // Escape to close search
+      if (e.key === "Escape" && showQuickSearch) {
+        setShowQuickSearch(false);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [showQuickSearch]);
 
   return (
     <div className="app-layout">
@@ -58,6 +78,12 @@ function App() {
       </main>
       {showOnboarding && (
         <Onboarding onComplete={() => setShowOnboarding(false)} />
+      )}
+      {showQuickSearch && (
+        <QuickSearch
+          onPageSelect={setActivePage}
+          onClose={() => setShowQuickSearch(false)}
+        />
       )}
       <HelpButton />
     </div>

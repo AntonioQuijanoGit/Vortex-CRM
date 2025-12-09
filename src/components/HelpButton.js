@@ -19,7 +19,7 @@ export default function HelpButton() {
         className="help-button"
         onClick={handleShowTutorial}
         aria-label="Show tutorial"
-        title="Show tutorial"
+        title="Show tutorial (Press ? for help)"
       >
         ?
       </button>
@@ -27,4 +27,3 @@ export default function HelpButton() {
     </>
   );
 }
-

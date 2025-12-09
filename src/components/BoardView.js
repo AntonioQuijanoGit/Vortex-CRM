@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import BoardCard from "./BoardCard";
+import { Icons } from "../utils/icons";
 import "./BoardView.css";
 
 export default function BoardView({ todos, onUpdate, onDelete, onToggleComplete, onUpdateProperties }) {
@@ -10,19 +11,19 @@ export default function BoardView({ todos, onUpdate, onDelete, onToggleComplete,
     todo: {
       id: "todo",
       title: "To Do",
-      icon: "○",
+      icon: Icons.todo,
       items: todos.filter((t) => t.status === "todo"),
     },
     "in-progress": {
       id: "in-progress",
       title: "In Progress",
-      icon: "◐",
+      icon: Icons.inProgress,
       items: todos.filter((t) => t.status === "in-progress"),
     },
     done: {
       id: "done",
       title: "Done",
-      icon: "●",
+      icon: Icons.done,
       items: todos.filter((t) => t.status === "done" || t.completed),
     },
   };

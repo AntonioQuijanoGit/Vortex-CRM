@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Icons, normalizeIcon } from "../utils/icons";
 
 /**
  * Custom hook for managing hierarchical pages (Notion-style)
@@ -7,14 +8,19 @@ export function usePages() {
   const [pages, setPages] = useState(() => {
     const savedPages = localStorage.getItem("notion-pages");
     if (savedPages) {
-      return JSON.parse(savedPages);
+      const parsed = JSON.parse(savedPages);
+      // Normalize icons in saved pages
+      return parsed.map(page => ({
+        ...page,
+        icon: normalizeIcon(page.icon)
+      }));
     }
     // Default pages - only essential ones
     return [
       {
         id: "home",
         title: "Home",
-        icon: "🏠",
+        icon: Icons.page,
         parentId: null,
         type: "page",
         createdAt: new Date().toISOString(),
@@ -62,11 +68,11 @@ export function usePages() {
   };
 
   // Add new page
-  const addPage = (title, parentId = null, type = "page", icon = "📄") => {
+  const addPage = (title, parentId = null, type = "page", icon = Icons.page) => {
     const newPage = {
       id: crypto.randomUUID(),
       title: title.trim() || "Untitled",
-      icon,
+      icon: Icons.page, // Always use neutral icon
       parentId,
       type,
       viewType: type === "database" ? "list" : undefined,

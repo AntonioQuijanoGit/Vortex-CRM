@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useEvents } from "../../hooks/useEvents";
+import { Icons } from "../../utils/icons";
 import "./Block.css";
 import "./CalendarBlock.css";
 
@@ -70,7 +71,7 @@ export default function CalendarBlock({ pageId, data, onUpdate }) {
   return (
     <div className="block calendar-block">
       <div className="block-header">
-        <span className="block-icon">📅</span>
+        <span className="block-icon">{Icons.calendar}</span>
         <h3 className="block-title">Calendar</h3>
       </div>
 
@@ -149,13 +150,13 @@ export default function CalendarBlock({ pageId, data, onUpdate }) {
                       setShowEventForm(true);
                     }}
                   >
-                    ✎
+                    {Icons.edit}
                   </button>
                   <button
                     className="event-delete-btn"
                     onClick={() => deleteEvent(event.id)}
                   >
-                    ×
+                    {Icons.delete}
                   </button>
                 </div>
               ))}
@@ -207,7 +208,7 @@ function EventForm({ date, event, onSave, onCancel }) {
       <div className="event-form" onClick={(e) => e.stopPropagation()}>
         <div className="event-form-header">
           <h4>{event ? "Edit Event" : "New Event"}</h4>
-          <button className="event-form-close" onClick={onCancel}>×</button>
+          <button className="event-form-close" onClick={onCancel}>{Icons.close}</button>
         </div>
         <form onSubmit={handleSubmit}>
           <div className="event-form-field">

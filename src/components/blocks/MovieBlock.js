@@ -1,6 +1,7 @@
 import React from "react";
 import { useMovies } from "../../hooks/useMovies";
 import MovieTracker from "../MovieTracker";
+import { Icons } from "../../utils/icons";
 import "./Block.css";
 
 export default function MovieBlock({ pageId, data, onUpdate }) {
@@ -9,7 +10,7 @@ export default function MovieBlock({ pageId, data, onUpdate }) {
   return (
     <div className="block movie-block">
       <div className="block-header">
-        <span className="block-icon">🎬</span>
+        <span className="block-icon">{Icons.movie}</span>
         <h3 className="block-title">Movies</h3>
       </div>
       <MovieTracker pageId={blockPageId} />

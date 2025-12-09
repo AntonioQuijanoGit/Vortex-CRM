@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Icons } from "../../utils/icons";
 import "./Block.css";
 
 export default function NoteBlock({ pageId, data, onUpdate }) {
@@ -30,7 +31,7 @@ export default function NoteBlock({ pageId, data, onUpdate }) {
   return (
     <div className="block note-block">
       <div className="block-header">
-        <span className="block-icon">📄</span>
+        <span className="block-icon">{Icons.note}</span>
         <h3 className="block-title">Notes</h3>
       </div>
       <div className="note-block-content">

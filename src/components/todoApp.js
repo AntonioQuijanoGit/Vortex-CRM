@@ -10,6 +10,7 @@ import BoardView from "./BoardView";
 import TableView from "./TableView";
 import { useTodos } from "../hooks/useTodos";
 import { applyFilters } from "../utils/filters";
+import { Icons } from "../utils/icons";
 
 import "./todoApp.css";
 
@@ -60,14 +61,14 @@ export default function TodoApp({ pageId, viewType: initialViewType }) {
         </p>
         <div className="headerExplanation">
           <div className="explanationItem">
-            <span className="explanationIcon">✓</span>
+            <span className="explanationIcon">{Icons.task}</span>
             <div className="explanationContent">
               <strong>Tasks</strong> - One-time items. Complete them and they're
               done.
             </div>
           </div>
           <div className="explanationItem">
-            <span className="explanationIcon">↻</span>
+            <span className="explanationIcon">{Icons.habit}</span>
             <div className="explanationContent">
               <strong>Habits</strong> - Daily routines. Reset each day and build
               streaks.

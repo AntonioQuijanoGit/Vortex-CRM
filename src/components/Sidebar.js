@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import PageItem from "./PageItem";
+import { Icons } from "../utils/icons";
 import "./Sidebar.css";
 
 export default function Sidebar({
@@ -21,7 +22,7 @@ export default function Sidebar({
 
   const handleAddPage = () => {
     if (newPageTitle.trim()) {
-      onAddPage(newPageTitle, null, "page", "📄");
+      onAddPage(newPageTitle, null, "page");
       setNewPageTitle("");
       setShowNewPageInput(false);
     }
@@ -43,7 +44,6 @@ export default function Sidebar({
           </button>
           {!isCollapsed && (
             <div className="sidebar-workspace">
-              <span className="workspace-icon">📋</span>
               <span className="workspace-name">My Workspace</span>
             </div>
           )}
@@ -59,7 +59,7 @@ export default function Sidebar({
                   onClick={() => setShowNewPageInput(true)}
                   aria-label="Open new page input"
                 >
-                  +
+                  {Icons.add}
                 </button>
               </div>
 
@@ -110,7 +110,7 @@ export default function Sidebar({
         {!isCollapsed && (
           <div className="sidebar-footer">
             <button className="new-page-button" onClick={() => setShowNewPageInput(true)}>
-              <span className="button-icon">+</span>
+              <span className="button-icon">{Icons.add}</span>
               <span className="button-text">New Page</span>
             </button>
           </div>

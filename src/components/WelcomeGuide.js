@@ -1,4 +1,5 @@
 import React from "react";
+import { Icons } from "../utils/icons";
 import "./WelcomeGuide.css";
 
 export default function WelcomeGuide({ onGetStarted }) {
@@ -11,28 +12,28 @@ export default function WelcomeGuide({ onGetStarted }) {
 
       <div className="guide-features">
         <div className="feature-item">
-          <span className="feature-icon">✓</span>
+          <span className="feature-icon">{Icons.page}</span>
           <div>
             <h3>Tasks & Habits</h3>
             <p>Manage tasks and build daily habits with streak tracking</p>
           </div>
         </div>
         <div className="feature-item">
-          <span className="feature-icon">🎬</span>
+          <span className="feature-icon">{Icons.page}</span>
           <div>
             <h3>Movie Tracker</h3>
             <p>Keep track of movies you want to watch</p>
           </div>
         </div>
         <div className="feature-item">
-          <span className="feature-icon">📝</span>
+          <span className="feature-icon">{Icons.page}</span>
           <div>
             <h3>Notes</h3>
             <p>Write and organize your thoughts</p>
           </div>
         </div>
         <div className="feature-item">
-          <span className="feature-icon">📊</span>
+          <span className="feature-icon">{Icons.page}</span>
           <div>
             <h3>Dashboard</h3>
             <p>See all your stats and activity in one place</p>
@@ -51,4 +52,3 @@ export default function WelcomeGuide({ onGetStarted }) {
     </div>
   );
 }
-

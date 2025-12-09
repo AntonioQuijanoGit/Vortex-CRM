@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Icons } from "../utils/icons";
 import "./TableView.css";
 
 export default function TableView({
@@ -43,7 +44,7 @@ export default function TableView({
         <table className="data-table">
           <thead>
             <tr>
-              <th className="col-checkbox">✓</th>
+              <th className="col-checkbox">{Icons.check}</th>
               <th className="col-title">Title</th>
               <th className="col-status">Status</th>
               <th className="col-priority">Priority</th>
@@ -70,7 +71,7 @@ export default function TableView({
                       className={`table-checkbox ${todo.completed ? "checked" : ""}`}
                       onClick={() => onToggleComplete(todo.id)}
                     >
-                      {todo.completed && "✓"}
+                      {todo.completed && Icons.check}
                     </button>
                   </td>
 
@@ -129,7 +130,7 @@ export default function TableView({
                   {/* Type */}
                   <td className="col-type">
                     <span className={`type-badge ${todo.type}`}>
-                      {todo.type === "habit" ? "↻ Habit" : "✓ Task"}
+                      {todo.type === "habit" ? `${Icons.habit} Habit` : `${Icons.task} Task`}
                     </span>
                   </td>
 

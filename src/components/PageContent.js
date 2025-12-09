@@ -8,7 +8,12 @@ import WelcomeGuide from "./WelcomeGuide";
 import BlockManager from "./BlockManager";
 import "./PageContent.css";
 
-export default function PageContent({ page, breadcrumbs, onNavigate, onUpdatePage }) {
+export default function PageContent({
+  page,
+  breadcrumbs,
+  onNavigate,
+  onUpdatePage,
+}) {
   if (!page) {
     return (
       <div className="page-content" role="region" aria-live="polite">
@@ -20,7 +25,11 @@ export default function PageContent({ page, breadcrumbs, onNavigate, onUpdatePag
   // Show dashboard for home page
   if (page.id === "home" || page.id === "dashboard") {
     return (
-      <div className="page-content page-content-dashboard" role="region" aria-live="polite">
+      <div
+        className="page-content page-content-dashboard"
+        role="region"
+        aria-live="polite"
+      >
         <Dashboard onNavigate={onNavigate} />
       </div>
     );
@@ -44,19 +53,19 @@ export default function PageContent({ page, breadcrumbs, onNavigate, onUpdatePag
 function BreadcrumbTrail({ items, onNavigate }) {
   return (
     <nav className="breadcrumbs" aria-label="Breadcrumb navigation">
-      <button 
+      <button
         className="breadcrumb-item breadcrumb-home"
         onClick={() => onNavigate && onNavigate("home")}
         aria-label="Go to home"
       >
-        <span className="breadcrumb-icon" aria-hidden="true">🏠</span>
         <span className="breadcrumb-title">Home</span>
       </button>
       {items.map((crumb, index) => (
         <React.Fragment key={crumb.id}>
-          <span className="breadcrumb-separator" aria-hidden="true">/</span>
+          <span className="breadcrumb-separator" aria-hidden="true">
+            /
+          </span>
           <span className="breadcrumb-item">
-            <span className="breadcrumb-icon" aria-hidden="true">{crumb.icon}</span>
             <span className="breadcrumb-title">{crumb.title}</span>
           </span>
         </React.Fragment>
@@ -67,9 +76,7 @@ function BreadcrumbTrail({ items, onNavigate }) {
 
 function PageHero({ page, onUpdatePage }) {
   const [isEditingTitle, setIsEditingTitle] = useState(false);
-  const [isEditingIcon, setIsEditingIcon] = useState(false);
   const [editTitle, setEditTitle] = useState(page.title);
-  const [editIcon, setEditIcon] = useState(page.icon);
 
   const handleTitleSave = () => {
     if (editTitle.trim() && editTitle !== page.title) {
@@ -80,64 +87,9 @@ function PageHero({ page, onUpdatePage }) {
     setIsEditingTitle(false);
   };
 
-  const handleIconSave = () => {
-    if (editIcon !== page.icon) {
-      onUpdatePage(page.id, { icon: editIcon });
-    } else {
-      setEditIcon(page.icon);
-    }
-    setIsEditingIcon(false);
-  };
-
-  const commonIcons = ["📄", "📝", "✓", "🎬", "📅", "📊", "🎯", "💡", "🔖", "📌", "⭐", "🔥"];
-
   return (
     <header className="page-hero">
-      <div 
-        className="page-icon-large editable-icon" 
-        onClick={() => setIsEditingIcon(true)}
-        title="Click to change icon"
-      >
-        {isEditingIcon ? (
-          <div className="icon-picker">
-            <input
-              type="text"
-              value={editIcon}
-              onChange={(e) => setEditIcon(e.target.value)}
-              onBlur={handleIconSave}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") handleIconSave();
-                if (e.key === "Escape") {
-                  setIsEditingIcon(false);
-                  setEditIcon(page.icon);
-                }
-              }}
-              className="icon-input"
-              autoFocus
-              maxLength={2}
-            />
-            <div className="icon-suggestions">
-              {commonIcons.map((icon) => (
-                <button
-                  key={icon}
-                  type="button"
-                  className="icon-option"
-                  onClick={() => {
-                    setEditIcon(icon);
-                    handleIconSave();
-                  }}
-                >
-                  {icon}
-                </button>
-              ))}
-            </div>
-          </div>
-        ) : (
-          page.icon
-        )}
-      </div>
       <div className="page-hero-content">
-        <p className="page-eyebrow">{page.viewType?.toUpperCase() || "PAGE"}</p>
         {isEditingTitle ? (
           <input
             type="text"
@@ -155,8 +107,8 @@ function PageHero({ page, onUpdatePage }) {
             autoFocus
           />
         ) : (
-          <h1 
-            className="page-title-large editable-title" 
+          <h1
+            className="page-title-large editable-title"
             onClick={() => setIsEditingTitle(true)}
             title="Click to edit title"
           >
@@ -165,7 +117,8 @@ function PageHero({ page, onUpdatePage }) {
         )}
         {page.type === "database" && (
           <p className="page-subtitle">
-            Manage your {page.title.toLowerCase()} with filters, views, and organization tools.
+            Manage your {page.title.toLowerCase()} with filters, views, and
+            organization tools.
           </p>
         )}
       </div>
@@ -175,7 +128,10 @@ function PageHero({ page, onUpdatePage }) {
 
 function DatabaseView({ page }) {
   return (
-    <section className="database-view" aria-label={`${page.title} database view`}>
+    <section
+      className="database-view"
+      aria-label={`${page.title} database view`}
+    >
       <TodoApp pageId={page.id} viewType={page.viewType} />
     </section>
   );
@@ -211,24 +167,20 @@ function RegularPageView({ page, onUpdatePage }) {
 function WelcomePage() {
   const features = [
     {
-      icon: "📄",
       title: "Hierarchical Pages",
-      copy: "Create pages and subpages to organize your content in a clear tree structure."
+      copy: "Create pages and subpages to organize your content in a clear tree structure.",
     },
     {
-      icon: "📊",
       title: "Multiple Views",
-      copy: "Switch between list, board, table, and calendar views to visualize your data."
+      copy: "Switch between list, board, table, and calendar views to visualize your data.",
     },
     {
-      icon: "✓",
       title: "Task Management",
-      copy: "Track tasks and habits with streak counters and completion metrics."
+      copy: "Track tasks and habits with streak counters and completion metrics.",
     },
     {
-      icon: "🎯",
       title: "Productivity Dashboard",
-      copy: "Monitor your progress with visual analytics and productivity insights."
+      copy: "Monitor your progress with visual analytics and productivity insights.",
     },
   ];
 
@@ -237,15 +189,15 @@ function WelcomePage() {
       <section className="welcome-hero">
         <h2>Welcome to Your Workspace</h2>
         <p>
-          A productivity app designed for clarity and efficiency. 
-          Manage tasks, track habits, and organize your work with a clean, functional interface.
+          A productivity app designed for clarity and efficiency. Manage tasks,
+          track habits, and organize your work with a clean, functional
+          interface.
         </p>
       </section>
 
       <section className="highlight-grid">
         {features.map((feature) => (
           <article key={feature.title} className="highlight-card">
-            <span aria-hidden="true">{feature.icon}</span>
             <div>
               <h3>{feature.title}</h3>
               <p>{feature.copy}</p>

@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import { Icons } from "../utils/icons";
 
 export default function Todo({ item, onUpdate, onDelete, onToggleComplete, index }) {
   const [isEdit, setIsEdit] = useState(false);
@@ -125,7 +126,7 @@ export default function Todo({ item, onUpdate, onDelete, onToggleComplete, index
               aria-checked={item.completed}
               role="checkbox"
             >
-              {item.completed && <span className="checkmark">✓</span>}
+              {item.completed && <span className="checkmark">{Icons.check}</span>}
             </button>
             <div className="todoTitleWrapper">
               <span 
