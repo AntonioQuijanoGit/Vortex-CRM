@@ -1,0 +1,227 @@
+/* Sidebar container */
+.notion-sidebar {
+  width: 260px;
+  height: 100vh;
+  background: var(--color-surface);
+  border-right: 2px solid var(--color-border-dark);
+  display: flex;
+  flex-direction: column;
+  transition: width 0.2s ease;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  overflow: hidden;
+}
+
+.notion-sidebar.collapsed {
+  width: 50px;
+}
+
+/* Sidebar header */
+.sidebar-header {
+  padding: var(--spacing-md);
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  min-height: 60px;
+}
+
+.sidebar-toggle {
+  width: 28px;
+  height: 28px;
+  border: 2px solid var(--color-border-dark);
+  border-radius: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  flex-shrink: 0;
+  box-shadow: 2px 2px 0 var(--color-shadow);
+}
+
+.sidebar-toggle:hover {
+  border-color: var(--color-accent);
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 var(--color-shadow-strong);
+}
+
+.sidebar-workspace {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  flex: 1;
+}
+
+.workspace-icon {
+  font-size: 20px;
+  line-height: 1;
+}
+
+.workspace-name {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--color-text);
+  text-transform: uppercase;
+}
+
+/* Sidebar content */
+.sidebar-content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: var(--spacing-sm) 0;
+}
+
+.sidebar-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sidebar-content::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 0;
+}
+
+.sidebar-content::-webkit-scrollbar-thumb:hover {
+  background: var(--color-border-dark);
+}
+
+/* Pages section */
+.pages-section {
+  padding: 0;
+}
+
+.pages-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-xs) var(--spacing-md);
+  margin-bottom: var(--spacing-xs);
+}
+
+.pages-title {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.add-page-button {
+  width: 20px;
+  height: 20px;
+  border: 1px solid var(--color-border-dark);
+  border-radius: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.add-page-button:hover {
+  border-color: var(--color-accent);
+  background: var(--color-accent);
+  color: var(--color-bg);
+}
+
+/* New page input */
+.new-page-input-container {
+  padding: 0 var(--spacing-md);
+  margin-bottom: var(--spacing-xs);
+}
+
+.new-page-input {
+  width: 100%;
+  border: 2px solid var(--color-border-dark);
+  border-radius: 0;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  font-size: 13px;
+  font-weight: 400;
+  font-family: var(--font-sans);
+  background: var(--color-bg);
+  color: var(--color-text);
+  transition: all var(--transition-base);
+}
+
+.new-page-input:focus {
+  outline: none;
+  border-color: var(--color-accent);
+}
+
+/* Pages list */
+.pages-list {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Sidebar footer */
+.sidebar-footer {
+  padding: var(--spacing-md);
+  border-top: 1px solid var(--color-border);
+}
+
+.new-page-button {
+  width: 100%;
+  border: 2px solid var(--color-border-dark);
+  border-radius: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  padding: var(--spacing-sm) var(--spacing-md);
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-size: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-xs);
+  box-shadow: 2px 2px 0 var(--color-shadow);
+}
+
+.new-page-button:hover {
+  border-color: var(--color-accent);
+  background: var(--color-accent);
+  color: var(--color-bg);
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 var(--color-shadow-strong);
+}
+
+.new-page-button .button-icon {
+  font-size: 16px;
+  line-height: 1;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .notion-sidebar {
+    position: fixed;
+    z-index: 100;
+    left: 0;
+    top: 0;
+  }
+
+  .notion-sidebar.collapsed {
+    transform: translateX(-100%);
+  }
+}

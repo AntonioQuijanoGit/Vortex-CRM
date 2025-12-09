@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Todo from "./Todo";
+import Todo from "./todo";
 import Calendar from "./Calendar";
 import TodoForm from "./TodoForm";
 import TodoControls from "./TodoControls";
@@ -11,7 +11,7 @@ import { applyFilters } from "../utils/filters";
 
 import "./todoApp.css";
 
-export default function TodoApp() {
+export default function TodoApp({ pageId, viewType }) {
   const { todos, addTodo, updateTodo, deleteTodo, toggleComplete } = useTodos();
   
   const [title, setTitle] = useState("");
