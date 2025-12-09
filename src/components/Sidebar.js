@@ -28,40 +28,43 @@ export default function Sidebar({
   };
 
   return (
-    <aside className={`notion-sidebar ${isCollapsed ? "collapsed" : ""}`}>
-      <div className="sidebar-header">
-        <button
-          className="sidebar-toggle"
-          onClick={() => setIsCollapsed(!isCollapsed)}
-          aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-        >
-          {isCollapsed ? "→" : "←"}
-        </button>
-        {!isCollapsed && (
-          <div className="sidebar-workspace">
-            <span className="workspace-icon">📋</span>
-            <span className="workspace-name">My Workspace</span>
-          </div>
-        )}
-      </div>
+    <nav
+      className={`notion-sidebar ${isCollapsed ? "collapsed" : ""}`}
+      aria-label="Workspace navigation"
+    >
+      <div className="sidebar-scroll">
+        <div className="sidebar-header">
+          <button
+            className="sidebar-toggle"
+            onClick={() => setIsCollapsed(!isCollapsed)}
+            aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+          >
+            {isCollapsed ? "→" : "←"}
+          </button>
+          {!isCollapsed && (
+            <div className="sidebar-workspace">
+              <span className="workspace-icon">📋</span>
+              <span className="workspace-name">My Workspace</span>
+            </div>
+          )}
+        </div>
 
-      {!isCollapsed && (
-        <>
-          <div className="sidebar-content">
-            <div className="pages-section">
+        {!isCollapsed && (
+          <section className="sidebar-content" aria-labelledby="pages-title">
+            <header className="pages-section">
               <div className="pages-header">
-                <span className="pages-title">Pages</span>
+                <h2 id="pages-title">Pages</h2>
                 <button
                   className="add-page-button"
                   onClick={() => setShowNewPageInput(true)}
-                  aria-label="Add new page"
+                  aria-label="Open new page input"
                 >
                   +
                 </button>
               </div>
 
               {showNewPageInput && (
-                <div className="new-page-input-container">
+                <div className="new-page-input-container" role="region" aria-live="polite">
                   <input
                     type="text"
                     className="new-page-input"
@@ -77,39 +80,42 @@ export default function Sidebar({
                     }}
                     onBlur={handleAddPage}
                     autoFocus
+                    aria-label="New page title"
                   />
                 </div>
               )}
+            </header>
 
-              <div className="pages-list">
-                {rootPages.map((page) => (
-                  <PageItem
-                    key={page.id}
-                    page={page}
-                    isActive={activePage === page.id}
-                    isExpanded={isExpanded(page.id)}
-                    hasChildren={getChildren(page.id).length > 0}
-                    onSelect={() => onPageSelect(page.id)}
-                    onToggleExpanded={() => onToggleExpanded(page.id)}
-                    onUpdate={onUpdatePage}
-                    onDelete={onDeletePage}
-                    onAddChild={onAddPage}
-                    getChildren={getChildren}
-                    level={0}
-                  />
-                ))}
-              </div>
+            <div className="pages-list" role="tree" aria-label="Workspace pages">
+              {rootPages.map((page) => (
+                <PageItem
+                  key={page.id}
+                  page={page}
+                  isActive={activePage === page.id}
+                  isExpanded={isExpanded(page.id)}
+                  hasChildren={getChildren(page.id).length > 0}
+                  onSelect={() => onPageSelect(page.id)}
+                  onToggleExpanded={() => onToggleExpanded(page.id)}
+                  onUpdate={onUpdatePage}
+                  onDelete={onDeletePage}
+                  onAddChild={onAddPage}
+                  getChildren={getChildren}
+                  level={0}
+                />
+              ))}
             </div>
-          </div>
+          </section>
+        )}
 
+        {!isCollapsed && (
           <div className="sidebar-footer">
             <button className="new-page-button" onClick={() => setShowNewPageInput(true)}>
               <span className="button-icon">+</span>
               <span className="button-text">New Page</span>
             </button>
           </div>
-        </>
-      )}
-    </aside>
+        )}
+      </div>
+    </nav>
   );
 }

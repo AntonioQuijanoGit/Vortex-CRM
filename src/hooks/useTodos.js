@@ -3,10 +3,13 @@ import { resetDailyHabits, calculateStreak, checkCompletedYesterday } from "../u
 
 /**
  * Custom hook for managing todos with localStorage persistence
+ * @param {string} pageId - Optional page ID to store todos per page
  */
-export function useTodos() {
+export function useTodos(pageId = null) {
+  const storageKey = pageId ? `todos-${pageId}` : "todos";
+  
   const [todos, setTodos] = useState(() => {
-    const savedTodos = localStorage.getItem("todos");
+    const savedTodos = localStorage.getItem(storageKey);
     if (savedTodos) {
       const parsed = JSON.parse(savedTodos);
       return resetDailyHabits(parsed);
@@ -16,8 +19,8 @@ export function useTodos() {
 
   // Save todos to localStorage when they change
   useEffect(() => {
-    localStorage.setItem("todos", JSON.stringify(todos));
-  }, [todos]);
+    localStorage.setItem(storageKey, JSON.stringify(todos));
+  }, [todos, storageKey]);
 
   // Reset habits when day changes
   useEffect(() => {

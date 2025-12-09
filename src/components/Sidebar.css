@@ -1,54 +1,68 @@
-/* Sidebar container */
 .notion-sidebar {
   width: 260px;
+  min-width: 260px;
   height: 100vh;
-  background: var(--color-surface);
-  border-right: 2px solid var(--color-border-dark);
+  background: var(--color-panel);
+  border-right: var(--border-thin);
   display: flex;
   flex-direction: column;
-  transition: width 0.2s ease;
-  flex-shrink: 0;
   position: sticky;
   top: 0;
   overflow: hidden;
+  transition: width var(--transition-base), min-width var(--transition-base);
 }
 
 .notion-sidebar.collapsed {
-  width: 50px;
+  width: 56px;
+  min-width: 56px;
 }
 
-/* Sidebar header */
+.sidebar-scroll {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.sidebar-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar-scroll::-webkit-scrollbar-thumb {
+  background: var(--color-stroke-strong);
+  border-radius: 3px;
+}
+
 .sidebar-header {
-  padding: var(--spacing-md);
-  border-bottom: 1px solid var(--color-border);
   display: flex;
   align-items: center;
   gap: var(--spacing-sm);
-  min-height: 60px;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-bottom: var(--border-thin);
+  min-height: 56px;
 }
 
 .sidebar-toggle {
-  width: 28px;
-  height: 28px;
-  border: 2px solid var(--color-border-dark);
-  border-radius: 0;
-  background: var(--color-bg);
-  color: var(--color-text);
-  cursor: pointer;
-  transition: all var(--transition-base);
+  width: 32px;
+  height: 32px;
+  border: var(--border-thin);
+  background: var(--color-panel);
+  color: var(--color-ink);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 14px;
-  font-weight: 700;
-  flex-shrink: 0;
-  box-shadow: 2px 2px 0 var(--color-shadow);
+  font-weight: 500;
+  transition: all var(--transition-base);
+  border-radius: 6px;
 }
 
-.sidebar-toggle:hover {
-  border-color: var(--color-accent);
-  transform: translate(-1px, -1px);
-  box-shadow: 3px 3px 0 var(--color-shadow-strong);
+.sidebar-toggle:hover,
+.sidebar-toggle:focus-visible {
+  background: var(--color-bg);
+  border-color: var(--color-stroke-strong);
+  transform: scale(1.05);
 }
 
 .sidebar-workspace {
@@ -59,169 +73,156 @@
 }
 
 .workspace-icon {
-  font-size: 20px;
+  font-size: 18px;
   line-height: 1;
 }
 
 .workspace-name {
   font-family: var(--font-display);
-  font-size: 16px;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  color: var(--color-text);
-  text-transform: uppercase;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--color-ink);
 }
 
-/* Sidebar content */
 .sidebar-content {
   flex: 1;
+  padding: var(--spacing-sm) var(--spacing-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
   overflow-y: auto;
-  overflow-x: hidden;
-  padding: var(--spacing-sm) 0;
 }
 
-.sidebar-content::-webkit-scrollbar {
-  width: 6px;
-}
-
-.sidebar-content::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.sidebar-content::-webkit-scrollbar-thumb {
-  background: var(--color-border);
-  border-radius: 0;
-}
-
-.sidebar-content::-webkit-scrollbar-thumb:hover {
-  background: var(--color-border-dark);
-}
-
-/* Pages section */
 .pages-section {
-  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
 }
 
 .pages-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--spacing-xs) var(--spacing-md);
-  margin-bottom: var(--spacing-xs);
+  gap: var(--spacing-xs);
+  margin-bottom: var(--spacing-xxs);
 }
 
-.pages-title {
+.pages-header h2 {
   font-family: var(--font-mono);
   font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 0.15em;
+  font-weight: 600;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--color-text-muted);
+  color: var(--color-muted);
+  margin: 0;
 }
 
 .add-page-button {
-  width: 20px;
-  height: 20px;
-  border: 1px solid var(--color-border-dark);
-  border-radius: 0;
-  background: var(--color-bg);
-  color: var(--color-text);
-  cursor: pointer;
-  transition: all var(--transition-base);
+  width: 24px;
+  height: 24px;
+  border: var(--border-thin);
+  background: var(--color-panel);
+  color: var(--color-ink);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 16px;
   font-weight: 400;
-  line-height: 1;
+  transition: all var(--transition-base);
+  border-radius: 4px;
 }
 
-.add-page-button:hover {
+.add-page-button:hover,
+.add-page-button:focus-visible {
+  background: var(--color-bg);
   border-color: var(--color-accent);
-  background: var(--color-accent);
-  color: var(--color-bg);
+  color: var(--color-accent);
+  transform: scale(1.1);
 }
 
-/* New page input */
 .new-page-input-container {
-  padding: 0 var(--spacing-md);
-  margin-bottom: var(--spacing-xs);
+  padding-top: var(--spacing-xxs);
 }
 
 .new-page-input {
   width: 100%;
-  border: 2px solid var(--color-border-dark);
-  border-radius: 0;
-  padding: var(--spacing-xs) var(--spacing-sm);
+  border: var(--border-thin);
+  background: var(--color-panel);
+  color: var(--color-ink);
+  padding: var(--spacing-xxs) var(--spacing-xs);
   font-size: 13px;
   font-weight: 400;
-  font-family: var(--font-sans);
-  background: var(--color-bg);
-  color: var(--color-text);
   transition: all var(--transition-base);
+  border-radius: 6px;
 }
 
 .new-page-input:focus {
   outline: none;
   border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
-/* Pages list */
 .pages-list {
   display: flex;
   flex-direction: column;
+  gap: 2px;
 }
 
-/* Sidebar footer */
 .sidebar-footer {
-  padding: var(--spacing-md);
-  border-top: 1px solid var(--color-border);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-top: var(--border-thin);
 }
 
 .new-page-button {
   width: 100%;
-  border: 2px solid var(--color-border-dark);
-  border-radius: 0;
-  background: var(--color-bg);
-  color: var(--color-text);
-  padding: var(--spacing-sm) var(--spacing-md);
-  font-family: var(--font-mono);
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
-  font-size: 10px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all var(--transition-base);
+  border: var(--border-thin);
+  background: var(--color-panel);
+  color: var(--color-ink);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: var(--spacing-xs);
-  box-shadow: 2px 2px 0 var(--color-shadow);
+  transition: all var(--transition-base);
+  border-radius: 6px;
 }
 
-.new-page-button:hover {
-  border-color: var(--color-accent);
+.new-page-button:hover,
+.new-page-button:focus-visible {
   background: var(--color-accent);
-  color: var(--color-bg);
-  transform: translate(-1px, -1px);
-  box-shadow: 3px 3px 0 var(--color-shadow-strong);
+  color: var(--color-panel);
+  border-color: var(--color-accent);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
 }
 
-.new-page-button .button-icon {
-  font-size: 16px;
+.button-icon {
+  font-size: 14px;
   line-height: 1;
+}
+
+.button-text {
+  font-size: 12px;
 }
 
 /* Responsive */
 @media (max-width: 768px) {
   .notion-sidebar {
     position: fixed;
-    z-index: 100;
-    left: 0;
-    top: 0;
+    inset: 0;
+    width: 100%;
+    max-width: 300px;
+    z-index: 1000;
+    transform: translateX(-100%);
+    transition: transform var(--transition-base);
+    box-shadow: var(--shadow-lg);
   }
 
-  .notion-sidebar.collapsed {
-    transform: translateX(-100%);
+  .notion-sidebar:not(.collapsed) {
+    transform: translateX(0);
   }
 }
