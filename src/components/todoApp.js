@@ -6,20 +6,21 @@ import TodoControls from "./TodoControls";
 import TodoStats from "./TodoStats";
 import EmptyState from "./EmptyState";
 import ProductivityDashboard from "./ProductivityDashboard";
+import BoardView from "./BoardView";
+import TableView from "./TableView";
 import { useTodos } from "../hooks/useTodos";
 import { applyFilters } from "../utils/filters";
 
 import "./todoApp.css";
 
-export default function TodoApp({ pageId, viewType }) {
-  const { todos, addTodo, updateTodo, deleteTodo, toggleComplete } = useTodos();
-  
+export default function TodoApp({ pageId, viewType: initialViewType }) {
+  const { todos, addTodo, updateTodo, updateTodoProperties, deleteTodo, toggleComplete } = useTodos();
+
+  const [currentView, setCurrentView] = useState(initialViewType || "list");
   const [title, setTitle] = useState("");
   const [todoType, setTodoType] = useState("task"); // 'task' or 'habit'
   const [filter, setFilter] = useState("all");
   const [typeFilter, setTypeFilter] = useState("all"); // all, task, habit
-  const [showCalendar, setShowCalendar] = useState(false);
-  const [showDashboard, setShowDashboard] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
 
   function handleAddTodo() {
@@ -76,47 +77,63 @@ export default function TodoApp({ pageId, viewType }) {
 
       {todos.length > 0 && (
         <>
-          <div className="viewToggle">
+          {/* View Selector */}
+          <div className="viewSelector">
             <button
-              className={`viewToggleButton ${showDashboard ? "active" : ""}`}
-              onClick={() => {
-                setShowDashboard(true);
-                setShowCalendar(false);
-              }}
-              aria-label="Show dashboard"
+              className={`viewButton ${currentView === "list" ? "active" : ""}`}
+              onClick={() => setCurrentView("list")}
             >
-              <span className="buttonText">Dashboard</span>
+              <span className="buttonText">List</span>
             </button>
             <button
-              className={`viewToggleButton ${!showDashboard ? "active" : ""}`}
-              onClick={() => {
-                setShowDashboard(false);
-                setShowCalendar(true);
-              }}
-              aria-label="Show calendar"
+              className={`viewButton ${currentView === "board" ? "active" : ""}`}
+              onClick={() => setCurrentView("board")}
+            >
+              <span className="buttonText">Board</span>
+            </button>
+            <button
+              className={`viewButton ${currentView === "table" ? "active" : ""}`}
+              onClick={() => setCurrentView("table")}
+            >
+              <span className="buttonText">Table</span>
+            </button>
+            <button
+              className={`viewButton ${currentView === "calendar" ? "active" : ""}`}
+              onClick={() => setCurrentView("calendar")}
             >
               <span className="buttonText">Calendar</span>
             </button>
+            <button
+              className={`viewButton ${currentView === "dashboard" ? "active" : ""}`}
+              onClick={() => setCurrentView("dashboard")}
+            >
+              <span className="buttonText">Dashboard</span>
+            </button>
           </div>
 
-          {showDashboard && (
+          {/* Dashboard View */}
+          {currentView === "dashboard" && (
             <ProductivityDashboard todos={todos} habits={habits} />
           )}
 
-          {showCalendar && (
+          {/* Calendar View */}
+          {currentView === "calendar" && (
             <div className="calendarContainer">
               <Calendar todos={todos} />
             </div>
           )}
 
-          <TodoControls
-            searchQuery={searchQuery}
-            onSearchChange={setSearchQuery}
-            filter={filter}
-            onFilterChange={setFilter}
-            typeFilter={typeFilter}
-            onTypeFilterChange={setTypeFilter}
-          />
+          {/* Filters for List/Board/Table views */}
+          {(currentView === "list" || currentView === "board" || currentView === "table") && (
+            <TodoControls
+              searchQuery={searchQuery}
+              onSearchChange={setSearchQuery}
+              filter={filter}
+              onFilterChange={setFilter}
+              typeFilter={typeFilter}
+              onTypeFilterChange={setTypeFilter}
+            />
+          )}
         </>
       )}
 
@@ -126,30 +143,57 @@ export default function TodoApp({ pageId, viewType }) {
           hint="Create your first task or habit to begin tracking your productivity"
           showExamples={true}
         />
-      ) : filteredTodos.length === 0 ? (
+      ) : filteredTodos.length === 0 && (currentView === "list" || currentView === "board" || currentView === "table") ? (
         <EmptyState
           message="No items found in this period"
           hint="Change the filter or add a new item"
         />
       ) : (
-        <div
-          className="todosContainer"
-          role="list"
-          aria-label={`List of ${filteredTodos.length} ${
-            filteredTodos.length === 1 ? "item" : "items"
-          }`}
-        >
-          {filteredTodos.map((item, index) => (
-            <Todo
-              key={item.id}
-              item={item}
-              index={index}
+        <>
+          {/* List View */}
+          {currentView === "list" && (
+            <div
+              className="todosContainer"
+              role="list"
+              aria-label={`List of ${filteredTodos.length} ${
+                filteredTodos.length === 1 ? "item" : "items"
+              }`}
+            >
+              {filteredTodos.map((item, index) => (
+                <Todo
+                  key={item.id}
+                  item={item}
+                  index={index}
+                  onUpdate={updateTodo}
+                  onDelete={deleteTodo}
+                  onToggleComplete={toggleComplete}
+                />
+              ))}
+            </div>
+          )}
+
+          {/* Board View */}
+          {currentView === "board" && (
+            <BoardView
+              todos={filteredTodos}
               onUpdate={updateTodo}
               onDelete={deleteTodo}
               onToggleComplete={toggleComplete}
+              onUpdateProperties={updateTodoProperties}
             />
-          ))}
-        </div>
+          )}
+
+          {/* Table View */}
+          {currentView === "table" && (
+            <TableView
+              todos={filteredTodos}
+              onUpdate={updateTodo}
+              onDelete={deleteTodo}
+              onToggleComplete={toggleComplete}
+              onUpdateProperties={updateTodoProperties}
+            />
+          )}
+        </>
       )}
 
       <TodoStats
