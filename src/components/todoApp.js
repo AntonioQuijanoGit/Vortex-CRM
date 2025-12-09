@@ -77,7 +77,7 @@ export default function TodoApp({ pageId, viewType: initialViewType }) {
       </header>
 
       {/* Always show view selector and content */}
-      {todos.length > 0 ? (
+      {todos.length > 0 && (
         <>
           {/* View Selector */}
           <div className="viewSelector">

@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useEvents } from "../hooks/useEvents";
 import "./DashboardCalendar.css";
 
 export default function DashboardCalendar({ todos, onNavigate }) {
@@ -137,12 +136,12 @@ export default function DashboardCalendar({ todos, onNavigate }) {
           }
 
           const dayInfo = getDayInfo(day);
-          const today = isToday(day);
+          const isTodayDay = isToday(day);
 
           return (
             <div
               key={day}
-              className={`dashboard-cal-day ${today ? "today" : ""} ${
+              className={`dashboard-cal-day ${isTodayDay ? "today" : ""} ${
                 dayInfo.hasActivity ? "has-activity" : ""
               }`}
             >
