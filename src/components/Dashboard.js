@@ -108,6 +108,14 @@ export default function Dashboard({ onNavigate }) {
         <p className="dashboard-subtitle">Overview of your workspace</p>
       </div>
 
+      {/* Calendar first - most important */}
+      <section 
+        className="dashboard-section dashboard-calendar-section dashboard-calendar-first"
+        style={{ display: 'block', visibility: 'visible', opacity: 1, width: '100%' }}
+      >
+        <DashboardCalendar todos={allTodos} onNavigate={onNavigate} />
+      </section>
+
       <div className="dashboard-stats">
         {stats.map((stat, index) => (
           <div 
@@ -127,9 +135,6 @@ export default function Dashboard({ onNavigate }) {
       </div>
 
       <div className="dashboard-sections">
-        <section className="dashboard-section dashboard-calendar-section">
-          <DashboardCalendar todos={allTodos} onNavigate={onNavigate} />
-        </section>
 
         <section className="dashboard-section">
           <h2 className="section-title">Quick Access</h2>

@@ -90,9 +90,10 @@ export default function DashboardCalendar({ todos, onNavigate }) {
   const todayInfo = getDayInfo(today.getDate());
 
   return (
-    <div className="dashboard-calendar">
+    <div className="dashboard-calendar" style={{ display: 'block', visibility: 'visible', opacity: 1 }}>
       <div className="dashboard-calendar-header">
-        <h3 className="dashboard-calendar-title">Today</h3>
+        <h2 className="dashboard-calendar-title" style={{ fontSize: '48px', fontWeight: 700 }}>📅 CALENDAR</h2>
+        <h3 className="dashboard-calendar-subtitle">Today</h3>
         <div className="dashboard-today-info">
           <div className="today-date">
             {today.toLocaleDateString("en-US", {
