@@ -1,9 +1,6 @@
 import React, { useState } from "react";
 import { TodoApp } from "../Todo";
-import { EmptyState, WelcomeGuide } from "../shared";
 import { Dashboard } from "../Dashboard";
-import { MovieTracker } from "../MovieTracker";
-import { NoteEditor } from "../NoteEditor";
 import { BlockManager } from "../BlockManager";
 import "./PageContent.css";
 
