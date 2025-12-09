@@ -37,8 +37,21 @@ export default function PageItem({
   };
 
   const handleAddSubpage = () => {
-    const newPageId = onAddChild("Untitled", page.id, "page", "📄");
+    onAddChild("Untitled", page.id, "page", "📄");
     setShowOptions(false);
+  };
+
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      onSelect();
+    }
+    if (event.key === "ArrowRight" && hasChildren && !isExpanded) {
+      onToggleExpanded();
+    }
+    if (event.key === "ArrowLeft" && hasChildren && isExpanded) {
+      onToggleExpanded();
+    }
   };
 
   return (
@@ -48,6 +61,13 @@ export default function PageItem({
         style={{ paddingLeft: `${12 + indent}px` }}
         onMouseEnter={() => setShowOptions(true)}
         onMouseLeave={() => setShowOptions(false)}
+        onFocus={() => setShowOptions(true)}
+        onBlur={() => setShowOptions(false)}
+        role="treeitem"
+        aria-selected={isActive}
+        aria-expanded={hasChildren ? isExpanded : undefined}
+        tabIndex={0}
+        onKeyDown={handleKeyDown}
       >
         <div className="page-item-content">
           {hasChildren && (
@@ -57,7 +77,8 @@ export default function PageItem({
                 e.stopPropagation();
                 onToggleExpanded();
               }}
-              aria-label={isExpanded ? "Collapse" : "Expand"}
+              aria-label={isExpanded ? "Collapse subpages" : "Expand subpages"}
+              aria-expanded={isExpanded}
             >
               {isExpanded ? "▼" : "▶"}
             </button>
@@ -67,6 +88,7 @@ export default function PageItem({
             className="page-link"
             onClick={onSelect}
             style={{ marginLeft: hasChildren ? "0" : "20px" }}
+            aria-label={`Open ${page.title}`}
           >
             <span className="page-icon">{page.icon}</span>
             {isEditing ? (
@@ -103,6 +125,7 @@ export default function PageItem({
                   handleAddSubpage();
                 }}
                 title="Add subpage"
+                aria-label="Add subpage"
               >
                 +
               </button>
@@ -113,6 +136,7 @@ export default function PageItem({
                   setIsEditing(true);
                 }}
                 title="Rename"
+                aria-label="Rename page"
               >
                 ✎
               </button>
@@ -123,6 +147,7 @@ export default function PageItem({
                   handleDelete();
                 }}
                 title="Delete"
+                aria-label="Delete page"
               >
                 ×
               </button>
@@ -132,7 +157,7 @@ export default function PageItem({
       </div>
 
       {isExpanded && children.length > 0 && (
-        <div className="page-children">
+        <div className="page-children" role="group">
           {children.map((child) => (
             <PageItem
               key={child.id}

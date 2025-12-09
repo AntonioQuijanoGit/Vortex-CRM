@@ -14,7 +14,7 @@ import { applyFilters } from "../utils/filters";
 import "./todoApp.css";
 
 export default function TodoApp({ pageId, viewType: initialViewType }) {
-  const { todos, addTodo, updateTodo, updateTodoProperties, deleteTodo, toggleComplete } = useTodos();
+  const { todos, addTodo, updateTodo, updateTodoProperties, deleteTodo, toggleComplete } = useTodos(pageId);
 
   const [currentView, setCurrentView] = useState(initialViewType || "list");
   const [title, setTitle] = useState("");
@@ -75,7 +75,8 @@ export default function TodoApp({ pageId, viewType: initialViewType }) {
         onTypeChange={setTodoType}
       />
 
-      {todos.length > 0 && (
+      {/* Always show view selector and content */}
+      {todos.length > 0 ? (
         <>
           {/* View Selector */}
           <div className="viewSelector">

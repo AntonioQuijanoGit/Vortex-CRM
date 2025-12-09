@@ -1,0 +1,110 @@
+.block {
+  width: 100%;
+  background: var(--color-panel);
+  border: var(--border-thin);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-md);
+  transition: all var(--transition-base);
+  position: relative;
+}
+
+.block:hover {
+  border-color: var(--color-stroke-strong);
+  box-shadow: var(--shadow-sm);
+}
+
+.block-header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  margin-bottom: var(--spacing-md);
+  padding-bottom: var(--spacing-sm);
+  border-bottom: var(--border-thin);
+}
+
+.block-icon {
+  font-size: 20px;
+  line-height: 1;
+}
+
+.block-title {
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-ink);
+  margin: 0;
+}
+
+.text-block {
+  min-height: 120px;
+}
+
+.block-textarea {
+  width: 100%;
+  min-height: 200px;
+  border: var(--border-thin);
+  border-radius: var(--radius-sm);
+  padding: var(--spacing-sm);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--color-ink);
+  background: var(--color-bg);
+  resize: vertical;
+  transition: border-color var(--transition-fast);
+}
+
+.block-textarea:focus {
+  outline: none;
+  border-color: var(--color-ink);
+}
+
+.block-content {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--color-ink);
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  min-height: 60px;
+  cursor: text;
+}
+
+.block-placeholder {
+  color: var(--color-muted);
+  font-style: italic;
+}
+
+.block-hint {
+  font-size: 11px;
+  color: var(--color-muted);
+  margin-top: var(--spacing-xs);
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.movie-block,
+.note-block,
+.task-block {
+  min-height: 200px;
+}
+
+.note-block-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.note-stats {
+  display: flex;
+  gap: var(--spacing-sm);
+  font-size: 11px;
+  color: var(--color-muted);
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding-top: var(--spacing-xs);
+  border-top: var(--border-thin);
+}
+

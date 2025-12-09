@@ -1,0 +1,71 @@
+.note-editor {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  min-height: 400px;
+}
+
+.note-toolbar {
+  display: flex;
+  gap: var(--spacing-xxs);
+  padding: var(--spacing-xs);
+  border: var(--border-thin);
+  background: var(--color-bg);
+  border-radius: 6px;
+}
+
+.toolbar-btn {
+  width: 28px;
+  height: 28px;
+  border: var(--border-thin);
+  background: var(--color-panel);
+  color: var(--color-ink);
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.toolbar-btn:hover {
+  background: var(--color-bg);
+  border-color: var(--color-stroke-strong);
+}
+
+.note-textarea {
+  flex: 1;
+  border: var(--border-thin);
+  padding: var(--spacing-md);
+  font-size: 15px;
+  line-height: 1.6;
+  font-family: var(--font-sans);
+  color: var(--color-ink);
+  background: var(--color-panel);
+  border-radius: 6px;
+  resize: vertical;
+  min-height: 300px;
+  transition: all var(--transition-base);
+}
+
+.note-textarea:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.note-textarea::placeholder {
+  color: var(--color-muted);
+}
+
+.note-stats {
+  display: flex;
+  gap: var(--spacing-md);
+  font-size: 11px;
+  color: var(--color-muted);
+  font-family: var(--font-mono);
+  padding: var(--spacing-xs) 0;
+}
+
