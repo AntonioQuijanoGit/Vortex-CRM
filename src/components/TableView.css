@@ -1,0 +1,309 @@
+/* Table View Wrapper */
+.table-view-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  border: 2px solid var(--color-border-dark);
+  border-radius: 0;
+  background: var(--color-surface);
+  box-shadow: 4px 4px 0 var(--color-shadow);
+}
+
+.table-view {
+  min-width: 100%;
+  width: max-content;
+}
+
+/* Data Table */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-sans);
+  background: var(--color-bg);
+}
+
+/* Table Header */
+.data-table thead {
+  background: var(--color-surface);
+  border-bottom: 2px solid var(--color-border-dark);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.data-table th {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  text-align: left;
+  padding: var(--spacing-md);
+  border-right: 1px solid var(--color-border);
+}
+
+.data-table th:last-child {
+  border-right: none;
+}
+
+/* Table Body */
+.data-table tbody tr {
+  border-bottom: 1px solid var(--color-border);
+  transition: all var(--transition-base);
+}
+
+.data-table tbody tr:hover {
+  background: var(--color-surface);
+}
+
+.data-table tbody tr.row-completed {
+  opacity: 0.6;
+}
+
+.data-table td {
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-right: 1px solid var(--color-border);
+  vertical-align: middle;
+}
+
+.data-table td:last-child {
+  border-right: none;
+}
+
+/* Column Widths */
+.col-checkbox {
+  width: 60px;
+  text-align: center;
+}
+
+.col-title {
+  min-width: 250px;
+  max-width: 400px;
+}
+
+.col-status {
+  width: 140px;
+}
+
+.col-priority {
+  width: 130px;
+}
+
+.col-type {
+  width: 120px;
+}
+
+.col-tags {
+  min-width: 150px;
+  max-width: 250px;
+}
+
+.col-due-date {
+  width: 140px;
+}
+
+.col-created {
+  width: 130px;
+}
+
+.col-actions {
+  width: 80px;
+  text-align: center;
+}
+
+/* Table Checkbox */
+.table-checkbox {
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--color-border-dark);
+  border-radius: 0;
+  background: var(--color-bg);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-bg);
+  box-shadow: 1px 1px 0 var(--color-shadow);
+}
+
+.table-checkbox:hover {
+  border-color: var(--color-accent);
+  transform: translate(-1px, -1px);
+  box-shadow: 2px 2px 0 var(--color-shadow-strong);
+}
+
+.table-checkbox.checked {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+/* Table Cell Content */
+.table-cell-content {
+  display: block;
+  cursor: pointer;
+  padding: 4px 0;
+  transition: all var(--transition-base);
+  font-size: 14px;
+  color: var(--color-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.table-cell-content:hover {
+  color: var(--color-accent);
+  text-decoration: underline;
+}
+
+/* Table Input */
+.table-input {
+  width: 100%;
+  border: 2px solid var(--color-accent);
+  border-radius: 0;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  font-size: 14px;
+  font-weight: 400;
+  font-family: var(--font-sans);
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+.table-input:focus {
+  outline: none;
+}
+
+/* Table Select */
+.table-select {
+  width: 100%;
+  border: 2px solid var(--color-border-dark);
+  border-radius: 0;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  font-size: 12px;
+  font-weight: 600;
+  font-family: var(--font-sans);
+  background: var(--color-bg);
+  color: var(--color-text);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.table-select:hover {
+  border-color: var(--color-accent);
+}
+
+.table-select:focus {
+  outline: none;
+  border-color: var(--color-accent);
+}
+
+/* Type Badge */
+.type-badge {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  padding: 4px 8px;
+  border: 2px solid var(--color-border-dark);
+  background: var(--color-surface);
+  display: inline-block;
+  box-shadow: 1px 1px 0 var(--color-shadow);
+}
+
+.type-badge.habit {
+  border-color: var(--color-accent);
+  background: var(--color-accent);
+  color: var(--color-bg);
+}
+
+/* Date Input */
+.table-date-input {
+  width: 100%;
+  border: 2px solid var(--color-border-dark);
+  border-radius: 0;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  font-size: 11px;
+  font-weight: 400;
+  font-family: var(--font-mono);
+  background: var(--color-bg);
+  color: var(--color-text);
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.table-date-input:hover {
+  border-color: var(--color-accent);
+}
+
+.table-date-input:focus {
+  outline: none;
+  border-color: var(--color-accent);
+}
+
+.table-date {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--color-text-muted);
+}
+
+/* Delete Button */
+.table-delete-btn {
+  width: 28px;
+  height: 28px;
+  border: 2px solid var(--color-border-dark);
+  border-radius: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1;
+  padding: 0;
+  box-shadow: 1px 1px 0 var(--color-shadow);
+}
+
+.table-delete-btn:hover {
+  border-color: var(--color-text);
+  background: var(--color-text);
+  color: var(--color-bg);
+  transform: translate(-1px, -1px);
+  box-shadow: 2px 2px 0 var(--color-shadow-strong);
+}
+
+/* Empty State */
+.table-empty {
+  text-align: center;
+  padding: var(--spacing-2xl) !important;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .table-view-wrapper {
+    border: none;
+    box-shadow: none;
+  }
+
+  .data-table th,
+  .data-table td {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: 12px;
+  }
+
+  .col-title {
+    min-width: 200px;
+  }
+}

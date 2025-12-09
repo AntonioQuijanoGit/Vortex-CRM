@@ -332,14 +332,15 @@
 }
 
 /* View Toggle */
-.viewToggle {
+/* View Selector */
+.viewSelector {
   display: flex;
   gap: var(--spacing-xs);
   margin-bottom: var(--spacing-lg);
-  animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.45s both;
+  flex-wrap: wrap;
 }
 
-.viewToggleButton {
+.viewButton {
   border: 2px solid var(--color-border-dark);
   border-radius: 0;
   background: var(--color-bg);
@@ -354,15 +355,16 @@
   transition: all var(--transition-base);
   box-shadow: 2px 2px 0 var(--color-shadow);
   flex: 1;
+  min-width: 100px;
 }
 
-.viewToggleButton:hover {
+.viewButton:hover {
   border-color: var(--color-accent);
   transform: translate(-2px, -2px);
   box-shadow: 4px 4px 0 var(--color-shadow-strong);
 }
 
-.viewToggleButton.active {
+.viewButton.active {
   border-color: var(--color-accent);
   background: var(--color-accent);
   color: var(--color-bg);
