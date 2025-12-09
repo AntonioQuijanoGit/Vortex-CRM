@@ -14,7 +14,7 @@ import { applyFilters } from "../utils/filters";
 import "./todoApp.css";
 
 export default function TodoApp({ pageId, viewType: initialViewType }) {
-  const { todos, addTodo, updateTodo, updateTodoProperties, deleteTodo, toggleComplete } = useTodos();
+  const { todos, addTodo, updateTodo, updateTodoProperties, deleteTodo, toggleComplete } = useTodos(pageId);
 
   const [currentView, setCurrentView] = useState(initialViewType || "list");
   const [title, setTitle] = useState("");
@@ -44,6 +44,15 @@ export default function TodoApp({ pageId, viewType: initialViewType }) {
       role="main"
       aria-label="Daily Productivity and Habit Tracker"
     >
+      {/* Form always visible at the top */}
+      <TodoForm
+        title={title}
+        onTitleChange={setTitle}
+        onSubmit={handleAddTodo}
+        todoType={todoType}
+        onTypeChange={setTodoType}
+      />
+
       <header className="todoHeader">
         <h1 id="app-title">Daily Productivity Tracker</h1>
         <p className="todoSubtitle" id="app-description">
@@ -67,15 +76,8 @@ export default function TodoApp({ pageId, viewType: initialViewType }) {
         </div>
       </header>
 
-      <TodoForm
-        title={title}
-        onTitleChange={setTitle}
-        onSubmit={handleAddTodo}
-        todoType={todoType}
-        onTypeChange={setTodoType}
-      />
-
-      {todos.length > 0 && (
+      {/* Always show view selector and content */}
+      {todos.length > 0 ? (
         <>
           {/* View Selector */}
           <div className="viewSelector">
@@ -137,18 +139,25 @@ export default function TodoApp({ pageId, viewType: initialViewType }) {
         </>
       )}
 
-      {todos.length === 0 ? (
+      {/* Show empty state only when there are no todos and we're in list/board/table view */}
+      {todos.length === 0 && (currentView === "list" || currentView === "board" || currentView === "table") && (
         <EmptyState
           message="Get Started"
-          hint="Create your first task or habit to begin tracking your productivity"
+          hint="Create your first task or habit using the form above"
           showExamples={true}
         />
-      ) : filteredTodos.length === 0 && (currentView === "list" || currentView === "board" || currentView === "table") ? (
+      )}
+
+      {/* Show filtered empty state */}
+      {todos.length > 0 && filteredTodos.length === 0 && (currentView === "list" || currentView === "board" || currentView === "table") && (
         <EmptyState
           message="No items found in this period"
           hint="Change the filter or add a new item"
         />
-      ) : (
+      )}
+
+      {/* Show todos when we have them */}
+      {todos.length > 0 && filteredTodos.length > 0 && (
         <>
           {/* List View */}
           {currentView === "list" && (

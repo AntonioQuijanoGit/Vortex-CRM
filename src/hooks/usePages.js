@@ -9,34 +9,14 @@ export function usePages() {
     if (savedPages) {
       return JSON.parse(savedPages);
     }
-    // Default pages
+    // Default pages - only essential ones
     return [
       {
-        id: "welcome",
-        title: "Getting Started",
-        icon: "👋",
+        id: "home",
+        title: "Home",
+        icon: "🏠",
         parentId: null,
         type: "page",
-        createdAt: new Date().toISOString(),
-        content: [],
-      },
-      {
-        id: "tasks",
-        title: "My Tasks",
-        icon: "✓",
-        parentId: null,
-        type: "database",
-        viewType: "list", // list, board, table, calendar
-        createdAt: new Date().toISOString(),
-        content: [],
-      },
-      {
-        id: "habits",
-        title: "Daily Habits",
-        icon: "↻",
-        parentId: null,
-        type: "database",
-        viewType: "list",
         createdAt: new Date().toISOString(),
         content: [],
       },
@@ -45,7 +25,7 @@ export function usePages() {
 
   const [activePage, setActivePage] = useState(() => {
     const saved = localStorage.getItem("notion-active-page");
-    return saved || "welcome";
+    return saved || "home";
   });
 
   const [expandedPages, setExpandedPages] = useState(() => {

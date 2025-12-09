@@ -1,0 +1,118 @@
+.welcome-guide {
+  text-align: center;
+  padding: var(--spacing-xl) var(--spacing-md);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.guide-header h2 {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--color-ink);
+  margin-bottom: var(--spacing-xs);
+}
+
+.guide-header p {
+  font-size: 16px;
+  color: var(--color-muted);
+  margin-bottom: var(--spacing-lg);
+}
+
+.guide-features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-xl);
+  text-align: left;
+}
+
+.feature-item {
+  display: flex;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm);
+  border: var(--border-thin);
+  background: var(--color-panel);
+  border-radius: 8px;
+  transition: all var(--transition-base);
+}
+
+.feature-item:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--color-stroke-strong);
+}
+
+.feature-icon {
+  font-size: 32px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.feature-item h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-ink);
+  margin-bottom: var(--spacing-xxs);
+}
+
+.feature-item p {
+  font-size: 13px;
+  color: var(--color-muted);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.guide-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.guide-button {
+  padding: var(--spacing-sm) var(--spacing-xl);
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 8px;
+  border: var(--border-medium);
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.guide-button.primary {
+  background: var(--color-accent);
+  color: var(--color-panel);
+  border-color: var(--color-accent);
+}
+
+.guide-button.primary:hover {
+  background: var(--color-accent-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.guide-hint {
+  font-size: 12px;
+  color: var(--color-muted);
+  margin: 0;
+}
+
+.guide-hint strong {
+  color: var(--color-ink);
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .welcome-guide {
+    padding: var(--spacing-lg) var(--spacing-sm);
+  }
+
+  .guide-header h2 {
+    font-size: 24px;
+  }
+
+  .guide-features {
+    grid-template-columns: 1fr;
+  }
+}
+

@@ -1,4 +1,4 @@
-/* Contenedor principal - diseño moderno blanco y negro */
+/* Main container - brutalist design */
 .todoContainer {
   width: 100%;
   display: flex;
@@ -7,13 +7,14 @@
   padding: 0;
   position: relative;
   z-index: 1;
+  gap: var(--spacing-lg);
 }
 
 /* Header con tipografía grande y bold */
 .todoHeader {
   text-align: left;
   margin-bottom: var(--spacing-xl);
-  border-bottom: 2px solid var(--color-border-dark);
+  border-bottom: 2px solid var(--border-thick);
   padding-bottom: var(--spacing-md);
   display: none; /* Hidden in new layout, page header shows instead */
 }
@@ -24,7 +25,7 @@
   font-weight: 700;
   line-height: 1;
   letter-spacing: -0.04em;
-  color: var(--color-text);
+  color: var(--color-ink);
   margin: 0 0 var(--spacing-xs);
   text-transform: uppercase;
 }
@@ -52,7 +53,7 @@
   align-items: flex-start;
   gap: var(--spacing-sm);
   padding: var(--spacing-sm);
-  background: var(--color-surface);
+  background: var(--color-panel);
   border: 1px solid var(--color-border);
   border-radius: 0;
 }
@@ -71,35 +72,36 @@
   font-family: var(--font-sans);
   font-size: 13px;
   line-height: 1.6;
-  color: var(--color-text);
+  color: var(--color-ink);
   margin: 0;
   font-weight: 400;
 }
 
 .explanationContent strong {
   font-weight: 700;
-  color: var(--color-text);
+  color: var(--color-ink);
   margin-right: var(--spacing-xs);
 }
 
 /* Formulario con diseño geométrico */
 .todoCreateForm {
-  display: flex;
+  display: flex !important;
   flex-direction: column;
   gap: var(--spacing-sm);
   width: 100%;
-  margin-bottom: var(--spacing-2xl);
-  background: var(--color-surface);
+  margin-bottom: var(--spacing-xl);
+  background: var(--color-panel);
   padding: var(--spacing-lg);
-  border: 2px solid var(--color-border-dark);
-  border-radius: 0;
+  border: var(--border-medium);
+  border-radius: var(--radius-md);
   transition: all var(--transition-base);
   position: relative;
-  overflow: hidden;
-  opacity: 0;
-  transform: translateY(30px) scale(0.98);
-  animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.4s forwards;
-  box-shadow: 8px 8px 0 var(--color-shadow);
+  opacity: 1 !important;
+  transform: none !important;
+  box-shadow: var(--shadow-md);
+  visibility: visible !important;
+  z-index: 10;
+  margin-top: 0;
 }
 
 .formRow {
@@ -115,21 +117,21 @@
 }
 
 .typeButton {
-  border: 2px solid var(--color-border-dark);
-  border-radius: 0;
+  border: var(--border-thin);
+  border-radius: var(--radius-sm);
   background: var(--color-bg);
-  color: var(--color-text);
-  padding: var(--spacing-sm) var(--spacing-md);
-  font-family: var(--font-mono);
+  color: var(--color-ink);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  font-family: var(--font-sans);
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-  font-size: 10px;
-  font-weight: 700;
+  letter-spacing: 0.05em;
+  font-size: 11px;
+  font-weight: 600;
   cursor: pointer;
-  transition: all var(--transition-base);
+  transition: all var(--transition-fast);
   white-space: nowrap;
-  box-shadow: 2px 2px 0 var(--color-shadow);
-  min-width: 80px;
+  box-shadow: none;
+  min-width: 70px;
 }
 
 .typeButton:hover {
@@ -139,10 +141,10 @@
 }
 
 .typeButton.active {
-  border-color: var(--color-accent);
-  background: var(--color-accent);
-  color: var(--color-bg);
-  box-shadow: 3px 3px 0 var(--color-shadow-strong);
+  border-color: var(--color-ink);
+  background: var(--color-ink);
+  color: var(--color-panel);
+  box-shadow: none;
 }
 
 .todoCreateForm::before {
@@ -175,64 +177,57 @@
 .todoInput {
   flex: 1;
   width: 100%;
-  border: 2px solid var(--color-border-dark);
-  border-radius: 0;
-  padding: var(--spacing-md) var(--spacing-lg);
-  font-size: 18px;
+  border: var(--border-thin);
+  border-radius: var(--radius-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  font-size: 14px;
   font-weight: 400;
   font-family: var(--font-sans);
-  letter-spacing: -0.01em;
   transition: all var(--transition-base);
   background: var(--color-bg);
-  color: var(--color-text);
-  text-transform: uppercase;
-  font-size: 14px;
-  letter-spacing: 0.1em;
+  color: var(--color-ink);
 }
 
 .todoInput::placeholder {
-  color: var(--color-text-light);
+  color: var(--color-muted);
   font-weight: 400;
-  text-transform: none;
-  letter-spacing: normal;
 }
 
 .todoInput:hover {
-  border-color: var(--color-accent);
-  background: var(--color-surface);
+  border-color: var(--color-ink);
+  background: var(--color-panel);
 }
 
 .todoInput:focus {
-  outline: none;
-  border-color: var(--color-accent);
-  background: var(--color-bg);
-  box-shadow: 4px 4px 0 var(--color-shadow);
-  transform: translate(-2px, -2px);
+  outline: 2px solid var(--color-ink);
+  outline-offset: 2px;
+  border-color: var(--color-ink);
+  background: var(--color-panel);
+  box-shadow: none;
+  transform: none;
 }
 
 /* Botón con estilo bold y geométrico */
 .buttonCreate {
-  border: 2px solid var(--color-accent);
-  border-radius: 0;
-  background-color: var(--color-accent);
-  color: var(--color-bg);
-  padding: var(--spacing-md) var(--spacing-xl);
-  font-family: var(--font-mono);
+  border: var(--border-medium);
+  border-radius: var(--radius-md);
+  background-color: var(--color-ink);
+  color: var(--color-panel);
+  padding: var(--spacing-sm) var(--spacing-lg);
+  font-family: var(--font-sans);
   text-transform: uppercase;
-  letter-spacing: 0.2em;
-  font-size: 11px;
-  font-weight: 700;
+  letter-spacing: 0.05em;
+  font-size: 12px;
+  font-weight: 600;
   cursor: pointer;
   transition: all var(--transition-base);
-  position: relative;
-  overflow: hidden;
   white-space: nowrap;
   display: flex;
   align-items: center;
   gap: var(--spacing-xs);
-  min-width: 140px;
+  min-width: 100px;
   justify-content: center;
-  box-shadow: 4px 4px 0 var(--color-shadow);
+  box-shadow: var(--shadow-sm);
 }
 
 .buttonCreate::before {
@@ -242,7 +237,7 @@
   left: -100%;
   width: 100%;
   height: 100%;
-  background: var(--color-bg);
+  background: var(--color-panel);
   transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 0;
 }
@@ -252,23 +247,24 @@
 }
 
 .buttonCreate:hover:not(:disabled) {
-  transform: translate(-2px, -2px);
-  box-shadow: 6px 6px 0 var(--color-shadow-strong);
-  color: var(--color-text);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+  background: var(--color-ink);
+  color: var(--color-panel);
 }
 
 .buttonCreate:active:not(:disabled) {
-  transform: translate(0, 0);
-  box-shadow: 2px 2px 0 var(--color-shadow);
+  transform: translateY(0);
+  box-shadow: var(--shadow-sm);
 }
 
 .buttonCreate:disabled {
-  opacity: 0.4;
+  opacity: 0.5;
   cursor: not-allowed;
   transform: none;
-  border-color: var(--color-border);
-  background: var(--color-surface);
-  color: var(--color-text-muted);
+  border-color: var(--color-stroke);
+  background: var(--color-bg);
+  color: var(--color-muted);
   box-shadow: none;
 }
 
@@ -300,7 +296,7 @@
 
 .searchInput {
   width: 100%;
-  border: 2px solid var(--color-border-dark);
+  border: 2px solid var(--border-thick);
   border-radius: 0;
   padding: var(--spacing-sm) var(--spacing-md);
   font-size: 14px;
@@ -308,25 +304,25 @@
   font-family: var(--font-sans);
   letter-spacing: -0.01em;
   transition: all var(--transition-base);
-  background: var(--color-bg);
-  color: var(--color-text);
+  background: var(--color-panel);
+  color: var(--color-ink);
   box-shadow: 2px 2px 0 var(--color-shadow);
 }
 
 .searchInput::placeholder {
-  color: var(--color-text-light);
+  color: var(--color-muted);
   font-weight: 400;
 }
 
 .searchInput:hover {
   border-color: var(--color-accent);
-  background: var(--color-surface);
+  background: var(--color-panel);
 }
 
 .searchInput:focus {
   outline: none;
   border-color: var(--color-accent);
-  background: var(--color-bg);
+  background: var(--color-panel);
   box-shadow: 4px 4px 0 var(--color-shadow-strong);
   transform: translate(-2px, -2px);
 }
@@ -341,11 +337,10 @@
 }
 
 .viewButton {
-  border: 2px solid var(--color-border-dark);
-  border-radius: 0;
-  background: var(--color-bg);
-  color: var(--color-text);
-  padding: 10px 20px;
+  border: var(--border-medium);
+  background: var(--color-panel);
+  color: var(--color-ink);
+  padding: var(--spacing-sm) var(--spacing-md);
   font-family: var(--font-mono);
   text-transform: uppercase;
   letter-spacing: 0.15em;
@@ -353,28 +348,28 @@
   font-weight: 700;
   cursor: pointer;
   transition: all var(--transition-base);
-  box-shadow: 2px 2px 0 var(--color-shadow);
+  box-shadow: var(--shadow-sm);
   flex: 1;
   min-width: 100px;
 }
 
-.viewButton:hover {
-  border-color: var(--color-accent);
-  transform: translate(-2px, -2px);
-  box-shadow: 4px 4px 0 var(--color-shadow-strong);
+.viewButton:hover,
+.viewButton:focus-visible {
+  transform: translate(-3px, -3px);
+  box-shadow: var(--shadow-md);
+  background: var(--color-panel);
 }
 
 .viewButton.active {
-  border-color: var(--color-accent);
-  background: var(--color-accent);
-  color: var(--color-bg);
-  box-shadow: 4px 4px 0 var(--color-shadow-strong);
+  background: var(--color-ink);
+  color: var(--color-panel);
+  box-shadow: var(--shadow-md);
 }
 
 /* Productivity Dashboard */
 .productivityDashboard {
-  background: var(--color-surface);
-  border: 2px solid var(--color-border-dark);
+  background: var(--color-panel);
+  border: 2px solid var(--border-thick);
   border-radius: 0;
   padding: var(--spacing-xl);
   margin-bottom: var(--spacing-lg);
@@ -391,7 +386,7 @@
   font-size: 32px;
   font-weight: 700;
   letter-spacing: -0.03em;
-  color: var(--color-text);
+  color: var(--color-ink);
   margin: 0 0 var(--spacing-xs);
   text-transform: uppercase;
 }
@@ -411,8 +406,8 @@
 }
 
 .dashboardCard {
-  background: var(--color-bg);
-  border: 2px solid var(--color-border-dark);
+  background: var(--color-panel);
+  border: 2px solid var(--border-thick);
   border-radius: 0;
   padding: var(--spacing-md);
   box-shadow: 4px 4px 0 var(--color-shadow);
@@ -445,14 +440,14 @@
   font-size: 24px;
   font-weight: 700;
   letter-spacing: -0.02em;
-  color: var(--color-text);
+  color: var(--color-ink);
 }
 
 .dashboardProgressBar {
   width: 100%;
   height: 8px;
   background: var(--color-border);
-  border: 1px solid var(--color-border-dark);
+  border: 1px solid var(--border-thick);
   margin: var(--spacing-sm) 0;
   position: relative;
   overflow: hidden;
@@ -512,10 +507,10 @@
 }
 
 .filterButton {
-  border: 2px solid var(--color-border-dark);
+  border: 2px solid var(--border-thick);
   border-radius: 0;
-  background: var(--color-bg);
-  color: var(--color-text);
+  background: var(--color-panel);
+  color: var(--color-ink);
   padding: 8px 16px;
   font-family: var(--font-mono);
   text-transform: uppercase;
@@ -554,7 +549,7 @@
 .filterButton.active {
   border-color: var(--color-accent);
   background: var(--color-accent);
-  color: var(--color-bg);
+  color: var(--color-panel);
 }
 
 .filterButton.active::before {
@@ -576,8 +571,8 @@
 
 /* Estado vacío */
 .emptyState {
-  background: var(--color-surface);
-  border: 2px solid var(--color-border-dark);
+  background: var(--color-panel);
+  border: 2px solid var(--border-thick);
   border-radius: 0;
   padding: var(--spacing-2xl) var(--spacing-lg);
   text-align: center;
@@ -591,7 +586,7 @@
   font-size: 32px;
   font-weight: 700;
   letter-spacing: -0.03em;
-  color: var(--color-text);
+  color: var(--color-ink);
   margin: 0 0 var(--spacing-xs);
   text-transform: uppercase;
 }
@@ -631,21 +626,21 @@
 .exampleItem {
   font-family: var(--font-sans);
   font-size: 13px;
-  color: var(--color-text);
+  color: var(--color-ink);
   line-height: 1.6;
 }
 
 .exampleItem strong {
   font-weight: 600;
-  color: var(--color-text);
+  color: var(--color-ink);
   margin-right: var(--spacing-xs);
 }
 
 /* Tarea individual con diseño geométrico */
 .todo {
   padding: var(--spacing-lg);
-  background: var(--color-bg);
-  border: 2px solid var(--color-border-dark);
+  background: var(--color-panel);
+  border: 2px solid var(--border-thick);
   border-radius: 0;
   transition: all var(--transition-base);
   position: relative;
@@ -714,9 +709,9 @@
 .todoCheckbox {
   width: 24px;
   height: 24px;
-  border: 2px solid var(--color-border-dark);
+  border: 2px solid var(--border-thick);
   border-radius: 0;
-  background: var(--color-bg);
+  background: var(--color-panel);
   cursor: pointer;
   transition: all var(--transition-base);
   display: flex;
@@ -739,7 +734,7 @@
 }
 
 .checkmark {
-  color: var(--color-bg);
+  color: var(--color-panel);
   font-size: 14px;
   font-weight: 700;
   line-height: 1;
@@ -768,7 +763,7 @@
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.05em;
-  color: var(--color-bg);
+  color: var(--color-panel);
   padding: 4px 8px;
   border: 2px solid var(--color-accent);
   background: var(--color-accent);
@@ -790,7 +785,7 @@
   font-size: 24px;
   font-weight: 600;
   letter-spacing: -0.02em;
-  color: var(--color-text);
+  color: var(--color-ink);
   line-height: 1.4;
   word-break: break-word;
   transition: all var(--transition-base);
@@ -829,10 +824,10 @@
 
 /* Botones estilo geométrico */
 .button {
-  border: 2px solid var(--color-border-dark);
+  border: 2px solid var(--border-thick);
   border-radius: 0;
-  background: var(--color-bg);
-  color: var(--color-text);
+  background: var(--color-panel);
+  color: var(--color-ink);
   padding: 10px 20px;
   font-family: var(--font-mono);
   text-transform: uppercase;
@@ -868,7 +863,7 @@
 
 .button:hover {
   border-color: var(--color-accent);
-  color: var(--color-bg);
+  color: var(--color-panel);
   transform: translate(-2px, -2px);
   box-shadow: 4px 4px 0 var(--color-shadow-strong);
 }
@@ -890,12 +885,12 @@
 .buttonSave {
   border-color: var(--color-accent);
   background-color: var(--color-accent);
-  color: var(--color-bg);
+  color: var(--color-panel);
 }
 
 .buttonSave:hover {
   background-color: var(--color-accent);
-  color: var(--color-bg);
+  color: var(--color-panel);
 }
 
 .buttonCancel {
@@ -904,10 +899,10 @@
 
 /* Botón eliminar */
 .buttonDelete {
-  border: 2px solid var(--color-border-dark);
+  border: 2px solid var(--border-thick);
   border-radius: 0;
-  background: var(--color-bg);
-  color: var(--color-text);
+  background: var(--color-panel);
+  color: var(--color-ink);
   padding: 10px 20px;
   font-family: var(--font-mono);
   text-transform: uppercase;
@@ -932,7 +927,7 @@
   left: -100%;
   width: 100%;
   height: 100%;
-  background: var(--color-text);
+  background: var(--color-ink);
   transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 0;
 }
@@ -942,8 +937,8 @@
 }
 
 .buttonDelete:hover {
-  border-color: var(--color-text);
-  color: var(--color-bg);
+  border-color: var(--color-ink);
+  color: var(--color-panel);
   transform: translate(-2px, -2px);
   box-shadow: 4px 4px 0 var(--color-shadow-strong);
 }
@@ -960,8 +955,8 @@
 }
 
 .calendar {
-  background: var(--color-surface);
-  border: 2px solid var(--color-border-dark);
+  background: var(--color-panel);
+  border: 2px solid var(--border-thick);
   border-radius: 0;
   padding: var(--spacing-lg);
   box-shadow: 4px 4px 0 var(--color-shadow);
@@ -998,7 +993,7 @@
   gap: var(--spacing-md);
   margin-bottom: var(--spacing-md);
   padding: var(--spacing-sm);
-  background: var(--color-surface);
+  background: var(--color-panel);
   border: 1px solid var(--color-border);
   border-radius: 0;
   flex-wrap: wrap;
@@ -1025,10 +1020,10 @@
   font-family: var(--font-mono);
   font-size: 8px;
   font-weight: 700;
-  color: var(--color-text);
-  background: var(--color-bg);
+  color: var(--color-ink);
+  background: var(--color-panel);
   padding: 2px 4px;
-  border: 1px solid var(--color-border-dark);
+  border: 1px solid var(--border-thick);
   line-height: 1;
 }
 
@@ -1044,17 +1039,17 @@
   font-size: 24px;
   font-weight: 700;
   letter-spacing: -0.02em;
-  color: var(--color-text);
+  color: var(--color-ink);
   margin: 0;
   text-transform: uppercase;
 }
 
 .calendarNavButton,
 .calendarTodayButton {
-  border: 2px solid var(--color-border-dark);
+  border: 2px solid var(--border-thick);
   border-radius: 0;
-  background: var(--color-bg);
-  color: var(--color-text);
+  background: var(--color-panel);
+  color: var(--color-ink);
   padding: 8px 16px;
   font-family: var(--font-mono);
   text-transform: uppercase;
@@ -1107,7 +1102,7 @@
   justify-content: center;
   position: relative;
   transition: all var(--transition-base);
-  background: var(--color-bg);
+  background: var(--color-panel);
 }
 
 .calendarDayEmpty {
@@ -1124,17 +1119,17 @@
 .calendarDay.today {
   border-color: var(--color-accent);
   background: var(--color-accent);
-  color: var(--color-bg);
+  color: var(--color-panel);
 }
 
 .calendarDay.hasActivity {
-  border-color: var(--color-border-dark);
-  background: var(--color-surface);
+  border-color: var(--border-thick);
+  background: var(--color-panel);
 }
 
 .calendarDay.hasHabits {
   background: var(--color-accent);
-  color: var(--color-bg);
+  color: var(--color-panel);
   border-color: var(--color-accent);
 }
 
@@ -1150,32 +1145,32 @@
 .calendarHabitDot {
   width: 6px;
   height: 6px;
-  background: var(--color-bg);
-  border: 1px solid var(--color-bg);
+  background: var(--color-panel);
+  border: 1px solid var(--color-panel);
   border-radius: 50%;
   display: block;
 }
 
 .calendarDay.hasHabits .calendarHabitDot {
-  background: var(--color-bg);
-  border-color: var(--color-bg);
+  background: var(--color-panel);
+  border-color: var(--color-panel);
 }
 
 .calendarTaskCount {
   font-family: var(--font-mono);
   font-size: 8px;
   font-weight: 700;
-  color: var(--color-text);
-  background: var(--color-bg);
+  color: var(--color-ink);
+  background: var(--color-panel);
   padding: 2px 4px;
-  border: 1px solid var(--color-border-dark);
+  border: 1px solid var(--border-thick);
   line-height: 1;
 }
 
 .calendarDay.hasHabits .calendarTaskCount {
-  background: var(--color-bg);
+  background: var(--color-panel);
   color: var(--color-accent);
-  border-color: var(--color-bg);
+  border-color: var(--color-panel);
 }
 
 .calendarTaskIndicator {
@@ -1196,7 +1191,7 @@
   width: 16px;
   height: 16px;
   background: var(--color-accent);
-  color: var(--color-bg);
+  color: var(--color-panel);
   border-radius: 0;
   display: flex;
   align-items: center;
@@ -1204,11 +1199,11 @@
   font-family: var(--font-mono);
   font-size: 8px;
   font-weight: 700;
-  border: 1px solid var(--color-bg);
+  border: 1px solid var(--color-panel);
 }
 
 .calendarDay.today .calendarTaskIndicator {
-  background: var(--color-bg);
+  background: var(--color-panel);
   color: var(--color-accent);
   border-color: var(--color-accent);
 }
@@ -1217,7 +1212,7 @@
 .todoFooter {
   margin-top: var(--spacing-xl);
   animation: fadeIn 0.6s ease 0.6s both;
-  border-top: 2px solid var(--color-border-dark);
+  border-top: 2px solid var(--border-thick);
   padding-top: var(--spacing-md);
 }
 
@@ -1240,7 +1235,7 @@
 }
 
 .statNumber {
-  color: var(--color-text);
+  color: var(--color-ink);
   font-weight: 700;
 }
 
@@ -1256,7 +1251,7 @@
 }
 
 .activeStreaks {
-  color: var(--color-text);
+  color: var(--color-ink);
 }
 
 /* Responsive Design */
