@@ -42,6 +42,11 @@ export function useTodos() {
       type: type,
       completed: false,
       createdAt: new Date().toISOString(),
+      // Notion-style properties
+      status: "todo", // "todo" | "in-progress" | "done"
+      priority: null, // "high" | "medium" | "low" | null
+      tags: [],
+      dueDate: null,
       // Habit-specific fields
       ...(type === "habit" && {
         streak: 0,
@@ -59,6 +64,14 @@ export function useTodos() {
     setTodos((prev) =>
       prev.map((todo) =>
         todo.id === id ? { ...todo, title: value.trim() } : todo
+      )
+    );
+  };
+
+  const updateTodoProperties = (id, properties) => {
+    setTodos((prev) =>
+      prev.map((todo) =>
+        todo.id === id ? { ...todo, ...properties } : todo
       )
     );
   };
@@ -116,6 +129,7 @@ export function useTodos() {
     todos,
     addTodo,
     updateTodo,
+    updateTodoProperties,
     deleteTodo,
     toggleComplete,
   };

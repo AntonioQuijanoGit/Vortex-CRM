@@ -1,0 +1,156 @@
+import React, { useState } from "react";
+import "./PageItem.css";
+
+export default function PageItem({
+  page,
+  isActive,
+  isExpanded,
+  hasChildren,
+  onSelect,
+  onToggleExpanded,
+  onUpdate,
+  onDelete,
+  onAddChild,
+  getChildren,
+  level = 0,
+}) {
+  const [isEditing, setIsEditing] = useState(false);
+  const [editTitle, setEditTitle] = useState(page.title);
+  const [showOptions, setShowOptions] = useState(false);
+
+  const children = getChildren(page.id);
+  const indent = level * 20;
+
+  const handleUpdate = () => {
+    if (editTitle.trim() && editTitle !== page.title) {
+      onUpdate(page.id, { title: editTitle.trim() });
+    } else {
+      setEditTitle(page.title);
+    }
+    setIsEditing(false);
+  };
+
+  const handleDelete = () => {
+    if (window.confirm(`Delete "${page.title}" and all its subpages?`)) {
+      onDelete(page.id);
+    }
+  };
+
+  const handleAddSubpage = () => {
+    const newPageId = onAddChild("Untitled", page.id, "page", "📄");
+    setShowOptions(false);
+  };
+
+  return (
+    <>
+      <div
+        className={`page-item ${isActive ? "active" : ""}`}
+        style={{ paddingLeft: `${12 + indent}px` }}
+        onMouseEnter={() => setShowOptions(true)}
+        onMouseLeave={() => setShowOptions(false)}
+      >
+        <div className="page-item-content">
+          {hasChildren && (
+            <button
+              className="expand-button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onToggleExpanded();
+              }}
+              aria-label={isExpanded ? "Collapse" : "Expand"}
+            >
+              {isExpanded ? "▼" : "▶"}
+            </button>
+          )}
+
+          <button
+            className="page-link"
+            onClick={onSelect}
+            style={{ marginLeft: hasChildren ? "0" : "20px" }}
+          >
+            <span className="page-icon">{page.icon}</span>
+            {isEditing ? (
+              <input
+                type="text"
+                className="page-edit-input"
+                value={editTitle}
+                onChange={(e) => setEditTitle(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") handleUpdate();
+                  if (e.key === "Escape") {
+                    setIsEditing(false);
+                    setEditTitle(page.title);
+                  }
+                }}
+                onBlur={handleUpdate}
+                onClick={(e) => e.stopPropagation()}
+                autoFocus
+              />
+            ) : (
+              <span className="page-title">{page.title}</span>
+            )}
+            {page.type === "database" && (
+              <span className="page-type-badge">{page.viewType}</span>
+            )}
+          </button>
+
+          {showOptions && !isEditing && (
+            <div className="page-options">
+              <button
+                className="option-button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleAddSubpage();
+                }}
+                title="Add subpage"
+              >
+                +
+              </button>
+              <button
+                className="option-button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsEditing(true);
+                }}
+                title="Rename"
+              >
+                ✎
+              </button>
+              <button
+                className="option-button delete"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleDelete();
+                }}
+                title="Delete"
+              >
+                ×
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {isExpanded && children.length > 0 && (
+        <div className="page-children">
+          {children.map((child) => (
+            <PageItem
+              key={child.id}
+              page={child}
+              isActive={isActive}
+              isExpanded={isExpanded}
+              hasChildren={getChildren(child.id).length > 0}
+              onSelect={onSelect}
+              onToggleExpanded={onToggleExpanded}
+              onUpdate={onUpdate}
+              onDelete={onDelete}
+              onAddChild={onAddChild}
+              getChildren={getChildren}
+              level={level + 1}
+            />
+          ))}
+        </div>
+      )}
+    </>
+  );
+}

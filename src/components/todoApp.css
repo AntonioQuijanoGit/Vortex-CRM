@@ -1,54 +1,43 @@
 /* Contenedor principal - diseño moderno blanco y negro */
 .todoContainer {
-  max-width: 680px;
   width: 100%;
-  margin: 0 auto;
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  padding: var(--spacing-2xl) var(--spacing-md);
+  padding: 0;
   position: relative;
   z-index: 1;
-  animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Header con tipografía grande y bold */
 .todoHeader {
   text-align: left;
-  margin-bottom: var(--spacing-2xl);
-  animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.1s both;
+  margin-bottom: var(--spacing-xl);
   border-bottom: 2px solid var(--color-border-dark);
   padding-bottom: var(--spacing-md);
+  display: none; /* Hidden in new layout, page header shows instead */
 }
 
 .todoHeader h1 {
   font-family: var(--font-display);
-  font-size: clamp(48px, 10vw, 96px);
+  font-size: clamp(32px, 6vw, 48px);
   font-weight: 700;
-  line-height: 0.95;
+  line-height: 1;
   letter-spacing: -0.04em;
   color: var(--color-text);
   margin: 0 0 var(--spacing-xs);
   text-transform: uppercase;
-  opacity: 0;
-  transform: translateY(30px);
-  animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.2s forwards;
 }
 
 .todoSubtitle {
   font-family: var(--font-sans);
-  font-size: 16px;
+  font-size: 11px;
   font-weight: 400;
   line-height: 1.6;
   color: var(--color-text-muted);
-  letter-spacing: 0.02em;
+  letter-spacing: 0.15em;
   margin: 0 0 var(--spacing-md);
   text-transform: uppercase;
-  font-size: 11px;
-  letter-spacing: 0.15em;
-  opacity: 0;
-  transform: translateY(20px);
-  animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.3s forwards;
 }
 
 .headerExplanation {
@@ -56,9 +45,6 @@
   display: flex;
   flex-direction: column;
   gap: var(--spacing-sm);
-  opacity: 0;
-  transform: translateY(20px);
-  animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.4s forwards;
 }
 
 .explanationItem {
@@ -346,14 +332,15 @@
 }
 
 /* View Toggle */
-.viewToggle {
+/* View Selector */
+.viewSelector {
   display: flex;
   gap: var(--spacing-xs);
   margin-bottom: var(--spacing-lg);
-  animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.45s both;
+  flex-wrap: wrap;
 }
 
-.viewToggleButton {
+.viewButton {
   border: 2px solid var(--color-border-dark);
   border-radius: 0;
   background: var(--color-bg);
@@ -368,15 +355,16 @@
   transition: all var(--transition-base);
   box-shadow: 2px 2px 0 var(--color-shadow);
   flex: 1;
+  min-width: 100px;
 }
 
-.viewToggleButton:hover {
+.viewButton:hover {
   border-color: var(--color-accent);
   transform: translate(-2px, -2px);
   box-shadow: 4px 4px 0 var(--color-shadow-strong);
 }
 
-.viewToggleButton.active {
+.viewButton.active {
   border-color: var(--color-accent);
   background: var(--color-accent);
   color: var(--color-bg);
