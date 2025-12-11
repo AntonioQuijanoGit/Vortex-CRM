@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { TextBlock, MovieBlock, NoteBlock, TaskBlock, CalendarBlock } from "../Blocks";
+import { TextBlock, NoteBlock, TaskBlock, CalendarBlock } from "../Blocks";
 import { Icons } from "../../utils/icons";
 import { EmptyState } from "../shared";
 import "./BlockManager.css";
