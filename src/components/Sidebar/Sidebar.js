@@ -12,9 +12,19 @@ export default function Sidebar({
   onDeletePage,
   onToggleExpanded,
   isExpanded,
-  getChildren
+  getChildren,
+  isCollapsed: externalCollapsed,
+  onToggleCollapse
 }) {
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [internalCollapsed, setInternalCollapsed] = useState(false);
+  const isCollapsed = externalCollapsed !== undefined ? externalCollapsed : internalCollapsed;
+  const handleToggleCollapse = () => {
+    if (onToggleCollapse) {
+      onToggleCollapse(!isCollapsed);
+    } else {
+      setInternalCollapsed(!isCollapsed);
+    }
+  };
   const [showNewPageInput, setShowNewPageInput] = useState(false);
   const [newPageTitle, setNewPageTitle] = useState("");
 
@@ -37,10 +47,10 @@ export default function Sidebar({
         <div className="sidebar-header">
           <button
             className="sidebar-toggle"
-            onClick={() => setIsCollapsed(!isCollapsed)}
+            onClick={handleToggleCollapse}
             aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
           >
-            {isCollapsed ? "→" : "←"}
+            {isCollapsed ? Icons.arrowRight : Icons.arrowLeft}
           </button>
           {!isCollapsed && (
             <div className="sidebar-workspace">
@@ -94,12 +104,13 @@ export default function Sidebar({
                   isActive={activePage === page.id}
                   isExpanded={isExpanded(page.id)}
                   hasChildren={getChildren(page.id).length > 0}
-                  onSelect={() => onPageSelect(page.id)}
-                  onToggleExpanded={() => onToggleExpanded(page.id)}
+                  onSelect={(pageId) => onPageSelect(pageId || page.id)}
+                  onToggleExpanded={(pageId) => onToggleExpanded(pageId || page.id)}
                   onUpdate={onUpdatePage}
                   onDelete={onDeletePage}
                   onAddChild={onAddPage}
                   getChildren={getChildren}
+                  activePageId={activePage}
                   level={0}
                 />
               ))}
@@ -111,7 +122,7 @@ export default function Sidebar({
           <div className="sidebar-footer">
             <button className="new-page-button" onClick={() => setShowNewPageInput(true)}>
               <span className="button-icon">{Icons.add}</span>
-              <span className="button-text">New Page</span>
+              <span className="buttonText">New Page</span>
             </button>
           </div>
         )}

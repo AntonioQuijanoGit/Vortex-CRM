@@ -196,7 +196,7 @@ export default function TableView({
                       onClick={() => onDelete(todo.id)}
                       title="Delete"
                     >
-                      ×
+                      {Icons.delete}
                     </button>
                   </td>
                 </tr>

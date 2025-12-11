@@ -1,12 +1,28 @@
-import { useRef, useEffect, useState } from "react";
+import { useState, useRef, useEffect } from "react";
+import { Icons } from "../../utils/icons";
 
-export default function TodoForm({ title, onTitleChange, onSubmit, todoType, onTypeChange }) {
+export default function TodoForm({ title, onTitleChange, onSubmit, typeFilter = "all", onTypeChange }) {
   const inputRef = useRef(null);
+  // Determine initial type based on filter, default to "task"
+  // If filter is set to a specific type, lock to that type
+  const isTypeLocked = typeFilter === "habit" || typeFilter === "task";
+  const [selectedType, setSelectedType] = useState(() => {
+    return typeFilter === "habit" ? "habit" : "task";
+  });
 
   useEffect(() => {
-    // Focus al montar
+    // Focus on mount
     inputRef.current?.focus();
   }, []);
+
+  // Update selected type when filter changes
+  useEffect(() => {
+    if (typeFilter === "habit") {
+      setSelectedType("habit");
+    } else if (typeFilter === "task") {
+      setSelectedType("task");
+    }
+  }, [typeFilter]);
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -23,9 +39,41 @@ export default function TodoForm({ title, onTitleChange, onSubmit, todoType, onT
       aria-labelledby="app-title"
       noValidate
     >
+      {/* Type selector - only show if type is not locked by filter */}
+      {!isTypeLocked && (
+        <div className="type-selector">
+          <button
+            type="button"
+            className={`type-option ${selectedType === "task" ? "active" : ""}`}
+            onClick={() => {
+              setSelectedType("task");
+              if (onTypeChange) onTypeChange("task");
+            }}
+            aria-label="Create a task"
+            title="One-time task"
+          >
+            <span className="type-icon">{Icons.task}</span>
+            <span className="type-label">Task</span>
+          </button>
+          <button
+            type="button"
+            className={`type-option ${selectedType === "habit" ? "active" : ""}`}
+            onClick={() => {
+              setSelectedType("habit");
+              if (onTypeChange) onTypeChange("habit");
+            }}
+            aria-label="Create a habit"
+            title="Daily habit with streak tracking"
+          >
+            <span className="type-icon">{Icons.habit}</span>
+            <span className="type-label">Habit</span>
+          </button>
+        </div>
+      )}
+
       <div className="formRow">
         <label htmlFor="todo-input" className="sr-only">
-          New task or habit
+          {selectedType === "habit" ? "Add a new habit" : "Add a new task"}
         </label>
         <input
           id="todo-input"
@@ -33,42 +81,30 @@ export default function TodoForm({ title, onTitleChange, onSubmit, todoType, onT
           onChange={(e) => onTitleChange(e.target.value)}
           className="todoInput"
           value={title}
-          placeholder={todoType === "habit" ? "e.g., Exercise, Read 20 pages, Meditate..." : "e.g., Buy groceries, Call dentist, Finish report..."}
-          aria-label="Input field for new task or habit"
+          placeholder={
+            selectedType === "habit" 
+              ? "What habit do you want to build? (e.g., Exercise daily, Read 30 min)"
+              : "What needs to be done? (e.g., Buy groceries, Call dentist)"
+          }
+          aria-label={selectedType === "habit" ? "Add a new habit" : "Add a new task"}
           aria-describedby="input-hint"
           maxLength={200}
         />
-        <div className="typeSelector">
-          <button
-            type="button"
-            className={`typeButton ${todoType === "task" ? "active" : ""}`}
-            onClick={() => onTypeChange("task")}
-            aria-label="Create normal task"
-            title="Normal task"
-          >
-            <span className="buttonText">Task</span>
-          </button>
-          <button
-            type="button"
-            className={`typeButton ${todoType === "habit" ? "active" : ""}`}
-            onClick={() => onTypeChange("habit")}
-            aria-label="Create daily habit"
-            title="Daily habit"
-          >
-            <span className="buttonText">Habit</span>
-          </button>
-        </div>
       </div>
       <span id="input-hint" className="sr-only">
-        Press Enter or click the button to add the item
+        {selectedType === "habit" 
+          ? "Press Enter or click the Add button to create a new daily habit with streak tracking."
+          : "Press Enter or click the Add button to create a new task."}
       </span>
       <button
         type="submit"
         className="buttonCreate"
-        aria-label="Add new item"
+        aria-label={selectedType === "habit" ? "Add new habit" : "Add new task"}
         disabled={!title.trim()}
       >
-        <span className="buttonText">Add</span>
+        <span className="buttonText">
+          {selectedType === "habit" ? "Add Habit" : "Add Task"}
+        </span>
         <span className="buttonIcon" aria-hidden="true">+</span>
       </button>
     </form>

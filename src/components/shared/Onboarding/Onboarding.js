@@ -1,41 +1,56 @@
 import React, { useState, useEffect } from "react";
+import { Icons } from "../../../utils/icons";
 import "./Onboarding.css";
 
-export default function Onboarding({ onComplete }) {
+export default function Onboarding({ onComplete, forceShow = false }) {
   const [currentStep, setCurrentStep] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    const hasSeenTutorial = localStorage.getItem("has-seen-tutorial");
-    if (!hasSeenTutorial) {
+    if (forceShow) {
       setIsVisible(true);
+    } else {
+      const hasSeenTutorial = localStorage.getItem("has-seen-tutorial");
+      if (!hasSeenTutorial) {
+        setIsVisible(true);
+      }
     }
-  }, []);
+  }, [forceShow]);
 
   const steps = [
     {
       title: "Welcome to Your Workspace",
-      description: "This is your personal productivity hub. Organize tasks, track habits, watch movies, and take notes all in one place.",
+      description: "This is your personal productivity hub. Organize tasks, track habits, and manage your content all in one place.",
       position: "center"
     },
     {
       title: "Navigate with the Sidebar",
-      description: "Use the sidebar on the left to switch between pages. Click 'Home' to see your dashboard with all your stats.",
+      description: "Use the sidebar on the left to switch between pages. Click 'Home' to see your dashboard with stats and quick access to your pages.",
       position: "center"
     },
     {
-      title: "Create New Pages",
-      description: "Click the '+' button or 'New Page' at the bottom of the sidebar to create pages for tasks, notes, movies, or anything else.",
+      title: "Quick Search",
+      description: "Press Cmd/Ctrl + K to quickly search across all your pages, tasks, and habits. Navigate directly to any item instantly.",
+      position: "center"
+    },
+    {
+      title: "Create Tasks & Habits",
+      description: "Add tasks to track one-time items. Convert tasks to habits to track daily activities with streak counters. Everything saves automatically.",
+      position: "center"
+    },
+    {
+      title: "Multiple Views",
+      description: "Switch between List, Board, Table, Calendar, and Dashboard views to see your data in different ways. Each view offers unique insights.",
       position: "center"
     },
     {
       title: "Add Content with Blocks",
-      description: "On any page, click 'Add block' to add text, movies, notes, or tasks. You can add multiple blocks to organize your content.",
+      description: "On any page, click 'Add block' to add tasks, notes, or calendar events. Organize your content with multiple blocks per page.",
       position: "center"
     },
     {
       title: "You're All Set!",
-      description: "Start by creating a task, adding a block, or exploring your pages. Everything is saved automatically.",
+      description: "Start by creating a task, adding a block, or exploring your pages. Click the '?' button anytime to see this tutorial again.",
       position: "center"
     }
   ];
@@ -77,7 +92,7 @@ export default function Onboarding({ onComplete }) {
             ))}
           </div>
           <button className="tooltip-close" onClick={handleSkip} aria-label="Skip tutorial">
-            ×
+            {Icons.close}
           </button>
         </div>
         <div className="tooltip-content">

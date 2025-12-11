@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Icons } from "../../../utils/icons";
 
 export default function Calendar({ todos }) {
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -85,7 +86,7 @@ export default function Calendar({ todos }) {
     setCurrentDate(new Date());
   }
 
-  // Crear array de días
+  // Create array of days
   const days = [];
   
   // Días vacíos al inicio
@@ -123,7 +124,7 @@ export default function Calendar({ todos }) {
           onClick={goToPreviousMonth}
           aria-label="Previous month"
         >
-          <span className="buttonText">‹</span>
+          <span className="buttonText">{Icons.arrowLeft}</span>
         </button>
         <div className="calendarTitle">
           <div>
@@ -147,7 +148,7 @@ export default function Calendar({ todos }) {
           onClick={goToNextMonth}
           aria-label="Next month"
         >
-          <span className="buttonText">›</span>
+          <span className="buttonText">{Icons.arrowRight}</span>
         </button>
       </div>
       

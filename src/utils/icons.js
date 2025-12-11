@@ -1,52 +1,63 @@
 /**
- * Sistema de iconos accesible y claro
- * Iconos diseñados para ser intuitivos y comunicar significado claramente
+ * Accessible and clear icon system
+ * Icons designed to be intuitive and clearly communicate meaning
  */
 
 export const Icons = {
-  // Navegación y estructura
+  // Navigation and structure
   home: "⌂",
-  page: "📄",
-  folder: "📁",
-  workspace: "📋",
+  page: "◉",
+  folder: "◉",
+  workspace: "◉",
   
-  // Acciones - claras y reconocibles
+  // Actions - clear and recognizable
   add: "+",
   delete: "×",
   edit: "✎",
   check: "✓",
   close: "×",
+  search: "◉",
   arrow: "→",
   arrowRight: "→",
   arrowLeft: "←",
+  arrowUp: "↑",
+  arrowDown: "↓",
   expand: "▼",
   collapse: "▶",
   
-  // Tipos de contenido - iconos que comunican función claramente
+  // Content types - icons that clearly communicate function
   task: "✓",
   habit: "↻",
-  note: "📝",
-  text: "📄",
-  calendar: "📅",
-  movie: "🎬",
-  database: "📊",
+  note: "◉",
+  text: "◉",
+  calendar: "◉",
+  movie: "◉",
+  database: "◉",
   
-  // Estados
+  // States
   completed: "✓",
   pending: "○",
   inProgress: "◐",
   empty: "○",
   
-  // Características
-  streak: "🔥",
-  date: "📅",
-  stats: "📊",
-  dashboard: "📊",
+  // Features
+  streak: "↻",
+  date: "◉",
+  stats: "◉",
+  dashboard: "◉",
   
   // Board view states
   todo: "○",
   doing: "◐",
   done: "●",
+  
+  // Alerts and warnings
+  warning: "!",
+  alert: "!",
+  
+  // Theme
+  sun: "☀",
+  moon: "☾",
 };
 
 /**

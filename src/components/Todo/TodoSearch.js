@@ -4,7 +4,7 @@ export default function TodoSearch({ searchQuery, onSearchChange }) {
       <input
         type="text"
         className="searchInput"
-        placeholder="Search tasks and habits..."
+        placeholder="Search your tasks and habits..."
         value={searchQuery}
         onChange={(e) => onSearchChange(e.target.value)}
         aria-label="Search tasks and habits"

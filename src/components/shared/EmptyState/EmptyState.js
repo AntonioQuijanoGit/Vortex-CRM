@@ -1,6 +1,7 @@
-export default function EmptyState({ message, hint, showExamples }) {
+export default function EmptyState({ message, hint, showExamples, icon }) {
   return (
     <div className="emptyState" role="status" aria-live="polite">
+      {icon && <div className="emptyStateIcon" aria-hidden="true">{icon}</div>}
       <p className="emptyStateText">{message}</p>
       <p className="emptyStateHint">{hint}</p>
       {showExamples && (

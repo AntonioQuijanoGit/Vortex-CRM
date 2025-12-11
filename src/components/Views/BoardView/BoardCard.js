@@ -103,7 +103,7 @@ export default function BoardCard({
           onClick={() => onDelete(item.id)}
           title="Delete"
         >
-          ×
+          {Icons.delete}
         </button>
       </div>
     </div>

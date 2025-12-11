@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { usePages } from "../../../hooks/usePages";
 import { Icons } from "../../../utils/icons";
+import { getAllTodosWithPages } from "../../../utils/todos";
 import "./QuickSearch.css";
 
 export default function QuickSearch({ onPageSelect, onClose }) {
@@ -8,22 +9,7 @@ export default function QuickSearch({ onPageSelect, onClose }) {
   const [results, setResults] = useState([]);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const inputRef = useRef(null);
-  const { pages } = usePages();
-
-  // Get all todos for search
-  const getAllTodos = () => {
-    let allTodos = [];
-    const legacyTodos = JSON.parse(localStorage.getItem("todos") || "[]");
-    allTodos = [...legacyTodos];
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-      if (key && key.startsWith("todos-")) {
-        const pageTodos = JSON.parse(localStorage.getItem(key) || "[]");
-        allTodos = [...allTodos, ...pageTodos];
-      }
-    }
-    return allTodos;
-  };
+  const { pages, getPage } = usePages();
 
   useEffect(() => {
     inputRef.current?.focus();
@@ -51,21 +37,22 @@ export default function QuickSearch({ onPageSelect, onClose }) {
     });
 
     // Search todos
-    const todos = getAllTodos();
-    todos.forEach((todo) => {
+    const todosWithPages = getAllTodosWithPages(getPage);
+    todosWithPages.forEach(({ todo, pageId }) => {
       if (todo.title.toLowerCase().includes(searchQuery)) {
         searchResults.push({
           type: "todo",
           id: todo.id,
           title: todo.title,
           icon: todo.type === "task" ? Icons.task : Icons.habit,
+          pageId: pageId, // Store pageId to navigate later
         });
       }
     });
 
     setResults(searchResults);
     setSelectedIndex(0);
-  }, [query, pages]);
+  }, [query, pages, getPage]);
 
   const handleKeyDown = (e) => {
     if (e.key === "Escape") {
@@ -84,6 +71,9 @@ export default function QuickSearch({ onPageSelect, onClose }) {
   const handleSelect = (result) => {
     if (result.type === "page") {
       onPageSelect(result.id);
+    } else if (result.type === "todo" && result.pageId) {
+      // Navigate to the page that contains this todo
+      onPageSelect(result.pageId);
     }
     onClose();
   };
@@ -92,7 +82,7 @@ export default function QuickSearch({ onPageSelect, onClose }) {
     <div className="quick-search-overlay" onClick={onClose}>
       <div className="quick-search-modal" onClick={(e) => e.stopPropagation()}>
         <div className="quick-search-header">
-          <span className="quick-search-icon">🔍</span>
+          <span className="quick-search-icon">{Icons.search}</span>
           <input
             ref={inputRef}
             type="text"

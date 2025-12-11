@@ -2,10 +2,10 @@
 .table-view-wrapper {
   width: 100%;
   overflow-x: auto;
-  border: 2px solid var(--color-border-dark);
-  border-radius: 0;
-  background: var(--color-surface);
-  box-shadow: 4px 4px 0 var(--color-shadow);
+  border: var(--border-thin);
+  border-radius: var(--radius-lg);
+  background: var(--color-panel);
+  box-shadow: var(--shadow-md);
 }
 
 .table-view {
@@ -24,7 +24,7 @@
 /* Table Header */
 .data-table thead {
   background: var(--color-surface);
-  border-bottom: 2px solid var(--color-border-dark);
+  border-bottom: var(--border-medium);
   position: sticky;
   top: 0;
   z-index: 10;
@@ -115,8 +115,8 @@
 .table-checkbox {
   width: 24px;
   height: 24px;
-  border: 2px solid var(--color-border-dark);
-  border-radius: 0;
+  border: var(--border-medium);
+  border-radius: var(--radius-sm);
   background: var(--color-bg);
   cursor: pointer;
   transition: all var(--transition-base);
@@ -126,13 +126,13 @@
   font-size: 14px;
   font-weight: 700;
   color: var(--color-bg);
-  box-shadow: 1px 1px 0 var(--color-shadow);
+  box-shadow: var(--shadow-sm);
 }
 
 .table-checkbox:hover {
   border-color: var(--color-accent);
-  transform: translate(-1px, -1px);
-  box-shadow: 2px 2px 0 var(--color-shadow-strong);
+  transform: scale(1.05);
+  box-shadow: var(--shadow-md);
 }
 
 .table-checkbox.checked {
@@ -161,14 +161,15 @@
 /* Table Input */
 .table-input {
   width: 100%;
-  border: 2px solid var(--color-accent);
-  border-radius: 0;
+  border: var(--border-thin);
+  border-color: var(--color-accent);
+  border-radius: var(--radius-sm);
   padding: var(--spacing-xs) var(--spacing-sm);
   font-size: 14px;
   font-weight: 400;
   font-family: var(--font-sans);
   background: var(--color-bg);
-  color: var(--color-text);
+  color: var(--color-ink);
 }
 
 .table-input:focus {
@@ -178,14 +179,14 @@
 /* Table Select */
 .table-select {
   width: 100%;
-  border: 2px solid var(--color-border-dark);
-  border-radius: 0;
+  border: var(--border-thin);
+  border-radius: var(--radius-sm);
   padding: var(--spacing-xs) var(--spacing-sm);
   font-size: 12px;
   font-weight: 600;
   font-family: var(--font-sans);
   background: var(--color-bg);
-  color: var(--color-text);
+  color: var(--color-ink);
   cursor: pointer;
   transition: all var(--transition-base);
   text-transform: uppercase;
@@ -208,10 +209,11 @@
   font-weight: 700;
   letter-spacing: 0.1em;
   padding: 4px 8px;
-  border: 2px solid var(--color-border-dark);
-  background: var(--color-surface);
+  border: var(--border-thin);
+  background: var(--color-panel);
+  border-radius: var(--radius-sm);
   display: inline-block;
-  box-shadow: 1px 1px 0 var(--color-shadow);
+  box-shadow: var(--shadow-sm);
 }
 
 .type-badge.habit {
@@ -223,14 +225,14 @@
 /* Date Input */
 .table-date-input {
   width: 100%;
-  border: 2px solid var(--color-border-dark);
-  border-radius: 0;
+  border: var(--border-thin);
+  border-radius: var(--radius-sm);
   padding: var(--spacing-xs) var(--spacing-sm);
   font-size: 11px;
   font-weight: 400;
   font-family: var(--font-mono);
   background: var(--color-bg);
-  color: var(--color-text);
+  color: var(--color-ink);
   cursor: pointer;
   transition: all var(--transition-base);
 }
@@ -254,10 +256,10 @@
 .table-delete-btn {
   width: 28px;
   height: 28px;
-  border: 2px solid var(--color-border-dark);
-  border-radius: 0;
+  border: var(--border-thin);
+  border-radius: var(--radius-sm);
   background: var(--color-bg);
-  color: var(--color-text);
+  color: var(--color-ink);
   cursor: pointer;
   transition: all var(--transition-base);
   display: inline-flex;
@@ -267,15 +269,15 @@
   font-weight: 700;
   line-height: 1;
   padding: 0;
-  box-shadow: 1px 1px 0 var(--color-shadow);
+  box-shadow: var(--shadow-sm);
 }
 
 .table-delete-btn:hover {
-  border-color: var(--color-text);
-  background: var(--color-text);
+  border-color: var(--color-ink);
+  background: var(--color-ink);
   color: var(--color-bg);
-  transform: translate(-1px, -1px);
-  box-shadow: 2px 2px 0 var(--color-shadow-strong);
+  transform: scale(1.05);
+  box-shadow: var(--shadow-md);
 }
 
 /* Empty State */

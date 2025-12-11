@@ -1,19 +1,19 @@
 /* Board Card */
 .board-card {
   background: var(--color-bg);
-  border: 2px solid var(--color-border-dark);
-  border-radius: 0;
+  border: var(--border-thin);
+  border-radius: var(--radius-md);
   padding: var(--spacing-md);
   cursor: grab;
   transition: all var(--transition-base);
-  box-shadow: 2px 2px 0 var(--color-shadow);
+  box-shadow: var(--shadow-sm);
   position: relative;
 }
 
 .board-card:hover {
   border-color: var(--color-accent);
-  transform: translate(-1px, -1px);
-  box-shadow: 3px 3px 0 var(--color-shadow-strong);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
 }
 
 .board-card:active {
@@ -44,7 +44,7 @@
   border: 2px solid;
   background: var(--color-bg);
   color: var(--color-text);
-  box-shadow: 1px 1px 0 var(--color-shadow);
+  box-shadow: var(--shadow-sm);
 }
 
 .card-streak {
@@ -56,7 +56,7 @@
   border: 2px solid var(--color-accent);
   background: var(--color-accent);
   color: var(--color-bg);
-  box-shadow: 1px 1px 0 var(--color-shadow);
+  box-shadow: var(--shadow-sm);
 }
 
 /* Card Title */
@@ -79,14 +79,15 @@
 
 .card-edit-input {
   width: 100%;
-  border: 2px solid var(--color-accent);
-  border-radius: 0;
+  border: var(--border-thin);
+  border-color: var(--color-accent);
+  border-radius: var(--radius-sm);
   padding: var(--spacing-xs) var(--spacing-sm);
   font-size: 16px;
   font-weight: 600;
   font-family: var(--font-display);
   background: var(--color-bg);
-  color: var(--color-text);
+  color: var(--color-ink);
   margin-bottom: var(--spacing-sm);
 }
 
@@ -112,7 +113,7 @@
   background: var(--color-surface);
   padding: 4px 8px;
   border: 1px solid var(--color-border-dark);
-  box-shadow: 1px 1px 0 var(--color-shadow);
+  box-shadow: var(--shadow-sm);
 }
 
 /* Card Footer */
@@ -136,10 +137,10 @@
 .card-delete-btn {
   width: 24px;
   height: 24px;
-  border: 2px solid var(--color-border-dark);
-  border-radius: 0;
+  border: var(--border-thin);
+  border-radius: var(--radius-sm);
   background: var(--color-bg);
-  color: var(--color-text);
+  color: var(--color-ink);
   cursor: pointer;
   transition: all var(--transition-base);
   display: flex;
@@ -149,13 +150,13 @@
   font-weight: 700;
   line-height: 1;
   padding: 0;
-  box-shadow: 1px 1px 0 var(--color-shadow);
+  box-shadow: var(--shadow-sm);
 }
 
 .card-delete-btn:hover {
-  border-color: var(--color-text);
-  background: var(--color-text);
+  border-color: var(--color-ink);
+  background: var(--color-ink);
   color: var(--color-bg);
-  transform: translate(-1px, -1px);
-  box-shadow: 2px 2px 0 var(--color-shadow-strong);
+  transform: scale(1.05);
+  box-shadow: var(--shadow-md);
 }

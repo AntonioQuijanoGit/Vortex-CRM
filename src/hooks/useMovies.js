@@ -1,15 +1,20 @@
 import { useState, useEffect } from "react";
+import { safeGetItem, safeSetItem } from "../utils/storage";
+import { logger } from "../utils/logger";
 
 export function useMovies(pageId) {
   const storageKey = pageId ? `movies-${pageId}` : "movies";
   
   const [movies, setMovies] = useState(() => {
-    const saved = localStorage.getItem(storageKey);
-    return saved ? JSON.parse(saved) : [];
+    return safeGetItem(storageKey, []);
   });
 
   useEffect(() => {
-    localStorage.setItem(storageKey, JSON.stringify(movies));
+    try {
+      safeSetItem(storageKey, movies);
+    } catch (error) {
+      logger.error("Failed to save movies:", error);
+    }
   }, [movies, storageKey]);
 
   const addMovie = (title) => {

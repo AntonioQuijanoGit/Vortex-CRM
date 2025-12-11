@@ -1,16 +1,18 @@
 import { useState, useEffect } from "react";
 import { Icons, normalizeIcon } from "../utils/icons";
+import { safeGetItem, safeSetItem } from "../utils/storage";
+import { validateTitle } from "../utils/validation";
+import { logger } from "../utils/logger";
 
 /**
  * Custom hook for managing hierarchical pages (Notion-style)
  */
 export function usePages() {
   const [pages, setPages] = useState(() => {
-    const savedPages = localStorage.getItem("notion-pages");
-    if (savedPages) {
-      const parsed = JSON.parse(savedPages);
+    const savedPages = safeGetItem("notion-pages", null);
+    if (savedPages && savedPages.length > 0) {
       // Normalize icons in saved pages
-      return parsed.map(page => ({
+      return savedPages.map(page => ({
         ...page,
         icon: normalizeIcon(page.icon)
       }));
@@ -30,26 +32,36 @@ export function usePages() {
   });
 
   const [activePage, setActivePage] = useState(() => {
-    const saved = localStorage.getItem("notion-active-page");
-    return saved || "home";
+    return safeGetItem("notion-active-page", "home");
   });
 
   const [expandedPages, setExpandedPages] = useState(() => {
-    const saved = localStorage.getItem("notion-expanded-pages");
-    return saved ? JSON.parse(saved) : [];
+    return safeGetItem("notion-expanded-pages", []);
   });
 
   // Save to localStorage
   useEffect(() => {
-    localStorage.setItem("notion-pages", JSON.stringify(pages));
+    try {
+      safeSetItem("notion-pages", pages);
+    } catch (error) {
+      logger.error("Failed to save pages:", error);
+    }
   }, [pages]);
 
   useEffect(() => {
-    localStorage.setItem("notion-active-page", activePage);
+    try {
+      safeSetItem("notion-active-page", activePage);
+    } catch (error) {
+      logger.error("Failed to save active page:", error);
+    }
   }, [activePage]);
 
   useEffect(() => {
-    localStorage.setItem("notion-expanded-pages", JSON.stringify(expandedPages));
+    try {
+      safeSetItem("notion-expanded-pages", expandedPages);
+    } catch (error) {
+      logger.error("Failed to save expanded pages:", error);
+    }
   }, [expandedPages]);
 
   // Get children of a page
@@ -69,9 +81,15 @@ export function usePages() {
 
   // Add new page
   const addPage = (title, parentId = null, type = "page", icon = Icons.page) => {
+    const pageTitle = title.trim() || "Untitled";
+    const validation = validateTitle(pageTitle);
+    if (!validation.valid) {
+      throw new Error(validation.error);
+    }
+
     const newPage = {
       id: crypto.randomUUID(),
-      title: title.trim() || "Untitled",
+      title: pageTitle,
       icon: Icons.page, // Always use neutral icon
       parentId,
       type,
@@ -92,6 +110,16 @@ export function usePages() {
 
   // Update page
   const updatePage = (pageId, updates) => {
+    // Validate title if it's being updated
+    if (updates.title !== undefined) {
+      const pageTitle = updates.title.trim() || "Untitled";
+      const validation = validateTitle(pageTitle);
+      if (!validation.valid) {
+        throw new Error(validation.error);
+      }
+      updates.title = pageTitle;
+    }
+
     setPages((prev) =>
       prev.map((page) =>
         page.id === pageId ? { ...page, ...updates } : page
@@ -99,8 +127,36 @@ export function usePages() {
     );
   };
 
+  // Check if page has content (todos, children, or blocks)
+  const pageHasContent = (pageId) => {
+    // Check for children
+    const children = getChildren(pageId);
+    if (children.length > 0) return true;
+
+    // Check for todos in this page
+    try {
+      const todos = safeGetItem(`todos-${pageId}`, []);
+      if (todos.length > 0) return true;
+    } catch (error) {
+      logger.error("Error checking todos for page:", error);
+    }
+
+    // Check for content blocks
+    const page = getPage(pageId);
+    if (page && Array.isArray(page.content) && page.content.length > 0) {
+      return true;
+    }
+
+    return false;
+  };
+
   // Delete page and its children
-  const deletePage = (pageId) => {
+  const deletePage = (pageId, force = false) => {
+    // If not forced and page has content, don't delete (should show confirmation first)
+    if (!force && pageHasContent(pageId)) {
+      throw new Error("Page has content. Please confirm deletion.");
+    }
+
     const deleteRecursive = (id) => {
       const children = getChildren(id);
       children.forEach((child) => deleteRecursive(child.id));

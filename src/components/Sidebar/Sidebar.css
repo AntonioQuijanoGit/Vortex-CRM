@@ -10,6 +10,7 @@
   top: 0;
   overflow: hidden;
   transition: width var(--transition-base), min-width var(--transition-base);
+  z-index: var(--z-sidebar);
 }
 
 .notion-sidebar.collapsed {
@@ -205,7 +206,7 @@
   line-height: 1;
 }
 
-.button-text {
+.buttonText {
   font-size: 12px;
 }
 

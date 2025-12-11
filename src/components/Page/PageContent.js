@@ -10,22 +10,17 @@ export default function PageContent({
   onNavigate,
   onUpdatePage,
 }) {
-  if (!page) {
-    return (
-      <div className="page-content" role="region" aria-live="polite">
-        <Dashboard onNavigate={onNavigate} />
-      </div>
-    );
-  }
-
-  // Show dashboard for home page
-  if (page.id === "home" || page.id === "dashboard") {
+  // Show dashboard when no page or when on home page, but always show breadcrumbs
+  const isDashboard = !page || page.id === "home" || page.id === "dashboard";
+  
+  if (isDashboard) {
     return (
       <div
         className="page-content page-content-dashboard"
         role="region"
         aria-live="polite"
       >
+        <BreadcrumbTrail items={breadcrumbs} onNavigate={onNavigate} />
         <Dashboard onNavigate={onNavigate} />
       </div>
     );
@@ -56,14 +51,18 @@ function BreadcrumbTrail({ items, onNavigate }) {
       >
         <span className="breadcrumb-title">Home</span>
       </button>
-      {items.map((crumb, index) => (
+      {items.length > 0 && items.map((crumb, index) => (
         <React.Fragment key={crumb.id}>
           <span className="breadcrumb-separator" aria-hidden="true">
             /
           </span>
-          <span className="breadcrumb-item">
+          <button
+            className="breadcrumb-item"
+            onClick={() => onNavigate && onNavigate(crumb.id)}
+            aria-label={`Go to ${crumb.title}`}
+          >
             <span className="breadcrumb-title">{crumb.title}</span>
-          </span>
+          </button>
         </React.Fragment>
       ))}
     </nav>
@@ -123,12 +122,30 @@ function PageHero({ page, onUpdatePage }) {
 }
 
 function DatabaseView({ page }) {
+  // Determine initial typeFilter based on page title
+  const getInitialTypeFilter = (title) => {
+    const lowerTitle = title.toLowerCase();
+    if (lowerTitle.includes("task") && !lowerTitle.includes("habit")) {
+      return "task";
+    }
+    if (lowerTitle.includes("habit")) {
+      return "habit";
+    }
+    return "all";
+  };
+
+  const initialTypeFilter = getInitialTypeFilter(page.title);
+
   return (
     <section
       className="database-view"
       aria-label={`${page.title} database view`}
     >
-      <TodoApp pageId={page.id} viewType={page.viewType} />
+      <TodoApp 
+        pageId={page.id} 
+        viewType={page.viewType} 
+        initialTypeFilter={initialTypeFilter}
+      />
     </section>
   );
 }
@@ -203,7 +220,7 @@ function WelcomePage() {
       </section>
 
       <section className="roadmap-section">
-        <h3>Getting Started</h3>
+        <h3>Quick Start Guide</h3>
         <ul>
           <li>Create a new page from the sidebar</li>
           <li>Add tasks and habits to track your progress</li>

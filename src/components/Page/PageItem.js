@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { Icons } from "../../utils/icons";
+import { ConfirmDialog } from "../shared";
+import { useTodos } from "../../hooks/useTodos";
 import "./PageItem.css";
 
 export default function PageItem({
@@ -13,14 +15,20 @@ export default function PageItem({
   onDelete,
   onAddChild,
   getChildren,
+  activePageId, // Add this prop to check if child is active
   level = 0,
 }) {
   const [isEditing, setIsEditing] = useState(false);
   const [editTitle, setEditTitle] = useState(page.title);
   const [showOptions, setShowOptions] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   const children = getChildren(page.id);
   const indent = level * 20;
+  
+  // Get todos count for this page
+  const { todos } = useTodos(page.id);
+  const todosCount = todos.length;
 
   const handleUpdate = () => {
     if (editTitle.trim() && editTitle !== page.title) {
@@ -32,8 +40,18 @@ export default function PageItem({
   };
 
   const handleDelete = () => {
-    if (window.confirm(`Delete "${page.title}" and all its subpages?`)) {
-      onDelete(page.id);
+    setShowDeleteConfirm(true);
+  };
+
+  const confirmDelete = () => {
+    try {
+      onDelete(page.id, true); // Pass force=true to actually delete
+      setShowDeleteConfirm(false);
+    } catch (error) {
+      // If page has content, show confirmation
+      setShowDeleteConfirm(false);
+      // Re-open with force confirmation
+      setShowDeleteConfirm(true);
     }
   };
 
@@ -45,7 +63,9 @@ export default function PageItem({
   const handleKeyDown = (event) => {
     if (event.key === "Enter" || event.key === " ") {
       event.preventDefault();
-      onSelect();
+      if (typeof onSelect === 'function') {
+        onSelect(page.id);
+      }
     }
     if (event.key === "ArrowRight" && hasChildren && !isExpanded) {
       onToggleExpanded();
@@ -61,9 +81,19 @@ export default function PageItem({
         className={`page-item ${isActive ? "active" : ""}`}
         style={{ paddingLeft: `${12 + indent}px` }}
         onMouseEnter={() => setShowOptions(true)}
-        onMouseLeave={() => setShowOptions(false)}
+        onMouseLeave={(e) => {
+          // Don't hide if moving to options buttons
+          if (!e.currentTarget.querySelector('.page-options')?.contains(e.relatedTarget)) {
+            setShowOptions(false);
+          }
+        }}
         onFocus={() => setShowOptions(true)}
-        onBlur={() => setShowOptions(false)}
+        onBlur={(e) => {
+          // Don't hide if clicking on options buttons
+          if (!e.currentTarget.contains(e.relatedTarget)) {
+            setShowOptions(false);
+          }
+        }}
         role="treeitem"
         aria-selected={isActive}
         aria-expanded={hasChildren ? isExpanded : undefined}
@@ -87,7 +117,11 @@ export default function PageItem({
 
           <button
             className="page-link"
-            onClick={onSelect}
+            onClick={() => {
+              if (typeof onSelect === 'function') {
+                onSelect(page.id);
+              }
+            }}
             style={{ marginLeft: hasChildren ? "0" : "20px" }}
             aria-label={`Open ${page.title}`}
           >
@@ -109,7 +143,14 @@ export default function PageItem({
                 autoFocus
               />
             ) : (
-              <span className="page-title">{page.title}</span>
+              <>
+                <span className="page-title">{page.title}</span>
+                {todosCount > 0 && (
+                  <span className="page-todos-badge" aria-label={`${todosCount} ${todosCount === 1 ? "item" : "items"}`}>
+                    {todosCount}
+                  </span>
+                )}
+              </>
             )}
           </button>
 
@@ -121,6 +162,7 @@ export default function PageItem({
                   e.stopPropagation();
                   handleAddSubpage();
                 }}
+                onMouseDown={(e) => e.stopPropagation()}
                 title="Add subpage"
                 aria-label="Add subpage"
               >
@@ -132,6 +174,7 @@ export default function PageItem({
                   e.stopPropagation();
                   setIsEditing(true);
                 }}
+                onMouseDown={(e) => e.stopPropagation()}
                 title="Rename"
                 aria-label="Rename page"
               >
@@ -143,6 +186,7 @@ export default function PageItem({
                   e.stopPropagation();
                   handleDelete();
                 }}
+                onMouseDown={(e) => e.stopPropagation()}
                 title="Delete"
                 aria-label="Delete page"
               >
@@ -153,24 +197,47 @@ export default function PageItem({
         </div>
       </div>
 
+      <ConfirmDialog
+        isOpen={showDeleteConfirm}
+        title="Delete Page"
+        message={`Are you sure you want to delete "${page.title}"${children.length > 0 ? ' and all its subpages' : ''}? This will also delete all tasks, habits, and content in this page. This action cannot be undone.`}
+        confirmText="Delete"
+        cancelText="Cancel"
+        type="danger"
+        onConfirm={confirmDelete}
+        onCancel={() => setShowDeleteConfirm(false)}
+      />
+
       {isExpanded && children.length > 0 && (
         <div className="page-children" role="group">
-          {children.map((child) => (
-            <PageItem
-              key={child.id}
-              page={child}
-              isActive={isActive}
-              isExpanded={isExpanded}
-              hasChildren={getChildren(child.id).length > 0}
-              onSelect={onSelect}
-              onToggleExpanded={onToggleExpanded}
-              onUpdate={onUpdate}
-              onDelete={onDelete}
-              onAddChild={onAddChild}
-              getChildren={getChildren}
-              level={level + 1}
-            />
-          ))}
+          {children.map((child) => {
+            const childIsExpanded = typeof isExpanded === 'function' ? isExpanded(child.id) : false;
+            return (
+              <PageItem
+                key={child.id}
+                page={child}
+                isActive={activePageId === child.id}
+                isExpanded={childIsExpanded}
+                hasChildren={getChildren(child.id).length > 0}
+                onSelect={(pageId) => {
+                  if (typeof onSelect === 'function') {
+                    onSelect(pageId || child.id);
+                  }
+                }}
+                onToggleExpanded={(pageId) => {
+                  if (typeof onToggleExpanded === 'function') {
+                    onToggleExpanded(pageId || child.id);
+                  }
+                }}
+                onUpdate={onUpdate}
+                onDelete={onDelete}
+                onAddChild={onAddChild}
+                getChildren={getChildren}
+                activePageId={activePageId}
+                level={level + 1}
+              />
+            );
+          })}
         </div>
       )}
     </>

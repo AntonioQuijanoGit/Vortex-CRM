@@ -1,0 +1,49 @@
+.mini-line-chart {
+  display: inline-block;
+  animation: fadeIn 0.4s ease-out;
+}
+
+.mini-line-chart-area {
+  animation: miniLineChartArea 0.8s ease-out;
+}
+
+.mini-line-chart-line {
+  animation: miniLineChartLine 0.8s ease-out;
+  filter: drop-shadow(0 0 2px currentColor);
+}
+
+.mini-line-chart-point {
+  animation: miniLineChartPoint 0.4s ease-out both;
+}
+
+@keyframes miniLineChartArea {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes miniLineChartLine {
+  from {
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+  }
+  to {
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes miniLineChartPoint {
+  from {
+    opacity: 0;
+    transform: scale(0);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+

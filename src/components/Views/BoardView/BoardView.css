@@ -10,19 +10,20 @@
 
 /* Board Column */
 .board-column {
-  background: var(--color-surface);
-  border: 2px solid var(--color-border-dark);
-  border-radius: 0;
+  background: var(--color-panel);
+  border: var(--border-thin);
+  border-radius: var(--radius-lg);
   display: flex;
   flex-direction: column;
-  box-shadow: 4px 4px 0 var(--color-shadow);
+  box-shadow: var(--shadow-md);
   transition: all var(--transition-base);
   min-height: 400px;
 }
 
 .board-column:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: 6px 6px 0 var(--color-shadow-strong);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--color-stroke-strong);
 }
 
 /* Column Header */
@@ -82,8 +83,8 @@
 }
 
 .board-column-content::-webkit-scrollbar-thumb {
-  background: var(--color-border);
-  border-radius: 0;
+  background: var(--color-stroke-strong);
+  border-radius: var(--radius-sm);
 }
 
 /* Empty State */

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { TextBlock, MovieBlock, NoteBlock, TaskBlock, CalendarBlock } from "../Blocks";
 import { Icons } from "../../utils/icons";
+import { EmptyState } from "../shared";
 import "./BlockManager.css";
 
 export default function BlockManager({ pageId, blocks = [], onUpdateBlocks }) {
@@ -56,10 +57,10 @@ export default function BlockManager({ pageId, blocks = [], onUpdateBlocks }) {
   return (
     <div className="block-manager">
       {blocks.length === 0 && (
-        <div className="empty-blocks-state">
-          <p className="empty-blocks-message">This page is empty</p>
-          <p className="empty-blocks-hint">Add a block to get started</p>
-        </div>
+        <EmptyState
+          message="This page is empty"
+          hint="Add a block to get started"
+        />
       )}
 
       <div className="blocks-container">
@@ -125,10 +126,6 @@ function BlockRenderer({ block, pageId, onUpdate }) {
   switch (block.type) {
     case "text":
       return <TextBlock data={block.data} onUpdate={onUpdate} />;
-    case "movies":
-      return (
-        <MovieBlock pageId={pageId} data={block.data} onUpdate={onUpdate} />
-      );
     case "notes":
       return (
         <NoteBlock pageId={pageId} data={block.data} onUpdate={onUpdate} />
@@ -171,7 +168,7 @@ function BlockControls({
             aria-label="Move up"
             title="Move up"
           >
-            ↑
+            {Icons.arrowUp}
           </button>
           <button
             className="block-control-btn"
@@ -180,7 +177,7 @@ function BlockControls({
             aria-label="Move down"
             title="Move down"
           >
-            ↓
+            {Icons.arrowDown}
           </button>
           <button
             className="block-control-btn delete"
@@ -188,7 +185,7 @@ function BlockControls({
             aria-label="Delete block"
             title="Delete block"
           >
-            ×
+            {Icons.delete}
           </button>
         </div>
       )}
@@ -200,8 +197,6 @@ function getDefaultBlockData(type) {
   switch (type) {
     case "text":
       return { content: "" };
-    case "movies":
-      return {};
     case "notes":
       return { content: "" };
     case "tasks":

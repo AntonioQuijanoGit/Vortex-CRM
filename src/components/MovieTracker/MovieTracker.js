@@ -89,7 +89,7 @@ export default function MovieTracker({ pageId }) {
                   onClick={() => deleteMovie(movie.id)}
                   aria-label="Delete movie"
                 >
-                  ×
+                  {Icons.delete}
                 </button>
               </div>
             </div>

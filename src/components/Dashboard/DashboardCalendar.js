@@ -1,17 +1,22 @@
 import React, { useState } from "react";
 import { useEvents } from "../../hooks/useEvents";
+import { usePages } from "../../hooks/usePages";
 import { Icons } from "../../utils/icons";
+import { DateDetailsModal, EventForm } from "../shared";
 import "./DashboardCalendar.css";
 
 export default function DashboardCalendar({ todos, onNavigate }) {
+  const { getPage } = usePages();
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(null);
+  const [clickedDate, setClickedDate] = useState(null); // Track which day was clicked
   const [showEventForm, setShowEventForm] = useState(false);
+  const [showDateDetails, setShowDateDetails] = useState(false);
   const [editingEvent, setEditingEvent] = useState(null);
   const today = new Date();
 
   // Use events hook for dashboard calendar (stored under "dashboard" key)
-  const { events, addEvent, updateEvent, getEventsForDate } =
+  const { events, addEvent, updateEvent, deleteEvent, getEventsForDate } =
     useEvents("dashboard");
 
   // Get all events from all pages for display
@@ -112,14 +117,58 @@ export default function DashboardCalendar({ todos, onNavigate }) {
   // Get today's info
   const todayInfo = getDayInfo(today.getDate());
 
+  const getDateItems = (dateString) => {
+    const dateObj = new Date(dateString);
+    const dateKey = dateObj.toDateString();
+    
+    // Get tasks for this day
+    const dayTasks = todos.filter((todo) => {
+      if (todo.type === "task") {
+        if (todo.dueDate) {
+          const dueDate = new Date(todo.dueDate);
+          return dueDate.toDateString() === dateKey;
+        }
+        const createdDate = new Date(todo.createdAt);
+        return createdDate.toDateString() === dateKey;
+      }
+      return false;
+    });
+
+    // Get habits completed this day
+    const habitsCompleted = todos.filter(
+      (todo) => todo.type === "habit" && todo.completedDates?.includes(dateKey)
+    );
+
+    // Get events for this day
+    const dayEvents = allEvents.filter((event) => event.date === dateString);
+
+    return {
+      tasks: dayTasks,
+      habits: habitsCompleted,
+      events: dayEvents,
+      hasItems: dayTasks.length > 0 || habitsCompleted.length > 0 || dayEvents.length > 0,
+    };
+  };
+
   const handleDayClick = (day) => {
     if (day === null) return;
     const dateString = `${year}-${String(month + 1).padStart(2, "0")}-${String(
       day
     ).padStart(2, "0")}`;
     setSelectedDate(dateString);
-    setShowEventForm(true);
-    setEditingEvent(null);
+    setClickedDate(dateString); // Track clicked date for visual feedback
+    
+    const dateItems = getDateItems(dateString);
+    
+    // If there are items, show details modal. Otherwise, show event form
+    if (dateItems.hasItems) {
+      setShowDateDetails(true);
+      setShowEventForm(false);
+    } else {
+      setShowDateDetails(false);
+      setShowEventForm(true);
+      setEditingEvent(null);
+    }
   };
 
   const handleSaveEvent = (eventData) => {
@@ -133,12 +182,38 @@ export default function DashboardCalendar({ todos, onNavigate }) {
     setSelectedDate(null);
   };
 
+  const handleDeleteEvent = (eventId) => {
+    // First try to delete from dashboard events
+    const dashboardEvent = events.find(e => e.id === eventId);
+    if (dashboardEvent) {
+      deleteEvent(eventId);
+      return;
+    }
+    
+    // If not found in dashboard, search in other pages
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key && key.startsWith("events-") && key !== "events-dashboard") {
+        const pageEvents = JSON.parse(localStorage.getItem(key) || "[]");
+        const eventIndex = pageEvents.findIndex(e => e.id === eventId);
+        if (eventIndex !== -1) {
+          // Remove the event from this page's events
+          const updatedEvents = pageEvents.filter(e => e.id !== eventId);
+          localStorage.setItem(key, JSON.stringify(updatedEvents));
+          // Force re-render by updating state
+          setSelectedDate(selectedDate);
+          return;
+        }
+      }
+    }
+  };
+
   return (
     <div className="dashboard-calendar">
       <div className="dashboard-calendar-header">
         <div className="calendar-header-top">
           <h2 className="dashboard-calendar-title">
-            {Icons.calendar} Calendar
+            Calendar
           </h2>
           <div className="calendar-nav">
             <button
@@ -222,13 +297,14 @@ export default function DashboardCalendar({ todos, onNavigate }) {
           const allDayEvents = allEvents.filter(
             (event) => event.date === dateString
           );
+          const isSelected = clickedDate === dateString;
 
           return (
             <div
               key={day}
               className={`dashboard-cal-day ${isTodayDay ? "today" : ""} ${
                 dayInfo.hasActivity ? "has-activity" : ""
-              }`}
+              } ${isSelected ? "selected" : ""}`}
               onClick={() => handleDayClick(day)}
             >
               <span className="dashboard-cal-day-number">{day}</span>
@@ -332,6 +408,31 @@ export default function DashboardCalendar({ todos, onNavigate }) {
         );
       })()}
 
+      {showDateDetails && selectedDate && (
+        <DateDetailsModal
+          date={selectedDate}
+          items={getDateItems(selectedDate)}
+          onNavigate={onNavigate}
+          onClose={() => {
+            setShowDateDetails(false);
+            setSelectedDate(null);
+            setClickedDate(null); // Clear visual selection
+          }}
+          onAddEvent={() => {
+            setShowDateDetails(false);
+            setShowEventForm(true);
+            setEditingEvent(null);
+          }}
+          onEditEvent={(event) => {
+            setShowDateDetails(false);
+            setEditingEvent(event);
+            setShowEventForm(true);
+          }}
+          onDeleteEvent={handleDeleteEvent}
+          getPage={getPage}
+        />
+      )}
+
       {showEventForm && (
         <EventForm
           date={selectedDate}
@@ -348,99 +449,3 @@ export default function DashboardCalendar({ todos, onNavigate }) {
   );
 }
 
-function EventForm({ date, event, onSave, onCancel }) {
-  const [title, setTitle] = useState(event?.title || "");
-  const [time, setTime] = useState(event?.time || "");
-  const [description, setDescription] = useState(event?.description || "");
-  const [color, setColor] = useState(event?.color || "var(--color-accent)");
-
-  const colors = [
-    "var(--color-accent)",
-    "var(--color-success)",
-    "var(--color-warning)",
-    "var(--color-error)",
-    "#000000",
-    "#666666",
-  ];
-
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", {
-      weekday: "long",
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (title.trim()) {
-      onSave({ title, time, description, color });
-    }
-  };
-
-  return (
-    <div className="event-form-overlay" onClick={onCancel}>
-      <div className="event-form" onClick={(e) => e.stopPropagation()}>
-        <div className="event-form-header">
-          <h4>{event ? "Edit Event" : "New Event"}</h4>
-          <button className="event-form-close" onClick={onCancel}>
-            {Icons.close}
-          </button>
-        </div>
-        {date && <p className="event-form-date">{formatDate(date)}</p>}
-        <form onSubmit={handleSubmit}>
-          <div className="event-form-field">
-            <label>Title</label>
-            <input
-              type="text"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              placeholder="Event title..."
-              required
-              autoFocus
-            />
-          </div>
-          <div className="event-form-field">
-            <label>Time (optional)</label>
-            <input
-              type="time"
-              value={time}
-              onChange={(e) => setTime(e.target.value)}
-            />
-          </div>
-          <div className="event-form-field">
-            <label>Description / Notes (optional)</label>
-            <textarea
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="Add notes or description..."
-              rows={3}
-            />
-          </div>
-          <div className="event-form-field">
-            <label>Color</label>
-            <div className="event-color-picker">
-              {colors.map((c) => (
-                <button
-                  key={c}
-                  type="button"
-                  className={`color-option ${color === c ? "selected" : ""}`}
-                  style={{ backgroundColor: c }}
-                  onClick={() => setColor(c)}
-                />
-              ))}
-            </div>
-          </div>
-          <div className="event-form-actions">
-            <button type="button" onClick={onCancel}>
-              Cancel
-            </button>
-            <button type="submit">Save</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  );
-}
