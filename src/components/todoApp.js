@@ -13,7 +13,7 @@ import "./todoApp.css";
 
 export default function TodoApp() {
   const { todos, addTodo, updateTodo, deleteTodo, toggleComplete } = useTodos();
-  
+
   const [title, setTitle] = useState("");
   const [todoType, setTodoType] = useState("task"); // 'task' or 'habit'
   const [filter, setFilter] = useState("all");

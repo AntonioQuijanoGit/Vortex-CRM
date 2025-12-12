@@ -1,26 +1,50 @@
 import { useState, useEffect } from "react";
 import { resetDailyHabits, calculateStreak, checkCompletedYesterday } from "../utils/habits";
 
+// Helper function to generate UUID with fallback
+function generateId() {
+  if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+    return crypto.randomUUID();
+  }
+  // Fallback for environments without crypto.randomUUID
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    const r = Math.random() * 16 | 0;
+    const v = c === 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
+
 /**
  * Custom hook for managing todos with localStorage persistence
  */
 export function useTodos() {
   const [todos, setTodos] = useState(() => {
+    // Only access localStorage in browser environment
+    if (typeof window === 'undefined') return [];
+    
     const savedTodos = localStorage.getItem("todos");
     if (savedTodos) {
-      const parsed = JSON.parse(savedTodos);
-      return resetDailyHabits(parsed);
+      try {
+        const parsed = JSON.parse(savedTodos);
+        return resetDailyHabits(parsed);
+      } catch (e) {
+        console.error('Error parsing saved todos:', e);
+        return [];
+      }
     }
     return [];
   });
 
   // Save todos to localStorage when they change
   useEffect(() => {
+    if (typeof window === 'undefined') return;
     localStorage.setItem("todos", JSON.stringify(todos));
   }, [todos]);
 
   // Reset habits when day changes
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
     const checkDayChange = setInterval(() => {
       const today = new Date().toDateString();
       const lastReset = localStorage.getItem("lastReset");
@@ -37,7 +61,7 @@ export function useTodos() {
     if (!title.trim()) return;
 
     const newTodo = {
-      id: crypto.randomUUID(),
+      id: generateId(),
       title: title.trim(),
       type: type,
       completed: false,
@@ -120,4 +144,5 @@ export function useTodos() {
     toggleComplete,
   };
 }
+
 

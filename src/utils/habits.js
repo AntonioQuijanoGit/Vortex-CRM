@@ -8,6 +8,9 @@
  * @returns {Array} Updated todos list with habits reset
  */
 export function resetDailyHabits(todosList) {
+  // Only access localStorage in browser environment
+  if (typeof window === 'undefined') return todosList;
+  
   const today = new Date().toDateString();
   const lastReset = localStorage.getItem("lastReset");
 
@@ -61,4 +64,5 @@ export function calculateStreak(todo, today) {
   const wasCompletedYesterday = checkCompletedYesterday(todo, today);
   return wasCompletedYesterday ? (todo.streak || 0) + 1 : 1;
 }
+
 
