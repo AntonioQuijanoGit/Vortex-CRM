@@ -33,6 +33,7 @@ function App() {
   const { toasts, removeToast, showInfo } = useToast();
 
   useEffect(() => {
+    if (typeof window === 'undefined') return;
     const hasSeenTutorial = localStorage.getItem("has-seen-tutorial");
     if (!hasSeenTutorial) {
       // Small delay to let the page render
