@@ -1,0 +1,399 @@
+.calendar-block-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.calendar-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) 0;
+  border-bottom: var(--border-thin);
+}
+
+.calendar-nav-btn {
+  width: 36px;
+  height: 36px;
+  border: var(--border-thin);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg);
+  color: var(--color-ink);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  transition: all var(--transition-fast);
+}
+
+.calendar-nav-btn:hover {
+  border-color: var(--color-ink);
+  background: var(--color-ink);
+  color: var(--color-panel);
+}
+
+.calendar-month-year {
+  flex: 1;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-ink);
+  text-align: center;
+  margin: 0;
+}
+
+.calendar-today-btn {
+  padding: var(--spacing-xs) var(--spacing-md);
+  border: var(--border-thin);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg);
+  color: var(--color-ink);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  transition: all var(--transition-fast);
+}
+
+.calendar-today-btn:hover {
+  border-color: var(--color-ink);
+  background: var(--color-ink);
+  color: var(--color-panel);
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: var(--spacing-xs);
+}
+
+.calendar-day-header {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-muted);
+  text-align: center;
+  padding: var(--spacing-xs);
+}
+
+.calendar-day,
+.calendar-day-empty {
+  aspect-ratio: 1;
+  border: var(--border-thin);
+  border-radius: var(--radius-sm);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: var(--spacing-xs);
+  background: var(--color-bg);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  position: relative;
+  min-height: 60px;
+}
+
+.calendar-day-empty {
+  border: none;
+  background: transparent;
+  cursor: default;
+}
+
+.calendar-day:hover {
+  border-color: var(--color-ink);
+  background: var(--color-panel);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
+.calendar-day.today {
+  border-color: var(--color-ink);
+  border-width: 2px;
+  background: var(--color-panel);
+  font-weight: 700;
+}
+
+.calendar-day.has-events {
+  border-color: var(--color-stroke-strong);
+}
+
+.calendar-day-number {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-ink);
+  margin-bottom: var(--spacing-xxs);
+}
+
+.calendar-day.today .calendar-day-number {
+  color: var(--color-ink);
+}
+
+.calendar-day-events {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
+.calendar-event-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform var(--transition-fast);
+}
+
+.calendar-event-dot:hover {
+  transform: scale(1.5);
+}
+
+.calendar-event-more {
+  font-size: 8px;
+  color: var(--color-muted);
+  font-weight: 600;
+}
+
+.calendar-selected-date {
+  margin-top: var(--spacing-md);
+  padding-top: var(--spacing-md);
+  border-top: var(--border-thin);
+}
+
+.calendar-selected-date h5 {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-ink);
+  margin-bottom: var(--spacing-sm);
+}
+
+.calendar-date-events {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.calendar-event-item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm);
+  border: var(--border-thin);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg);
+  transition: all var(--transition-fast);
+}
+
+.calendar-event-item:hover {
+  border-color: var(--color-ink);
+  box-shadow: var(--shadow-sm);
+}
+
+.event-color {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.event-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.event-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-ink);
+  margin-bottom: var(--spacing-xxs);
+}
+
+.event-time {
+  font-size: 12px;
+  color: var(--color-muted);
+  font-family: var(--font-mono);
+  margin-bottom: var(--spacing-xxs);
+}
+
+.event-description {
+  font-size: 12px;
+  color: var(--color-muted);
+  line-height: 1.4;
+}
+
+.event-edit-btn,
+.event-delete-btn {
+  width: 24px;
+  height: 24px;
+  border: var(--border-thin);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg);
+  color: var(--color-ink);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  transition: all var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.event-edit-btn:hover {
+  border-color: var(--color-ink);
+  background: var(--color-ink);
+  color: var(--color-panel);
+}
+
+.event-delete-btn:hover {
+  border-color: var(--color-error);
+  background: var(--color-error);
+  color: var(--color-panel);
+}
+
+.event-form-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-lg);
+}
+
+.event-form {
+  background: var(--color-panel);
+  border: var(--border-medium);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+  max-width: 500px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-lg);
+}
+
+.event-form-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-md);
+  padding-bottom: var(--spacing-sm);
+  border-bottom: var(--border-thin);
+}
+
+.event-form-header h4 {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-ink);
+  margin: 0;
+}
+
+.event-form-close {
+  width: 28px;
+  height: 28px;
+  border: var(--border-thin);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg);
+  color: var(--color-ink);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  transition: all var(--transition-fast);
+}
+
+.event-form-close:hover {
+  background: var(--color-ink);
+  color: var(--color-panel);
+  border-color: var(--color-ink);
+}
+
+.event-form-field {
+  margin-bottom: var(--spacing-md);
+}
+
+.event-form-field label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-ink);
+  margin-bottom: var(--spacing-xs);
+}
+
+.event-form-field input,
+.event-form-field textarea {
+  width: 100%;
+  padding: var(--spacing-sm);
+  border: var(--border-thin);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font-size: 14px;
+  font-family: var(--font-sans);
+}
+
+.event-form-field input:focus,
+.event-form-field textarea:focus {
+  outline: none;
+  border-color: var(--color-ink);
+}
+
+.event-color-picker {
+  display: flex;
+  gap: var(--spacing-xs);
+  flex-wrap: wrap;
+}
+
+.color-option {
+  width: 32px;
+  height: 32px;
+  border: 2px solid transparent;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.color-option.selected {
+  border-color: var(--color-ink);
+  transform: scale(1.1);
+}
+
+.event-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-lg);
+  padding-top: var(--spacing-md);
+  border-top: var(--border-thin);
+}
+
+.event-form-actions button {
+  padding: var(--spacing-xs) var(--spacing-md);
+  border: var(--border-thin);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg);
+  color: var(--color-ink);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all var(--transition-fast);
+}
+
+.event-form-actions button[type="submit"] {
+  background: var(--color-ink);
+  color: var(--color-panel);
+  border-color: var(--color-ink);
+}
+
+.event-form-actions button:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+

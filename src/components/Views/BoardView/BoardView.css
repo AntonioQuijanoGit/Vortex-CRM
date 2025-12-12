@@ -1,0 +1,122 @@
+/* Board View - Kanban style */
+.board-view {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--spacing-lg);
+  width: 100%;
+  padding: var(--spacing-md) 0;
+  min-height: 600px;
+}
+
+/* Board Column */
+.board-column {
+  background: var(--color-panel);
+  border: var(--border-thin);
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow-md);
+  transition: all var(--transition-base);
+  min-height: 400px;
+}
+
+.board-column:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--color-stroke-strong);
+}
+
+/* Column Header */
+.board-column-header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md);
+  border-bottom: 2px solid var(--color-border-dark);
+  background: var(--color-bg);
+}
+
+.column-icon {
+  font-size: 20px;
+  line-height: 1;
+  font-weight: 700;
+}
+
+.column-title {
+  flex: 1;
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--color-text);
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.column-count {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--color-text-muted);
+  background: var(--color-surface);
+  padding: 4px 8px;
+  border: 1px solid var(--color-border-dark);
+}
+
+/* Column Content */
+.board-column-content {
+  flex: 1;
+  padding: var(--spacing-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  overflow-y: auto;
+}
+
+.board-column-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.board-column-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.board-column-content::-webkit-scrollbar-thumb {
+  background: var(--color-stroke-strong);
+  border-radius: var(--radius-sm);
+}
+
+/* Empty State */
+.board-empty-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-2xl) var(--spacing-md);
+  border: 2px dashed var(--color-border);
+  background: var(--color-bg);
+  min-height: 150px;
+}
+
+.board-empty-state p {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .board-view {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .board-view {
+    grid-template-columns: 1fr;
+  }
+}

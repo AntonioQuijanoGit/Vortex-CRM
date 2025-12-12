@@ -1,5 +1,8 @@
 import { useState, useEffect } from "react";
 import { resetDailyHabits, calculateStreak, checkCompletedYesterday } from "../utils/habits";
+import { safeGetItem, safeSetItem } from "../utils/storage";
+import { validateTitle } from "../utils/validation";
+import { logger } from "../utils/logger";
 
 // Helper function to generate UUID with fallback
 function generateId() {
@@ -16,30 +19,28 @@ function generateId() {
 
 /**
  * Custom hook for managing todos with localStorage persistence
+ * @param {string} pageId - Optional page ID to store todos per page
  */
-export function useTodos() {
+export function useTodos(pageId = null) {
+  const storageKey = pageId ? `todos-${pageId}` : "todos";
+  
   const [todos, setTodos] = useState(() => {
-    // Only access localStorage in browser environment
-    if (typeof window === 'undefined') return [];
-    
-    const savedTodos = localStorage.getItem("todos");
-    if (savedTodos) {
-      try {
-        const parsed = JSON.parse(savedTodos);
-        return resetDailyHabits(parsed);
-      } catch (e) {
-        console.error('Error parsing saved todos:', e);
-        return [];
-      }
+    const savedTodos = safeGetItem(storageKey, []);
+    if (savedTodos && savedTodos.length > 0) {
+      return resetDailyHabits(savedTodos);
     }
     return [];
   });
 
   // Save todos to localStorage when they change
   useEffect(() => {
-    if (typeof window === 'undefined') return;
-    localStorage.setItem("todos", JSON.stringify(todos));
-  }, [todos]);
+    try {
+      safeSetItem(storageKey, todos);
+    } catch (error) {
+      logger.error("Failed to save todos:", error);
+      // Could show a toast here if we had access to it
+    }
+  }, [todos, storageKey]);
 
   // Reset habits when day changes
   useEffect(() => {
@@ -47,9 +48,10 @@ export function useTodos() {
     
     const checkDayChange = setInterval(() => {
       const today = new Date().toDateString();
-      const lastReset = localStorage.getItem("lastReset");
+      const lastReset = safeGetItem("lastReset", null);
 
       if (lastReset !== today) {
+        safeSetItem("lastReset", today);
         setTodos((prev) => resetDailyHabits(prev));
       }
     }, 60000); // Check every minute
@@ -58,7 +60,10 @@ export function useTodos() {
   }, []);
 
   const addTodo = (title, type) => {
-    if (!title.trim()) return;
+    const validation = validateTitle(title);
+    if (!validation.valid) {
+      throw new Error(validation.error);
+    }
 
     const newTodo = {
       id: generateId(),
@@ -66,6 +71,11 @@ export function useTodos() {
       type: type,
       completed: false,
       createdAt: new Date().toISOString(),
+      // Notion-style properties
+      status: "todo", // "todo" | "in-progress" | "done"
+      priority: null, // "high" | "medium" | "low" | null
+      tags: [],
+      dueDate: null,
       // Habit-specific fields
       ...(type === "habit" && {
         streak: 0,
@@ -78,11 +88,22 @@ export function useTodos() {
   };
 
   const updateTodo = (id, value) => {
-    if (!value.trim()) return;
+    const validation = validateTitle(value);
+    if (!validation.valid) {
+      throw new Error(validation.error);
+    }
 
     setTodos((prev) =>
       prev.map((todo) =>
         todo.id === id ? { ...todo, title: value.trim() } : todo
+      )
+    );
+  };
+
+  const updateTodoProperties = (id, properties) => {
+    setTodos((prev) =>
+      prev.map((todo) =>
+        todo.id === id ? { ...todo, ...properties } : todo
       )
     );
   };
@@ -140,6 +161,7 @@ export function useTodos() {
     todos,
     addTodo,
     updateTodo,
+    updateTodoProperties,
     deleteTodo,
     toggleComplete,
   };
