@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { resetDailyHabits, calculateStreak, checkCompletedYesterday } from "../utils/habits";
+import { resetDailyHabits, calculateStreak } from "../utils/habits";
 import { safeGetItem, safeSetItem } from "../utils/storage";
 import { validateTitle } from "../utils/validation";
 import { logger } from "../utils/logger";
@@ -11,8 +11,8 @@ function generateId() {
   }
   // Fallback for environments without crypto.randomUUID
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-    const r = Math.random() * 16 | 0;
-    const v = c === 'x' ? r : (r & 0x3 | 0x8);
+    const r = (Math.random() * 16) | 0;
+    const v = c === 'x' ? r : ((r & 0x3) | 0x8);
     return v.toString(16);
   });
 }

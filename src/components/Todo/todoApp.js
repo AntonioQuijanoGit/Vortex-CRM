@@ -23,8 +23,6 @@ export default function TodoApp({ pageId, viewType: initialViewType, initialType
   const [filter, setFilter] = useState("all");
   const [typeFilter, setTypeFilter] = useState(initialTypeFilter); // all, task, habit
   const [searchQuery, setSearchQuery] = useState("");
-  // Determine if type is locked by filter
-  const isTypeLocked = typeFilter === "habit" || typeFilter === "task";
   const [selectedType, setSelectedType] = useState(() => {
     // Initialize based on filter if set, otherwise default to "task"
     return initialTypeFilter === "habit" ? "habit" : "task";
@@ -44,7 +42,7 @@ export default function TodoApp({ pageId, viewType: initialViewType, initialType
     if (initialTypeFilter !== typeFilter) {
       setTypeFilter(initialTypeFilter);
     }
-  }, [initialTypeFilter]);
+  }, [initialTypeFilter, typeFilter]);
 
   function handleAddTodo() {
     try {
