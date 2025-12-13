@@ -770,7 +770,13 @@
   
   /* Hide breadcrumbs on mobile - everything should be in the hamburger menu */
   .breadcrumbs {
-    display: none;
+    display: none !important;
+  }
+  
+  /* Also hide any Home button or text that might be showing */
+  .breadcrumb-home,
+  .breadcrumb-item {
+    display: none !important;
   }
   
   .page-hero {

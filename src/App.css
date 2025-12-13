@@ -42,6 +42,13 @@
     padding: 0;
     width: 100%;
     overflow-x: hidden;
+    /* Ensure content doesn't show behind sidebar when closed */
+    margin-left: 0;
+  }
+  
+  /* Hide any content that might show "Home" when sidebar is closed */
+  .notion-sidebar.collapsed ~ .app-main .breadcrumbs {
+    display: none !important;
   }
 }
 
