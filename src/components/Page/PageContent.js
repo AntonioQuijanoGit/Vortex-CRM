@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { TodoApp } from "../Todo";
 import { Dashboard } from "../Dashboard";
 import { BlockManager } from "../BlockManager";
@@ -15,6 +15,23 @@ export default function PageContent({
   onUpdatePage,
   activePageId,
 }) {
+  // Check if we're on mobile
+  const [isMobile, setIsMobile] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return window.innerWidth <= 768;
+  });
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+  
   // Show dashboard when no page or when on home page, but always show breadcrumbs
   // Check both page?.id and activePageId for special views
   const pageId = page?.id || activePageId;
@@ -23,6 +40,9 @@ export default function PageContent({
   const isHabits = pageId === "habits";
   const isAnalytics = pageId === "analytics";
   
+  // Don't render breadcrumbs on mobile - everything should be in hamburger menu
+  const shouldShowBreadcrumbs = !isMobile;
+  
   if (isDashboard) {
     return (
       <div
@@ -30,7 +50,7 @@ export default function PageContent({
         role="region"
         aria-live="polite"
       >
-        <BreadcrumbTrail items={breadcrumbs} onNavigate={onNavigate} />
+        {shouldShowBreadcrumbs && <BreadcrumbTrail items={breadcrumbs} onNavigate={onNavigate} />}
         <Dashboard onNavigate={onNavigate} />
       </div>
     );
@@ -40,7 +60,7 @@ export default function PageContent({
   if (isTasks) {
     return (
       <div className="page-content" role="region" aria-live="polite">
-        <BreadcrumbTrail items={breadcrumbs} onNavigate={onNavigate} />
+        {shouldShowBreadcrumbs && <BreadcrumbTrail items={breadcrumbs} onNavigate={onNavigate} />}
         <TasksView onNavigate={onNavigate} />
       </div>
     );
@@ -49,7 +69,7 @@ export default function PageContent({
   if (isHabits) {
     return (
       <div className="page-content" role="region" aria-live="polite">
-        <BreadcrumbTrail items={breadcrumbs} onNavigate={onNavigate} />
+        {shouldShowBreadcrumbs && <BreadcrumbTrail items={breadcrumbs} onNavigate={onNavigate} />}
         <HabitsView onNavigate={onNavigate} />
       </div>
     );
@@ -58,7 +78,7 @@ export default function PageContent({
   if (isAnalytics) {
     return (
       <div className="page-content" role="region" aria-live="polite">
-        <BreadcrumbTrail items={breadcrumbs} onNavigate={onNavigate} />
+        {shouldShowBreadcrumbs && <BreadcrumbTrail items={breadcrumbs} onNavigate={onNavigate} />}
         <AnalyticsView />
       </div>
     );
@@ -66,7 +86,7 @@ export default function PageContent({
 
   return (
     <div className="page-content" role="region" aria-live="polite">
-      <BreadcrumbTrail items={breadcrumbs} onNavigate={onNavigate} />
+      {shouldShowBreadcrumbs && <BreadcrumbTrail items={breadcrumbs} onNavigate={onNavigate} />}
       <PageHero page={page} onUpdatePage={onUpdatePage} />
       <div className="page-body">
         {page.type === "database" ? (
