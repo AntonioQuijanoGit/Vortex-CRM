@@ -1181,4 +1181,25 @@
   .visual-data-card.heatmap-card {
     grid-column: 1;
   }
+  
+  .section-title-modern {
+    font-size: 18px;
+  }
+  
+  .section-subtitle {
+    font-size: 12px;
+  }
+  
+  .dashboard-calendar-section {
+    padding: var(--spacing-md) var(--spacing-sm) !important;
+  }
+  
+  .dashboard-section-modern {
+    padding: var(--spacing-md) var(--spacing-sm) !important;
+  }
+  
+  .section-header {
+    margin-bottom: var(--spacing-sm);
+    padding-bottom: var(--spacing-sm);
+  }
 }

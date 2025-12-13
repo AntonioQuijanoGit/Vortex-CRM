@@ -594,3 +594,115 @@
   color: var(--color-muted);
   font-size: 14px;
 }
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .dashboard-calendar {
+    padding: var(--spacing-sm);
+    max-width: 100%;
+  }
+  
+  .dashboard-calendar-header {
+    margin-bottom: var(--spacing-sm);
+    padding-bottom: var(--spacing-sm);
+  }
+  
+  .calendar-header-top {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-sm);
+  }
+  
+  .dashboard-calendar-title {
+    font-size: 16px;
+  }
+  
+  .calendar-nav {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .calendar-nav-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 12px;
+  }
+  
+  .calendar-month-year {
+    font-size: 13px;
+    min-width: auto;
+    flex: 1;
+  }
+  
+  .calendar-today-btn {
+    padding: var(--spacing-xxs) var(--spacing-sm);
+    font-size: 11px;
+  }
+  
+  .dashboard-calendar-grid {
+    gap: var(--spacing-xxs);
+  }
+  
+  .dashboard-cal-day-header {
+    font-size: 9px;
+    padding: var(--spacing-xxs);
+  }
+  
+  .dashboard-cal-day,
+  .dashboard-cal-day-empty {
+    min-height: 32px;
+    padding: 2px;
+  }
+  
+  .dashboard-cal-day-number {
+    font-size: 11px;
+  }
+  
+  .dashboard-cal-indicator {
+    font-size: 7px;
+    padding: 1px 2px;
+  }
+  
+  .dashboard-today-info {
+    gap: var(--spacing-xxs);
+  }
+  
+  .today-date {
+    font-size: 12px;
+  }
+  
+  .today-stat {
+    font-size: 10px;
+    padding: var(--spacing-xxs) var(--spacing-xs);
+  }
+  
+  .event-form {
+    width: 95%;
+    max-width: none;
+    padding: var(--spacing-md);
+    max-height: 85vh;
+  }
+  
+  .event-form-header h4 {
+    font-size: 14px;
+  }
+  
+  .date-details-modal {
+    max-width: 95%;
+    max-height: 85vh;
+  }
+  
+  .date-details-item {
+    padding: var(--spacing-xs) var(--spacing-sm);
+  }
+  
+  .date-details-text {
+    font-size: 13px;
+  }
+  
+  .date-details-icon {
+    width: 28px;
+    height: 28px;
+    font-size: 14px;
+  }
+}

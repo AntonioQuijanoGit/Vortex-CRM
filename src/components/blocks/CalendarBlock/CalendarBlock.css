@@ -397,3 +397,83 @@
   box-shadow: var(--shadow-sm);
 }
 
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .calendar-block-content {
+    gap: var(--spacing-sm);
+  }
+  
+  .calendar-nav {
+    flex-wrap: wrap;
+    gap: var(--spacing-xs);
+  }
+  
+  .calendar-nav-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 16px;
+  }
+  
+  .calendar-month-year {
+    font-size: 14px;
+    order: -1;
+    width: 100%;
+    margin-bottom: var(--spacing-xs);
+  }
+  
+  .calendar-today-btn {
+    padding: var(--spacing-xxs) var(--spacing-sm);
+    font-size: 11px;
+  }
+  
+  .calendar-grid {
+    gap: var(--spacing-xxs);
+  }
+  
+  .calendar-day-header {
+    font-size: 9px;
+    padding: var(--spacing-xxs);
+  }
+  
+  .calendar-day,
+  .calendar-day-empty {
+    min-height: 40px;
+    padding: var(--spacing-xxs);
+  }
+  
+  .calendar-day-number {
+    font-size: 12px;
+  }
+  
+  .calendar-event-dot {
+    width: 5px;
+    height: 5px;
+  }
+  
+  .event-form-overlay {
+    padding: var(--spacing-sm);
+  }
+  
+  .event-form {
+    padding: var(--spacing-md);
+    max-width: 100%;
+  }
+  
+  .event-form-header h4 {
+    font-size: 16px;
+  }
+  
+  .calendar-selected-date h5 {
+    font-size: 14px;
+  }
+  
+  .event-title {
+    font-size: 13px;
+  }
+  
+  .event-time,
+  .event-description {
+    font-size: 11px;
+  }
+}
+
