@@ -14,4 +14,5 @@ export { default as ThemeToggle } from './ThemeToggle/ThemeToggle';
 export { default as ProgressCircle } from './ProgressCircle/ProgressCircle';
 export { default as MiniLineChart } from './MiniLineChart/MiniLineChart';
 export { default as ActivityHeatmap } from './ActivityHeatmap/ActivityHeatmap';
+export { default as TemplateSelector } from './TemplateSelector/TemplateSelector';
 export * from './Toast';

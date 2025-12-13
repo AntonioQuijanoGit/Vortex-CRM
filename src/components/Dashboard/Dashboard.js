@@ -1,26 +1,68 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { usePages } from "../../hooks/usePages";
 import DashboardCalendar from "./DashboardCalendar";
 import { Icons } from "../../utils/icons";
-import { safeGetItem } from "../../utils/storage";
+import { safeGetItem, safeSetItem } from "../../utils/storage";
 import { getAllTodosWithPages } from "../../utils/todos";
 import { useToast } from "../../hooks/useToast";
 import { logger } from "../../utils/logger";
 import OrphanedItems from "../shared/OrphanedItems/OrphanedItems";
-import { DataExportImport, ProgressCircle, MiniLineChart, ActivityHeatmap } from "../shared";
+import { DataExportImport, ProgressCircle, MiniLineChart, ActivityHeatmap, TemplateSelector } from "../shared";
+import { applyTemplates } from "../../utils/templates";
 import "./Dashboard.css";
 
 export default function Dashboard({ onNavigate }) {
-  const { getRootPages, getPage } = usePages();
+  const { getRootPages, getPage, addPage, updatePage } = usePages();
   const { showToast } = useToast();
   const [showOrphanedItems, setShowOrphanedItems] = useState(false);
   const [showDataExportImport, setShowDataExportImport] = useState(false);
+  const [showTemplateSelector, setShowTemplateSelector] = useState(false);
 
   const rootPages = getRootPages();
 
   // Use centralized utility to get all todos with page info
   const allTodosWithPages = getAllTodosWithPages(getPage);
   const allTodos = allTodosWithPages.map(({ pageId, pageTitle, ...todo }) => todo);
+  
+  // Check if we should show template selector
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
+    const templatesApplied = safeGetItem("templates-applied", false);
+    const hasSeenTutorial = safeGetItem("has-seen-tutorial", false);
+    
+    // Show template selector if:
+    // - Templates haven't been applied
+    // - User has seen tutorial (so they know what they're doing)
+    // - App is empty (no pages except home, no todos)
+    if (!templatesApplied && hasSeenTutorial && rootPages.length <= 1 && allTodos.length === 0) {
+      // Small delay to let the page render
+      setTimeout(() => {
+        setShowTemplateSelector(true);
+      }, 1000);
+    }
+  }, [rootPages.length, allTodos.length]);
+
+  // Handle template application
+  const handleApplyTemplates = async () => {
+    try {
+      await applyTemplates(addPage, updatePage);
+      showToast("¡Plantillas aplicadas! Explora las páginas de ejemplo.", "success");
+      setShowTemplateSelector(false);
+      // Refresh the page to show new content
+      setTimeout(() => {
+        window.location.reload();
+      }, 500);
+    } catch (error) {
+      logger.error("Error applying templates:", error);
+      showToast("Error al aplicar las plantillas. Intenta de nuevo.", "error");
+    }
+  };
+  
+  const handleSkipTemplates = () => {
+    safeSetItem("templates-applied", "skipped");
+    setShowTemplateSelector(false);
+  };
   const tasks = allTodos.filter((t) => t.type === "task");
   const habits = allTodos.filter((t) => t.type === "habit");
   const completedTasks = tasks.filter((t) => t.completed).length;
@@ -269,6 +311,52 @@ export default function Dashboard({ onNavigate }) {
       </div>
 
       <div className="dashboard-main-content">
+        {/* Welcome Screen when app is empty */}
+        {rootPages.length <= 1 && allTodos.length === 0 && (
+          <section className="dashboard-section-modern welcome-empty-state">
+            <div className="welcome-empty-content">
+              <div className="welcome-empty-icon">{Icons.page}</div>
+              <h2 className="welcome-empty-title">¡Bienvenido a tu espacio de trabajo!</h2>
+              <p className="welcome-empty-description">
+                Empieza organizando tus tareas, hábitos y notas en un solo lugar. Todo se guarda automáticamente.
+              </p>
+              <div className="welcome-empty-actions">
+                <button
+                  className="welcome-action-button primary"
+                  onClick={() => {
+                    try {
+                      const newPage = addPage("Mi Primera Página", null, "page");
+                      if (newPage && newPage.id) {
+                        onNavigate(newPage.id);
+                      }
+                    } catch (error) {
+                      logger.error("Error creating first page:", error);
+                      showToast("Error al crear la página. Intenta de nuevo.", "error");
+                    }
+                  }}
+                >
+                  <span className="action-icon">{Icons.add}</span>
+                  <span>Crear mi primera página</span>
+                </button>
+                <div className="welcome-quick-tips">
+                  <div className="quick-tip">
+                    <span className="tip-icon">{Icons.task}</span>
+                    <span>Agrega tareas para organizar tu trabajo</span>
+                  </div>
+                  <div className="quick-tip">
+                    <span className="tip-icon">{Icons.habit}</span>
+                    <span>Crea hábitos para mantener rutinas</span>
+                  </div>
+                  <div className="quick-tip">
+                    <span className="tip-icon">{Icons.calendar}</span>
+                    <span>Usa el calendario para ver tus eventos</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
+
         {quickLinks.length > 0 && (
           <section className="dashboard-section-modern">
             <div className="section-header">
@@ -407,6 +495,13 @@ export default function Dashboard({ onNavigate }) {
             <DataExportImport onClose={() => setShowDataExportImport(false)} />
           </div>
         </div>
+      )}
+      
+      {showTemplateSelector && (
+        <TemplateSelector
+          onAccept={handleApplyTemplates}
+          onSkip={handleSkipTemplates}
+        />
       )}
     </div>
   );

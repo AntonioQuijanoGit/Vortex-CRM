@@ -10,6 +10,114 @@
   padding-right: calc(var(--spacing-lg) + 60px) !important; /* Space for theme toggle */
 }
 
+/* Welcome Empty State */
+.welcome-empty-state {
+  background: linear-gradient(135deg, var(--color-bg) 0%, var(--color-surface) 100%);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-3xl) var(--spacing-xl);
+  text-align: center;
+  border: 2px dashed var(--color-border);
+  margin: var(--spacing-2xl) 0;
+}
+
+.welcome-empty-content {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.welcome-empty-icon {
+  font-size: 64px;
+  color: var(--color-accent);
+  margin-bottom: var(--spacing-lg);
+  opacity: 0.8;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+.welcome-empty-title {
+  font-size: clamp(24px, 3vw, 32px);
+  font-weight: 700;
+  color: var(--color-ink);
+  margin: 0 0 var(--spacing-md) 0;
+  line-height: 1.3;
+}
+
+.welcome-empty-description {
+  font-size: 16px;
+  color: var(--color-muted);
+  margin: 0 0 var(--spacing-xl) 0;
+  line-height: 1.6;
+}
+
+.welcome-empty-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  align-items: center;
+}
+
+.welcome-action-button {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md) var(--spacing-xl);
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: var(--radius-md);
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: var(--color-accent);
+  color: white;
+}
+
+.welcome-action-button.primary {
+  background: var(--color-accent);
+  color: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.welcome-action-button.primary:hover {
+  background: var(--color-accent-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.welcome-action-button .action-icon {
+  font-size: 20px;
+}
+
+.welcome-quick-tips {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  width: 100%;
+  max-width: 400px;
+  margin-top: var(--spacing-lg);
+}
+
+.quick-tip {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: var(--color-surface);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  color: var(--color-muted);
+  text-align: left;
+}
+
+.quick-tip .tip-icon {
+  font-size: 18px;
+  color: var(--color-accent);
+  flex-shrink: 0;
+}
+
 .dashboard-hero {
   background: var(--color-bg);
   border-bottom: var(--border-thin);
