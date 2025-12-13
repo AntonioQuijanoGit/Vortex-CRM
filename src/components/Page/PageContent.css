@@ -768,10 +768,9 @@
     padding-left: var(--spacing-sm) !important;
   }
   
+  /* Hide breadcrumbs on mobile - everything should be in the hamburger menu */
   .breadcrumbs {
-    padding: var(--spacing-xs) var(--spacing-sm);
-    font-size: 12px;
-    margin-bottom: var(--spacing-sm);
+    display: none;
   }
   
   .page-hero {
