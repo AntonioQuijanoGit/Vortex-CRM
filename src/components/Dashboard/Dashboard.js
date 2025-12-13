@@ -363,7 +363,7 @@ export default function Dashboard({ onNavigate }) {
               <div className="welcome-empty-icon">{Icons.page}</div>
               <h2 className="welcome-empty-title">Welcome to Your Workspace!</h2>
               <p className="welcome-empty-description">
-                Start organizing your tasks, habits, and notes in one place. Everything saves automatically.
+                Your personal productivity hub. Organize tasks, track habits, and manage your content all in one place. Everything saves automatically.
               </p>
               <div className="welcome-empty-actions">
                 <button
@@ -383,18 +383,37 @@ export default function Dashboard({ onNavigate }) {
                   <span className="action-icon">{Icons.add}</span>
                   <span>Create my first page</span>
                 </button>
+                <p className="welcome-hint">
+                  Or use the <strong>+</strong> button in the sidebar to create a page
+                </p>
                 <div className="welcome-quick-tips">
                   <div className="quick-tip">
                     <span className="tip-icon">{Icons.task}</span>
-                    <span>Add tasks to organize your work</span>
+                    <div>
+                      <strong>Tasks</strong>
+                      <span>Track one-time items with due dates</span>
+                    </div>
                   </div>
                   <div className="quick-tip">
                     <span className="tip-icon">{Icons.habit}</span>
-                    <span>Create habits to maintain routines</span>
+                    <div>
+                      <strong>Habits</strong>
+                      <span>Build daily routines with streak tracking</span>
+                    </div>
                   </div>
                   <div className="quick-tip">
                     <span className="tip-icon">{Icons.calendar}</span>
-                    <span>Use the calendar to view your events</span>
+                    <div>
+                      <strong>Calendar</strong>
+                      <span>View and manage your events</span>
+                    </div>
+                  </div>
+                  <div className="quick-tip">
+                    <span className="tip-icon">{Icons.search}</span>
+                    <div>
+                      <strong>Quick Search</strong>
+                      <span>Press ⌘K or Ctrl+K to search everything</span>
+                    </div>
                   </div>
                 </div>
               </div>

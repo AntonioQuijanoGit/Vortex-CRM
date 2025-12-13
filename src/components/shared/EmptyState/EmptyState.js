@@ -17,13 +17,13 @@ export default function EmptyState({
       <p className="emptyStateHint">{hint}</p>
       {showExamples && (
         <div className="emptyStateExamples">
-          <p className="examplesTitle">Ejemplos:</p>
+          <p className="examplesTitle">Examples:</p>
           <div className="examplesList">
             <div className="exampleItem">
-              <strong>Tarea:</strong> "Revisar propuesta del proyecto"
+              <strong>Task:</strong> "Review project proposal"
             </div>
             <div className="exampleItem">
-              <strong>Hábito:</strong> "Beber 8 vasos de agua"
+              <strong>Habit:</strong> "Drink 8 glasses of water"
             </div>
           </div>
         </div>

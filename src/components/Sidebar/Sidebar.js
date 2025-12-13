@@ -67,7 +67,8 @@ export default function Sidebar({
                 <button
                   className="add-page-button"
                   onClick={() => setShowNewPageInput(true)}
-                  aria-label="Open new page input"
+                  aria-label="Add new page"
+                  title="Add new page (Click to create)"
                 >
                   {Icons.add}
                 </button>
