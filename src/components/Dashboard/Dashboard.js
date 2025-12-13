@@ -116,14 +116,32 @@ export default function Dashboard({ onNavigate }) {
   }, [tasks]);
 
   // Prepare activity data for heatmap
+  // Include both completed tasks (completedAt) and created todos (createdAt) for better activity tracking
   const activityData = useMemo(() => {
-    return allTodos
-      .filter((todo) => todo.completedAt || todo.createdAt)
-      .map((todo) => ({
-        date: todo.completedAt || todo.createdAt,
-        createdAt: todo.createdAt,
-        completedAt: todo.completedAt,
-      }));
+    const activities = [];
+    
+    allTodos.forEach((todo) => {
+      // Add completion activity if task/habit was completed
+      if (todo.completedAt) {
+        activities.push({
+          date: todo.completedAt,
+          createdAt: todo.createdAt,
+          completedAt: todo.completedAt,
+          type: 'completed'
+        });
+      }
+      // Also add creation activity for new todos
+      if (todo.createdAt) {
+        activities.push({
+          date: todo.createdAt,
+          createdAt: todo.createdAt,
+          completedAt: todo.completedAt,
+          type: 'created'
+        });
+      }
+    });
+    
+    return activities;
   }, [allTodos]);
 
   // Movies functionality has been removed, so we don't count them anymore

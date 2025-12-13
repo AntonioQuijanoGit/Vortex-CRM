@@ -13,11 +13,22 @@ export default function ActivityHeatmap({ data, days = 90, startDate }) {
 
   // Count activity per day
   const activityMap = {};
-  if (data) {
+  if (data && Array.isArray(data) && data.length > 0) {
     data.forEach((item) => {
-      const date = new Date(item.date || item.createdAt || item.completedAt);
-      const dateKey = date.toISOString().split("T")[0];
-      activityMap[dateKey] = (activityMap[dateKey] || 0) + 1;
+      if (!item || (!item.date && !item.createdAt && !item.completedAt)) return;
+      
+      const dateStr = item.date || item.createdAt || item.completedAt;
+      if (!dateStr) return;
+      
+      try {
+        const date = new Date(dateStr);
+        if (isNaN(date.getTime())) return; // Invalid date
+        
+        const dateKey = date.toISOString().split("T")[0];
+        activityMap[dateKey] = (activityMap[dateKey] || 0) + 1;
+      } catch (error) {
+        console.warn("Invalid date in activity data:", dateStr, error);
+      }
     });
   }
 
