@@ -20,4 +20,5 @@ export { default as QuickNotes } from './QuickNotes/QuickNotes';
 export { default as Reminders } from './Reminders/Reminders';
 export { default as Goals } from './Goals/Goals';
 export { default as FocusTimer } from './FocusTimer/FocusTimer';
+export { default as QuickActions } from './QuickActions/QuickActions';
 export * from './Toast';

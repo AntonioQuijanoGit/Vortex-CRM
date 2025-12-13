@@ -20,9 +20,16 @@
   --color-border-dark: #b0b0b0;
   --color-accent: #000000;
   --color-accent-hover: #333333;
+  --color-accent-light: rgba(0, 0, 0, 0.1);
   --color-primary: #000000;
   --color-primary-dark: #1a1a1a;
   --color-primary-light: rgba(0, 0, 0, 0.1);
+  
+  /* Gradient colors - subtle black/white gradients */
+  --gradient-primary: linear-gradient(135deg, #000000 0%, #333333 100%);
+  --gradient-success: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  --gradient-warm: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);
+  --gradient-cool: linear-gradient(135deg, #666666 0%, #000000 100%);
   --color-success: #10b981;
   --color-success-light: rgba(16, 185, 129, 0.1);
   --color-success-dark: #059669;
@@ -52,9 +59,11 @@
   --spacing-3xl: 4rem;
   
   /* Border Radius */
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-full: 9999px;
 
   /* Refined Borders */
   --border-thin: 1px solid var(--color-stroke);
@@ -62,10 +71,15 @@
   --border-thick: 2px solid var(--color-stroke-strong);
 
   /* Enhanced Shadows with Depth */
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.06);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.08);
-  --shadow-lg: 0 10px 24px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.1);
-  --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.15), 0 8px 16px rgba(0, 0, 0, 0.12);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1), 0 10px 10px rgba(0, 0, 0, 0.04);
+  --shadow-2xl: 0 25px 50px rgba(0, 0, 0, 0.15), 0 10px 20px rgba(0, 0, 0, 0.1);
+  
+  /* Colored shadows for accent */
+  --shadow-accent: 0 4px 14px rgba(99, 102, 241, 0.25);
+  --shadow-accent-lg: 0 10px 30px rgba(99, 102, 241, 0.3);
   
   /* Glassmorphism effects */
   --glass-bg: rgba(255, 255, 255, 0.7);
@@ -125,9 +139,16 @@
   --color-border-dark: #4a4a4a;
   --color-accent: #ffffff;
   --color-accent-hover: #e0e0e0;
+  --color-accent-light: rgba(255, 255, 255, 0.15);
   --color-primary: #ffffff;
   --color-primary-dark: #e0e0e0;
   --color-primary-light: rgba(255, 255, 255, 0.1);
+  
+  /* Gradient colors for dark mode - white/gray gradients */
+  --gradient-primary: linear-gradient(135deg, #ffffff 0%, #e0e0e0 100%);
+  --gradient-success: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  --gradient-warm: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);
+  --gradient-cool: linear-gradient(135deg, #a0a0a0 0%, #ffffff 100%);
   --color-success: #10b981;
   --color-success-light: rgba(16, 185, 129, 0.15);
   --color-success-dark: #059669;

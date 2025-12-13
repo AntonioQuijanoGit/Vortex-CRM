@@ -7,7 +7,7 @@ import { getAllTodosWithPages } from "../../utils/todos";
 import { useToast } from "../../hooks/useToast";
 import { logger } from "../../utils/logger";
 import OrphanedItems from "../shared/OrphanedItems/OrphanedItems";
-import { DataExportImport, ProgressCircle, MiniLineChart, ActivityHeatmap, TemplateSelector, Achievements, Reminders, Goals, FocusTimer } from "../shared";
+import { DataExportImport, ProgressCircle, MiniLineChart, ActivityHeatmap, TemplateSelector, Achievements, Reminders, Goals, FocusTimer, QuickActions } from "../shared";
 import { TodayTasksWidget, UpcomingDeadlinesWidget, HabitsAtRiskWidget } from "../shared/DashboardWidgets";
 import { checkAchievements } from "../../utils/achievements";
 import { applyTemplates } from "../../utils/templates";
@@ -20,6 +20,7 @@ export default function Dashboard({ onNavigate }) {
   const [showDataExportImport, setShowDataExportImport] = useState(false);
   const [showTemplateSelector, setShowTemplateSelector] = useState(false);
   const [showAchievements, setShowAchievements] = useState(false);
+  const [showFocusTimer, setShowFocusTimer] = useState(false);
 
   const rootPages = getRootPages();
 
@@ -330,6 +331,21 @@ export default function Dashboard({ onNavigate }) {
       </div>
 
       <div className="dashboard-main-content">
+        {/* Quick Actions - Compact bar */}
+        {rootPages.length > 1 || allTodos.length > 0 ? (
+          <section className="dashboard-section-modern dashboard-quick-actions-section">
+            <div className="section-header">
+              <h2 className="section-title-modern">Quick Actions</h2>
+            </div>
+            <QuickActions
+              onNavigate={onNavigate}
+              onAddPage={addPage}
+              onShowAchievements={() => setShowAchievements(true)}
+              onShowFocusTimer={() => setShowFocusTimer(true)}
+            />
+          </section>
+        ) : null}
+
         {/* Widgets Section */}
         <div className="dashboard-widgets-grid">
           <TodayTasksWidget todos={allTodos} onNavigate={onNavigate} />
@@ -386,18 +402,20 @@ export default function Dashboard({ onNavigate }) {
           </section>
         )}
 
+        {/* Quick Access - Only show if there are pages */}
         {quickLinks.length > 0 && (
           <section className="dashboard-section-modern">
             <div className="section-header">
               <h2 className="section-title-modern">Quick Access</h2>
-              <p className="section-subtitle">Jump to your pages</p>
+              <p className="section-subtitle">Your recent pages</p>
             </div>
             <div className="quick-links-modern">
-              {quickLinks.map((page) => (
+              {quickLinks.slice(0, 6).map((page) => (
                 <button
                   key={page.id}
                   className="quick-link-modern"
                   onClick={page.onClick}
+                  title={`Go to ${page.title}`}
                 >
                   <div className="quick-link-info">
                     <div className="quick-link-title-modern">{page.title}</div>
@@ -495,36 +513,30 @@ export default function Dashboard({ onNavigate }) {
         <DashboardCalendar todos={allTodos} onNavigate={onNavigate} />
       </section>
       
-      {/* Achievements Section */}
+      {/* Tools Section - Consolidate Achievements and Data Management */}
       <section className="dashboard-section-modern">
         <div className="section-header">
-          <h2 className="section-title-modern">Achievements</h2>
-          <p className="section-subtitle">Unlock achievements by completing tasks and habits</p>
+          <h2 className="section-title-modern">Tools</h2>
+          <p className="section-subtitle">Additional features and settings</p>
         </div>
-        <button
-          className="dashboard-button-modern"
-          onClick={() => setShowAchievements(true)}
-          aria-label="View achievements"
-        >
-          <span className="button-icon">{Icons.streak}</span>
-          <span className="button-text">View Achievements</span>
-        </button>
-      </section>
-      
-      {/* Data Export/Import Section */}
-      <section className="dashboard-section-modern">
-        <div className="section-header">
-          <h2 className="section-title-modern">Data Management</h2>
-          <p className="section-subtitle">Export or import your data</p>
+        <div className="dashboard-tools-grid">
+          <button
+            className="dashboard-tool-button"
+            onClick={() => setShowAchievements(true)}
+            aria-label="View achievements"
+          >
+            <span className="tool-icon">{Icons.streak}</span>
+            <span className="tool-text">Achievements</span>
+          </button>
+          <button
+            className="dashboard-tool-button"
+            onClick={() => setShowDataExportImport(true)}
+            aria-label="Export or import data"
+          >
+            <span className="tool-icon">{Icons.arrowDown}</span>
+            <span className="tool-text">Export / Import</span>
+          </button>
         </div>
-        <button
-          className="dashboard-button-modern"
-          onClick={() => setShowDataExportImport(true)}
-          aria-label="Export or import data"
-        >
-          <span className="button-icon">{Icons.arrowDown}</span>
-          <span className="button-text">Export / Import Data</span>
-        </button>
       </section>
       
       {showOrphanedItems && (
@@ -554,6 +566,22 @@ export default function Dashboard({ onNavigate }) {
           stats={achievementStats}
           onClose={() => setShowAchievements(false)}
         />
+      )}
+      
+      {showFocusTimer && (
+        <div className="focus-timer-modal-overlay" onClick={() => setShowFocusTimer(false)}>
+          <div className="focus-timer-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="focus-timer-modal-header">
+              <h2>Focus Timer</h2>
+              <button onClick={() => setShowFocusTimer(false)} aria-label="Close">
+                {Icons.close}
+              </button>
+            </div>
+            <div className="focus-timer-modal-content">
+              <FocusTimer />
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

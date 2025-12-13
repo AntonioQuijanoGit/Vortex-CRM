@@ -1,0 +1,114 @@
+.quick-actions {
+  display: flex;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-lg);
+  flex-wrap: wrap;
+}
+
+.quick-actions-header {
+  display: none; /* Hide header, make it more compact */
+}
+
+.quick-action-card {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: var(--color-panel);
+  border: var(--border-thin);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  position: relative;
+  overflow: hidden;
+}
+
+.quick-action-card:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+  border-color: var(--color-stroke-strong);
+  background: var(--color-surface);
+}
+
+.quick-action-icon-wrapper {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
+  transition: all var(--transition-base);
+}
+
+.quick-action-card:hover .quick-action-icon-wrapper {
+  transform: scale(1.1);
+}
+
+.quick-action-icon {
+  font-size: 18px;
+}
+
+.quick-action-primary .quick-action-icon-wrapper {
+  background: var(--color-accent-light);
+  color: var(--color-accent);
+}
+
+.quick-action-info .quick-action-icon-wrapper {
+  background: var(--color-info-light);
+  color: var(--color-info);
+}
+
+.quick-action-success .quick-action-icon-wrapper {
+  background: var(--color-success-light);
+  color: var(--color-success);
+}
+
+.quick-action-accent .quick-action-icon-wrapper {
+  background: var(--color-accent-light);
+  color: var(--color-accent);
+}
+
+.quick-action-content {
+  display: none; /* Hide description for compact view */
+}
+
+.quick-action-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-ink);
+}
+
+.quick-action-description {
+  display: none;
+}
+
+.quick-action-arrow {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .quick-actions {
+    gap: var(--spacing-xs);
+    margin-bottom: var(--spacing-md);
+  }
+  
+  .quick-action-card {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: 12px;
+  }
+  
+  .quick-action-icon-wrapper {
+    width: 28px;
+    height: 28px;
+  }
+  
+  .quick-action-icon {
+    font-size: 16px;
+  }
+  
+  .quick-action-title {
+    font-size: 12px;
+  }
+}
+

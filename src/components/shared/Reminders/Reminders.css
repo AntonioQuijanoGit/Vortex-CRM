@@ -1,9 +1,29 @@
 .reminders-widget {
   background: var(--color-surface);
   border: var(--border-thin);
-  border-radius: var(--radius-md);
-  padding: var(--spacing-md);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
   margin-bottom: var(--spacing-md);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-smooth);
+  position: relative;
+  overflow: hidden;
+}
+
+.reminders-widget::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--gradient-warm);
+  opacity: 0.6;
+}
+
+.reminders-widget:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
 }
 
 .reminders-header {

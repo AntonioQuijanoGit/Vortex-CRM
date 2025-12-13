@@ -1,9 +1,29 @@
 .focus-timer {
   background: var(--color-surface);
   border: var(--border-thin);
-  border-radius: var(--radius-md);
-  padding: var(--spacing-md);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
   margin-bottom: var(--spacing-md);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-smooth);
+  position: relative;
+  overflow: hidden;
+}
+
+.focus-timer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--gradient-cool);
+  opacity: 0.6;
+}
+
+.focus-timer:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
 }
 
 .focus-timer-header {
@@ -83,6 +103,7 @@
 
 .focus-timer-progress {
   transition: stroke-dashoffset 1s linear;
+  filter: drop-shadow(0 0 4px rgba(99, 102, 241, 0.5));
 }
 
 .focus-timer-time {
@@ -145,5 +166,64 @@
   margin-top: var(--spacing-sm);
   font-size: 12px;
   color: var(--color-muted);
+}
+
+.focus-timer-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: var(--z-modal-backdrop);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-lg);
+  animation: fadeIn 0.2s ease;
+}
+
+.focus-timer-modal {
+  background: var(--color-bg);
+  border: var(--border-thin);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-xl);
+  max-width: 500px;
+  width: 100%;
+  box-shadow: var(--shadow-xl);
+  animation: scaleIn 0.3s ease;
+}
+
+.focus-timer-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-lg);
+  padding-bottom: var(--spacing-md);
+  border-bottom: var(--border-thin);
+}
+
+.focus-timer-modal-header h2 {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--color-ink);
+  margin: 0;
+}
+
+.focus-timer-modal-header button {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  background: var(--color-panel);
+  color: var(--color-ink);
+  border: var(--border-thin);
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.focus-timer-modal-header button:hover {
+  background: var(--color-surface);
+  transform: scale(1.1);
 }
 
