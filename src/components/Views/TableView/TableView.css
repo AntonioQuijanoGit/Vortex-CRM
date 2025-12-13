@@ -144,7 +144,7 @@
 .table-cell-content {
   display: block;
   cursor: pointer;
-  padding: 4px 0;
+  padding: var(--spacing-xs) 0;
   transition: all var(--transition-base);
   font-size: 14px;
   color: var(--color-text);
@@ -208,7 +208,7 @@
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.1em;
-  padding: 4px 8px;
+  padding: var(--spacing-xs) var(--spacing-sm);
   border: var(--border-thin);
   background: var(--color-panel);
   border-radius: var(--radius-sm);

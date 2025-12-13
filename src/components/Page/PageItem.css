@@ -107,7 +107,7 @@
   background: linear-gradient(135deg, var(--color-panel) 0%, var(--color-surface) 100%);
   border: var(--border-thin);
   border-radius: var(--radius-lg);
-  padding: 2px 6px;
+  padding: var(--spacing-xxs) var(--spacing-xs);
   min-width: 18px;
   text-align: center;
   line-height: 1.2;
@@ -135,7 +135,7 @@
   text-transform: uppercase;
   color: var(--color-muted);
   border: var(--border-thin);
-  padding: 1px 4px;
+  padding: var(--spacing-xxs) var(--spacing-xs);
   background: var(--color-bg);
   border-radius: var(--radius-sm);
   flex-shrink: 0;
@@ -168,7 +168,7 @@
 .page-options {
   display: flex;
   align-items: center;
-  gap: 3px;
+  gap: var(--spacing-xxs);
   margin-left: auto;
   flex-shrink: 0;
 }
@@ -208,7 +208,7 @@
   flex-direction: column;
   margin-left: var(--spacing-md);
   margin-top: 2px;
-  gap: 2px;
+  gap: var(--spacing-xxs);
   border-left: 1px solid var(--color-stroke);
   padding-left: var(--spacing-xs);
 }

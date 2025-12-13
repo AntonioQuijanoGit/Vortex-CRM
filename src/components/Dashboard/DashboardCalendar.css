@@ -138,7 +138,7 @@
 .dashboard-calendar-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 4px;
+  gap: var(--spacing-xs);
   margin-bottom: var(--spacing-md);
 }
 
@@ -222,7 +222,7 @@
 .dashboard-cal-day-indicators {
   display: flex;
   flex-wrap: wrap;
-  gap: 2px;
+  gap: var(--spacing-xxs);
   width: 100%;
   justify-content: center;
   align-items: center;

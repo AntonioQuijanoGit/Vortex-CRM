@@ -54,7 +54,7 @@
   font-weight: 600;
   display: inline-flex;
   align-items: center;
-  gap: 0.3rem;
+  gap: var(--spacing-xxs);
 }
 
 .breadcrumb-home:hover {

@@ -132,7 +132,7 @@
 .calendar-day-events {
   display: flex;
   flex-wrap: wrap;
-  gap: 2px;
+  gap: var(--spacing-xxs);
   width: 100%;
   justify-content: center;
   align-items: center;

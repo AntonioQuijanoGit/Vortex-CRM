@@ -147,7 +147,7 @@
   color: var(--color-muted);
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  padding: 2px 8px;
+  padding: var(--spacing-xxs) var(--spacing-sm);
   background: var(--color-bg);
   border-radius: var(--radius-sm);
   flex-shrink: 0;
@@ -176,7 +176,7 @@
 }
 
 .quick-search-hint kbd {
-  padding: 2px 6px;
+  padding: var(--spacing-xxs) var(--spacing-xs);
   background: var(--color-panel);
   border: var(--border-thin);
   border-radius: var(--radius-sm);

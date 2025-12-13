@@ -519,7 +519,7 @@
   text-transform: uppercase;
   color: var(--color-muted);
   background: var(--color-bg);
-  padding: 2px 4px;
+  padding: var(--spacing-xxs) var(--spacing-xs);
   border-radius: 3px;
   margin-top: var(--spacing-xxs);
 }
@@ -565,7 +565,7 @@
   text-transform: uppercase;
   color: var(--color-muted);
   background: var(--color-bg);
-  padding: 4px 8px;
+  padding: var(--spacing-xs) var(--spacing-sm);
   border-radius: 4px;
 }
 
@@ -787,7 +787,7 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  padding: 2px 8px;
+  padding: var(--spacing-xxs) var(--spacing-sm);
   border-radius: var(--radius-sm);
   background: var(--color-panel);
   border: var(--border-thin);

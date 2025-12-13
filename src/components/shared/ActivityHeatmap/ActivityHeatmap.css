@@ -38,7 +38,7 @@
 
 .legend-squares {
   display: flex;
-  gap: 3px;
+  gap: var(--spacing-xxs);
 }
 
 .legend-square {
@@ -75,7 +75,7 @@
 
 .heatmap-grid {
   display: flex;
-  gap: 4px;
+  gap: var(--spacing-xs);
   overflow-x: auto;
   padding-bottom: var(--spacing-xs);
 }
@@ -83,7 +83,7 @@
 .heatmap-week {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: var(--spacing-xs);
 }
 
 .heatmap-day {
