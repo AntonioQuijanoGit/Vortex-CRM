@@ -1,12 +1,16 @@
 import { useState, useEffect } from "react";
+import { safeGetItem, safeSetItem } from "../utils/storage";
 
 /**
  * Custom hook for managing theme (light/dark mode)
  */
 export function useTheme() {
   const [theme, setTheme] = useState(() => {
+    // Only access localStorage and window in browser environment
+    if (typeof window === 'undefined') return "light";
+    
     // Check localStorage first
-    const savedTheme = localStorage.getItem("theme");
+    const savedTheme = safeGetItem("theme", null);
     if (savedTheme) {
       return savedTheme;
     }
@@ -18,9 +22,12 @@ export function useTheme() {
   });
 
   useEffect(() => {
+    // Only access document and localStorage in browser environment
+    if (typeof window === 'undefined') return;
+    
     // Apply theme to document
     document.documentElement.setAttribute("data-theme", theme);
-    localStorage.setItem("theme", theme);
+    safeSetItem("theme", theme);
   }, [theme]);
 
   const toggleTheme = () => {

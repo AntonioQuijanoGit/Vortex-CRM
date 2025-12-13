@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { safeGetItem } from "../../../utils/storage";
+import { safeGetItem, safeSetItem } from "../../../utils/storage";
 import { useToast } from "../../../hooks/useToast";
 import { Icons } from "../../../utils/icons";
 import { logger } from "../../../utils/logger";
@@ -10,6 +10,11 @@ export default function DataExportImport({ onClose }) {
   const [isImporting, setIsImporting] = useState(false);
 
   const exportData = () => {
+    if (typeof window === 'undefined') {
+      showError("Export is only available in the browser.");
+      return;
+    }
+    
     try {
       // Get all pages (using the correct key from usePages)
       const pages = safeGetItem("notion-pages", []);
@@ -79,21 +84,28 @@ export default function DataExportImport({ onClose }) {
           throw new Error("Invalid data format: pages array is required");
         }
         
+        // Only import in browser environment
+        if (typeof window === 'undefined') {
+          showError("Import is only available in the browser.");
+          setIsImporting(false);
+          return;
+        }
+        
         // Import pages (using the correct key from usePages)
         if (importData.pages && importData.pages.length > 0) {
-          localStorage.setItem("notion-pages", JSON.stringify(importData.pages));
+          safeSetItem("notion-pages", importData.pages);
         }
         
         // Import todos
         if (importData.todos) {
           Object.keys(importData.todos).forEach((key) => {
-            localStorage.setItem(`todos-${key}`, JSON.stringify(importData.todos[key]));
+            safeSetItem(`todos-${key}`, importData.todos[key]);
           });
         }
         
         // Import events
         if (importData.events && Array.isArray(importData.events)) {
-          localStorage.setItem("events", JSON.stringify(importData.events));
+          safeSetItem("events", importData.events);
         }
         
         // Movies functionality has been removed, skip importing movies data

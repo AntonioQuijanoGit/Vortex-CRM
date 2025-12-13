@@ -11,6 +11,8 @@ export default function HelpButton({ onNavigate }) {
   
   // Check if there are orphaned items
   const hasOrphanedItems = () => {
+    if (typeof window === 'undefined' || !localStorage) return false;
+    
     const allPages = safeGetItem("notion-pages", []);
     const pageIds = new Set(allPages.map(p => p.id));
 
@@ -33,6 +35,8 @@ export default function HelpButton({ onNavigate }) {
 
   // Check for orphaned items periodically
   useEffect(() => {
+    if (typeof window === 'undefined' || !localStorage) return;
+    
     const checkOrphaned = () => {
       const allPages = safeGetItem("notion-pages", []);
       const pageIds = new Set(allPages.map(p => p.id));
@@ -67,6 +71,8 @@ export default function HelpButton({ onNavigate }) {
 
   // Keyboard shortcut: ? key to show tutorial
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
     const handleKeyDown = (e) => {
       // Only trigger if not typing in an input
       if (e.key === "?" && !e.target.matches("input, textarea")) {

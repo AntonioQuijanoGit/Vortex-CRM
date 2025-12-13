@@ -2,6 +2,8 @@
  * Utility functions for habit management
  */
 
+import { safeGetItem, safeSetItem } from "./storage";
+
 /**
  * Reset daily habits when a new day starts
  * @param {Array} todosList - List of todos
@@ -12,11 +14,11 @@ export function resetDailyHabits(todosList) {
   if (typeof window === 'undefined') return todosList;
   
   const today = new Date().toDateString();
-  const lastReset = localStorage.getItem("lastReset");
+  const lastReset = safeGetItem("lastReset", null);
 
   // If it's a new day, reset habits
   if (lastReset !== today) {
-    localStorage.setItem("lastReset", today);
+    safeSetItem("lastReset", today);
     return todosList.map((todo) => {
       if (todo.type === "habit") {
         // Check if it was completed yesterday to maintain streak

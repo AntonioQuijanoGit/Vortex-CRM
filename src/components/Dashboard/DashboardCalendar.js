@@ -22,11 +22,19 @@ export default function DashboardCalendar({ todos, onNavigate }) {
   // Get all events from all pages for display
   const getAllEvents = () => {
     let allEvents = [...events]; // Include dashboard events
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-      if (key && key.startsWith("events-") && key !== "events-dashboard") {
-        const pageEvents = JSON.parse(localStorage.getItem(key) || "[]");
-        allEvents = [...allEvents, ...pageEvents];
+    
+    // Only access localStorage in browser environment
+    if (typeof window !== 'undefined' && localStorage) {
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith("events-") && key !== "events-dashboard") {
+          try {
+            const pageEvents = JSON.parse(localStorage.getItem(key) || "[]");
+            allEvents = [...allEvents, ...pageEvents];
+          } catch (error) {
+            // Skip invalid JSON
+          }
+        }
       }
     }
     return allEvents;
@@ -190,19 +198,26 @@ export default function DashboardCalendar({ todos, onNavigate }) {
       return;
     }
     
+    // Only access localStorage in browser environment
+    if (typeof window === 'undefined' || !localStorage) return;
+    
     // If not found in dashboard, search in other pages
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
       if (key && key.startsWith("events-") && key !== "events-dashboard") {
-        const pageEvents = JSON.parse(localStorage.getItem(key) || "[]");
-        const eventIndex = pageEvents.findIndex(e => e.id === eventId);
-        if (eventIndex !== -1) {
-          // Remove the event from this page's events
-          const updatedEvents = pageEvents.filter(e => e.id !== eventId);
-          localStorage.setItem(key, JSON.stringify(updatedEvents));
-          // Force re-render by updating state
-          setSelectedDate(selectedDate);
-          return;
+        try {
+          const pageEvents = JSON.parse(localStorage.getItem(key) || "[]");
+          const eventIndex = pageEvents.findIndex(e => e.id === eventId);
+          if (eventIndex !== -1) {
+            // Remove the event from this page's events
+            const updatedEvents = pageEvents.filter(e => e.id !== eventId);
+            localStorage.setItem(key, JSON.stringify(updatedEvents));
+            // Force re-render by updating state
+            setSelectedDate(selectedDate);
+            return;
+          }
+        } catch (error) {
+          // Skip invalid JSON
         }
       }
     }

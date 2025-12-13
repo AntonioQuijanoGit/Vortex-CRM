@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Icons } from "../../../utils/icons";
+import { safeGetItem, safeSetItem } from "../../../utils/storage";
 import "./Onboarding.css";
 
 export default function Onboarding({ onComplete, forceShow = false }) {
@@ -10,7 +11,8 @@ export default function Onboarding({ onComplete, forceShow = false }) {
     if (forceShow) {
       setIsVisible(true);
     } else {
-      const hasSeenTutorial = localStorage.getItem("has-seen-tutorial");
+      if (typeof window === 'undefined') return;
+      const hasSeenTutorial = safeGetItem("has-seen-tutorial", null);
       if (!hasSeenTutorial) {
         setIsVisible(true);
       }
@@ -69,7 +71,7 @@ export default function Onboarding({ onComplete, forceShow = false }) {
 
   const handleComplete = () => {
     setIsVisible(false);
-    localStorage.setItem("has-seen-tutorial", "true");
+    safeSetItem("has-seen-tutorial", "true");
     if (onComplete) onComplete();
   };
 

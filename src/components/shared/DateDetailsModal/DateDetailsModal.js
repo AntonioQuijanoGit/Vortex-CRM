@@ -30,19 +30,22 @@ export default function DateDetailsModal({
 
   // Get page info for todos (similar to Dashboard)
   const getTodoPageInfo = (todo) => {
-    // Search in localStorage for which page contains this todo
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-      if (key && key.startsWith("todos-")) {
-        const pageId = key.replace("todos-", "");
-        const pageTodos = safeGetItem(key, []);
-        if (pageTodos.some(t => t.id === todo.id)) {
-          const allPages = safeGetItem("notion-pages", []);
-          let page = getPage ? getPage(pageId) : null;
-          if (!page) {
-            page = allPages.find(p => p.id === pageId);
+    // Only access localStorage in browser environment
+    if (typeof window !== 'undefined' && localStorage) {
+      // Search in localStorage for which page contains this todo
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith("todos-")) {
+          const pageId = key.replace("todos-", "");
+          const pageTodos = safeGetItem(key, []);
+          if (pageTodos.some(t => t.id === todo.id)) {
+            const allPages = safeGetItem("notion-pages", []);
+            let page = getPage ? getPage(pageId) : null;
+            if (!page) {
+              page = allPages.find(p => p.id === pageId);
+            }
+            return { pageId, pageTitle: page ? page.title : "Unknown Page" };
           }
-          return { pageId, pageTitle: page ? page.title : "Unknown Page" };
         }
       }
     }

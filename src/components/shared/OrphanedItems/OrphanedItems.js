@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Icons } from "../../../utils/icons";
-import { safeGetItem } from "../../../utils/storage";
+import { safeGetItem, safeSetItem } from "../../../utils/storage";
 import { logger } from "../../../utils/logger";
 import ConfirmDialog from "../ConfirmDialog/ConfirmDialog";
 import "./OrphanedItems.css";
@@ -14,23 +14,26 @@ export default function OrphanedItems({ onNavigate, onClose }) {
     const allPages = safeGetItem("notion-pages", []);
     const pageIds = new Set(allPages.map(p => p.id));
 
-    // Check all todos from pages
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-      if (key && key.startsWith("todos-")) {
-        const pageId = key.replace("todos-", "");
-        const pageTodos = safeGetItem(key, []);
-        const page = allPages.find(p => p.id === pageId);
-        
-        // If page doesn't exist, these todos are orphaned
-        if (!page && pageId && pageId !== "null" && pageId !== "undefined") {
-          pageTodos.forEach(todo => {
-            orphanedItems.push({
-              ...todo,
-              pageId: pageId,
-              storageKey: key
+    // Only access localStorage in browser environment
+    if (typeof window !== 'undefined' && localStorage) {
+      // Check all todos from pages
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith("todos-")) {
+          const pageId = key.replace("todos-", "");
+          const pageTodos = safeGetItem(key, []);
+          const page = allPages.find(p => p.id === pageId);
+          
+          // If page doesn't exist, these todos are orphaned
+          if (!page && pageId && pageId !== "null" && pageId !== "undefined") {
+            pageTodos.forEach(todo => {
+              orphanedItems.push({
+                ...todo,
+                pageId: pageId,
+                storageKey: key
+              });
             });
-          });
+          }
         }
       }
     }
@@ -44,7 +47,7 @@ export default function OrphanedItems({ onNavigate, onClose }) {
     const todos = safeGetItem(item.storageKey, []);
     const updatedTodos = todos.filter(t => t.id !== item.id);
     try {
-      localStorage.setItem(item.storageKey, JSON.stringify(updatedTodos));
+      safeSetItem(item.storageKey, updatedTodos);
       // If no more todos in this key, we could delete the key, but let's leave it
     } catch (error) {
       logger.error("Error deleting orphaned item:", error);

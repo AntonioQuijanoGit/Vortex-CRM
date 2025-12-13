@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from "react";
+import { safeGetItem, safeSetItem } from "../../utils/storage";
 import "./NoteEditor.css";
 
 export default function NoteEditor({ pageId, initialContent = "" }) {
   const [content, setContent] = useState(() => {
-    const saved = localStorage.getItem(`note-${pageId}`);
+    if (typeof window === 'undefined') return initialContent;
+    const saved = safeGetItem(`note-${pageId}`, null);
     return saved || initialContent;
   });
 
   useEffect(() => {
-    localStorage.setItem(`note-${pageId}`, content);
+    if (typeof window === 'undefined') return;
+    safeSetItem(`note-${pageId}`, content);
   }, [content, pageId]);
 
   return (
