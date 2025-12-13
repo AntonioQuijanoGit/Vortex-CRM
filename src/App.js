@@ -101,10 +101,26 @@ function App() {
 
   return (
     <div className="app-layout">
+      {/* Mobile menu button */}
+      {sidebarCollapsed && (
+        <button
+          className="mobile-menu-button"
+          onClick={() => setSidebarCollapsed(false)}
+          aria-label="Open menu"
+        >
+          ☰
+        </button>
+      )}
       <Sidebar
         pages={getRootPages()}
         activePage={activePage}
-        onPageSelect={setActivePage}
+        onPageSelect={(pageId) => {
+          setActivePage(pageId);
+          // Close sidebar on mobile when page is selected
+          if (typeof window !== 'undefined' && window.innerWidth <= 768) {
+            setSidebarCollapsed(true);
+          }
+        }}
         onAddPage={addPage}
         onUpdatePage={updatePage}
         onDeletePage={deletePage}
@@ -114,6 +130,13 @@ function App() {
         isCollapsed={sidebarCollapsed}
         onToggleCollapse={setSidebarCollapsed}
       />
+      {/* Mobile overlay */}
+      {typeof window !== 'undefined' && !sidebarCollapsed && window.innerWidth <= 768 && (
+        <div
+          className="sidebar-overlay active"
+          onClick={() => setSidebarCollapsed(true)}
+        />
+      )}
       <main className="app-main">
         <PageContent 
           page={currentPage} 

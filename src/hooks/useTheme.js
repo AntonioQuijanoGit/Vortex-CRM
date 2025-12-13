@@ -14,10 +14,7 @@ export function useTheme() {
     if (savedTheme) {
       return savedTheme;
     }
-    // Check system preference
-    if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) {
-      return "dark";
-    }
+    // Default to light mode (white mode) - don't respect system preference
     return "light";
   });
 
@@ -25,10 +22,22 @@ export function useTheme() {
     // Only access document and localStorage in browser environment
     if (typeof window === 'undefined') return;
     
-    // Apply theme to document
+    // Apply theme to document immediately
     document.documentElement.setAttribute("data-theme", theme);
     safeSetItem("theme", theme);
   }, [theme]);
+
+  // Initialize theme on mount
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
+    // Ensure light theme is set by default if no theme is saved
+    const savedTheme = safeGetItem("theme", null);
+    if (!savedTheme) {
+      document.documentElement.setAttribute("data-theme", "light");
+      safeSetItem("theme", "light");
+    }
+  }, []);
 
   const toggleTheme = () => {
     setTheme((prev) => (prev === "light" ? "dark" : "light"));

@@ -87,6 +87,28 @@
 }
 
 @media (max-width: 768px) {
+  .help-buttons-container {
+    bottom: var(--spacing-md);
+    right: var(--spacing-md);
+    gap: var(--spacing-xs);
+  }
+  
+  .help-button {
+    width: 44px;
+    height: 44px;
+    font-size: 20px;
+  }
+  .help-buttons-container {
+    bottom: var(--spacing-md);
+    right: var(--spacing-md);
+    gap: var(--spacing-xs);
+  }
+  
+  .help-button {
+    width: 44px;
+    height: 44px;
+    font-size: 20px;
+  }
   .help-button {
     bottom: var(--spacing-sm);
     right: var(--spacing-sm);

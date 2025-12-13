@@ -216,14 +216,41 @@
     position: fixed;
     inset: 0;
     width: 100%;
-    max-width: 300px;
-    z-index: 1000;
+    max-width: 280px;
+    z-index: var(--z-sidebar);
     transform: translateX(-100%);
     transition: transform var(--transition-base);
     box-shadow: var(--shadow-lg);
+    background: var(--color-bg);
+    height: 100vh;
+    overflow-y: auto;
   }
 
   .notion-sidebar:not(.collapsed) {
     transform: translateX(0);
+  }
+  
+  .sidebar-header {
+    padding: var(--spacing-md) var(--spacing-sm);
+    min-height: 56px;
+  }
+  
+  .sidebar-content {
+    padding: var(--spacing-sm);
+  }
+  
+  .pages-header {
+    padding: var(--spacing-sm);
+  }
+  
+  .page-item {
+    padding: var(--spacing-sm) var(--spacing-xs);
+    font-size: 14px;
+  }
+  
+  .add-page-button {
+    width: 32px;
+    height: 32px;
+    font-size: 16px;
   }
 }
