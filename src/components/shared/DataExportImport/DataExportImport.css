@@ -70,6 +70,12 @@
   line-height: 1.6;
 }
 
+.export-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
 .buttonExport,
 .buttonImport {
   display: inline-flex;

@@ -24,6 +24,7 @@ export const Icons = {
   arrowDown: "↓",
   expand: "▼",
   collapse: "▶",
+  minimize: "−",
   
   // Content types - icons that clearly communicate function
   task: "✓",

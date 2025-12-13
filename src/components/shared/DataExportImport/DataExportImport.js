@@ -9,7 +9,7 @@ export default function DataExportImport({ onClose }) {
   const { showSuccess, showError } = useToast();
   const [isImporting, setIsImporting] = useState(false);
 
-  const exportData = () => {
+  const exportData = (format = "json") => {
     if (typeof window === 'undefined') {
       showError("Export is only available in the browser.");
       return;
@@ -37,35 +37,108 @@ export default function DataExportImport({ onClose }) {
       // Get events
       const events = safeGetItem("events", []);
       
-      // Get movies
-      const movies = safeGetItem("movies", []);
-      
       const exportData = {
         version: "1.0",
         exportedAt: new Date().toISOString(),
         pages,
         todos: allTodos,
         events,
-        movies,
       };
       
-      const dataStr = JSON.stringify(exportData, null, 2);
-      const dataBlob = new Blob([dataStr], { type: "application/json" });
+      let dataStr, mimeType, filename;
+      const dateStr = new Date().toISOString().split("T")[0];
+      
+      if (format === "markdown") {
+        dataStr = exportToMarkdown(pages, allTodos);
+        mimeType = "text/markdown";
+        filename = `task-list-export-${dateStr}.md`;
+      } else if (format === "csv") {
+        dataStr = exportToCSV(pages, allTodos);
+        mimeType = "text/csv";
+        filename = `task-list-export-${dateStr}.csv`;
+      } else {
+        dataStr = JSON.stringify(exportData, null, 2);
+        mimeType = "application/json";
+        filename = `task-list-export-${dateStr}.json`;
+      }
+      
+      const dataBlob = new Blob([dataStr], { type: mimeType });
       const url = URL.createObjectURL(dataBlob);
       const link = document.createElement("a");
       link.href = url;
-      link.download = `task-list-export-${new Date().toISOString().split("T")[0]}.json`;
+      link.download = filename;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
       
-      showSuccess("Data exported successfully!");
+      showSuccess(`Data exported as ${format.toUpperCase()} successfully!`);
       onClose();
     } catch (error) {
       logger.error("Failed to export data:", error);
       showError("Failed to export data. Please try again.");
     }
+  };
+
+  const exportToMarkdown = (pages, allTodos) => {
+    let markdown = `# Task List Export\n\n`;
+    markdown += `Exported on: ${new Date().toLocaleString()}\n\n`;
+    markdown += `---\n\n`;
+    
+    pages.forEach((page) => {
+      markdown += `## ${page.title}\n\n`;
+      const todos = allTodos[page.id] || [];
+      
+      if (todos.length === 0) {
+        markdown += `_No tasks in this page_\n\n`;
+      } else {
+        todos.forEach((todo) => {
+          const status = todo.completed ? "✓" : "○";
+          const type = todo.type === "habit" ? "↻" : "✓";
+          markdown += `- ${status} ${type} **${todo.title}**`;
+          
+          if (todo.dueDate) {
+            markdown += ` (Due: ${new Date(todo.dueDate).toLocaleDateString()})`;
+          }
+          
+          if (todo.tags && todo.tags.length > 0) {
+            markdown += ` [${todo.tags.join(", ")}]`;
+          }
+          
+          if (todo.type === "habit" && todo.streak) {
+            markdown += ` - Streak: ${todo.streak} days`;
+          }
+          
+          markdown += `\n`;
+        });
+      }
+      markdown += `\n`;
+    });
+    
+    return markdown;
+  };
+
+  const exportToCSV = (pages, allTodos) => {
+    let csv = "Type,Title,Status,Page,Due Date,Tags,Streak,Completed At\n";
+    
+    pages.forEach((page) => {
+      const todos = allTodos[page.id] || [];
+      todos.forEach((todo) => {
+        const row = [
+          todo.type || "task",
+          `"${(todo.title || "").replace(/"/g, '""')}"`,
+          todo.completed ? "Completed" : "Pending",
+          `"${(page.title || "").replace(/"/g, '""')}"`,
+          todo.dueDate || "",
+          todo.tags ? todo.tags.join("; ") : "",
+          todo.streak || "",
+          todo.completedAt || "",
+        ];
+        csv += row.join(",") + "\n";
+      });
+    });
+    
+    return csv;
   };
 
   const handleImport = (event) => {
@@ -145,15 +218,33 @@ export default function DataExportImport({ onClose }) {
       <div className="data-export-import-content">
         <div className="data-section">
           <h4>Export Data</h4>
-          <p>Download all your pages, tasks, habits, events, and movies as a JSON file.</p>
-          <button
-            className="button buttonExport"
-            onClick={exportData}
-            aria-label="Export data"
-          >
-            <span className="buttonIcon">{Icons.arrowDown}</span>
-            <span className="buttonText">Export Data</span>
-          </button>
+          <p>Download all your pages, tasks, habits, and events in different formats.</p>
+          <div className="export-buttons">
+            <button
+              className="button buttonExport"
+              onClick={() => exportData("json")}
+              aria-label="Export as JSON"
+            >
+              <span className="buttonIcon">{Icons.arrowDown}</span>
+              <span className="buttonText">Export JSON</span>
+            </button>
+            <button
+              className="button buttonExport"
+              onClick={() => exportData("markdown")}
+              aria-label="Export as Markdown"
+            >
+              <span className="buttonIcon">{Icons.arrowDown}</span>
+              <span className="buttonText">Export Markdown</span>
+            </button>
+            <button
+              className="button buttonExport"
+              onClick={() => exportData("csv")}
+              aria-label="Export as CSV"
+            >
+              <span className="buttonIcon">{Icons.arrowDown}</span>
+              <span className="buttonText">Export CSV</span>
+            </button>
+          </div>
         </div>
         
         <div className="data-section">

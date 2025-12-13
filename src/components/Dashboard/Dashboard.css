@@ -943,9 +943,16 @@
     border-top: var(--border-thin);
   }
 
-  .dashboard-main-content {
-    grid-template-columns: 1fr;
-  }
+.dashboard-main-content {
+  grid-template-columns: 1fr;
+}
+
+.dashboard-widgets-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-xl);
+}
 
   .dashboard-stats-grid {
     grid-template-columns: repeat(2, 1fr);

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Sidebar } from "./components/Sidebar";
 import { PageContent } from "./components/Page";
-import { Onboarding, HelpButton, QuickSearch, ToastContainer, ShortcutsModal, ThemeToggle } from "./components/shared";
+import { Onboarding, HelpButton, QuickSearch, ToastContainer, ShortcutsModal, ThemeToggle, QuickNotes } from "./components/shared";
 import { usePages } from "./hooks/usePages";
 import { useToast } from "./hooks/useToast";
 import { SHORTCUTS, matchesShortcut } from "./utils/keyboardShortcuts";
@@ -133,6 +133,7 @@ function App() {
       )}
       <ThemeToggle />
       <HelpButton onNavigate={setActivePage} />
+      <QuickNotes />
       {showShortcuts && (
         <ShortcutsModal onClose={() => setShowShortcuts(false)} />
       )}

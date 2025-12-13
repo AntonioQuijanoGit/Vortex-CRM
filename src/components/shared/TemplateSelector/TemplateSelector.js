@@ -43,23 +43,23 @@ export default function TemplateSelector({ onAccept, onSkip }) {
         </div>
 
         <div className="template-selector-preview">
-          <h3 className="template-preview-title">Incluye:</h3>
+          <h3 className="template-preview-title">Includes:</h3>
           <div className="template-preview-stats">
             <div className="template-stat">
               <span className="template-stat-value">{initialTemplates.pages.length}</span>
-              <span className="template-stat-label">Páginas</span>
+              <span className="template-stat-label">Pages</span>
             </div>
             <div className="template-stat">
               <span className="template-stat-value">
                 {Object.values(initialTemplates.todos).reduce((sum, todos) => sum + todos.length, 0)}
               </span>
-              <span className="template-stat-label">Tareas y Hábitos</span>
+              <span className="template-stat-label">Tasks & Habits</span>
             </div>
             <div className="template-stat">
               <span className="template-stat-value">
                 {Object.values(initialTemplates.blocks).reduce((sum, blocks) => sum + blocks.length, 0)}
               </span>
-              <span className="template-stat-label">Bloques</span>
+              <span className="template-stat-label">Blocks</span>
             </div>
           </div>
         </div>
@@ -70,7 +70,7 @@ export default function TemplateSelector({ onAccept, onSkip }) {
             onClick={onSkip}
             disabled={isLoading}
           >
-            Empezar desde cero
+            Start from scratch
           </button>
           <button
             className="template-action-button primary"
@@ -80,12 +80,12 @@ export default function TemplateSelector({ onAccept, onSkip }) {
             {isLoading ? (
               <>
                 <span className="template-loading-spinner"></span>
-                Cargando...
+                Loading...
               </>
             ) : (
               <>
                 <span className="template-action-icon">{Icons.add}</span>
-                Usar plantillas
+                Use templates
               </>
             )}
           </button>

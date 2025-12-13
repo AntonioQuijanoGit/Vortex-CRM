@@ -1,0 +1,149 @@
+.focus-timer {
+  background: var(--color-surface);
+  border: var(--border-thin);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+}
+
+.focus-timer-header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-md);
+}
+
+.focus-timer-icon {
+  font-size: 20px;
+  color: var(--color-accent);
+}
+
+.focus-timer-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-ink);
+  margin: 0;
+}
+
+.focus-timer-modes {
+  display: flex;
+  gap: var(--spacing-xs);
+  margin-bottom: var(--spacing-md);
+}
+
+.focus-mode-button {
+  flex: 1;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border: var(--border-thin);
+  border-radius: var(--radius-sm);
+  background: var(--color-panel);
+  color: var(--color-ink);
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.2s ease;
+}
+
+.focus-mode-button:hover:not(:disabled) {
+  background: var(--color-surface);
+}
+
+.focus-mode-button.active {
+  background: var(--color-accent);
+  color: white;
+  border-color: var(--color-accent);
+}
+
+.focus-mode-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.focus-timer-display {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: var(--spacing-md);
+}
+
+.focus-timer-circle {
+  position: relative;
+  width: 200px;
+  height: 200px;
+}
+
+.focus-timer-svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.focus-timer-bg {
+  transition: stroke 0.3s ease;
+}
+
+.focus-timer-progress {
+  transition: stroke-dashoffset 1s linear;
+}
+
+.focus-timer-time {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--color-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.focus-timer-controls {
+  display: flex;
+  gap: var(--spacing-sm);
+  justify-content: center;
+}
+
+.focus-timer-button {
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: var(--border-thin);
+  border-radius: var(--radius-sm);
+  background: var(--color-panel);
+  color: var(--color-ink);
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.focus-timer-button:hover {
+  background: var(--color-surface);
+}
+
+.focus-timer-button.primary {
+  background: var(--color-accent);
+  color: white;
+  border-color: var(--color-accent);
+}
+
+.focus-timer-button.primary:hover {
+  background: var(--color-accent-hover);
+}
+
+.focus-timer-button.secondary {
+  background: var(--color-warning);
+  color: white;
+  border-color: var(--color-warning);
+}
+
+.focus-timer-button.secondary:hover {
+  background: var(--color-error);
+}
+
+.focus-timer-stats {
+  text-align: center;
+  margin-top: var(--spacing-sm);
+  font-size: 12px;
+  color: var(--color-muted);
+}
+

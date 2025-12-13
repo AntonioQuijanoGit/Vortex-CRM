@@ -7,7 +7,9 @@ import { getAllTodosWithPages } from "../../utils/todos";
 import { useToast } from "../../hooks/useToast";
 import { logger } from "../../utils/logger";
 import OrphanedItems from "../shared/OrphanedItems/OrphanedItems";
-import { DataExportImport, ProgressCircle, MiniLineChart, ActivityHeatmap, TemplateSelector } from "../shared";
+import { DataExportImport, ProgressCircle, MiniLineChart, ActivityHeatmap, TemplateSelector, Achievements, Reminders, Goals, FocusTimer } from "../shared";
+import { TodayTasksWidget, UpcomingDeadlinesWidget, HabitsAtRiskWidget } from "../shared/DashboardWidgets";
+import { checkAchievements } from "../../utils/achievements";
 import { applyTemplates } from "../../utils/templates";
 import "./Dashboard.css";
 
@@ -17,6 +19,7 @@ export default function Dashboard({ onNavigate }) {
   const [showOrphanedItems, setShowOrphanedItems] = useState(false);
   const [showDataExportImport, setShowDataExportImport] = useState(false);
   const [showTemplateSelector, setShowTemplateSelector] = useState(false);
+  const [showAchievements, setShowAchievements] = useState(false);
 
   const rootPages = getRootPages();
 
@@ -47,7 +50,7 @@ export default function Dashboard({ onNavigate }) {
   const handleApplyTemplates = async () => {
     try {
       await applyTemplates(addPage, updatePage);
-      showToast("¡Plantillas aplicadas! Explora las páginas de ejemplo.", "success");
+      showToast("Templates applied! Explore the example pages.", "success");
       setShowTemplateSelector(false);
       // Refresh the page to show new content
       setTimeout(() => {
@@ -55,7 +58,7 @@ export default function Dashboard({ onNavigate }) {
       }, 500);
     } catch (error) {
       logger.error("Error applying templates:", error);
-      showToast("Error al aplicar las plantillas. Intenta de nuevo.", "error");
+      showToast("Error applying templates. Please try again.", "error");
     }
   };
   
@@ -67,6 +70,22 @@ export default function Dashboard({ onNavigate }) {
   const habits = allTodos.filter((t) => t.type === "habit");
   const completedTasks = tasks.filter((t) => t.completed).length;
   const totalStreaks = habits.reduce((sum, h) => sum + (h.streak || 0), 0);
+  const maxStreak = habits.length > 0 ? Math.max(...habits.map(h => h.streak || 0)) : 0;
+  
+  // Prepare stats for achievements
+  const achievementStats = useMemo(() => {
+    const unlockedAchievements = safeGetItem("achievements-unlocked", []);
+    const completedWeeklyGoals = safeGetItem("completed-weekly-goals", 0);
+    
+    return {
+      completedTasks,
+      totalHabits: habits.length,
+      maxStreak,
+      totalPages: rootPages.length,
+      completedWeeklyGoals,
+      unlockedAchievements: unlockedAchievements.length,
+    };
+  }, [completedTasks, habits.length, maxStreak, rootPages.length]);
 
   // Calculate completion percentage
   const completionPercentage = tasks.length > 0 ? (completedTasks / tasks.length) * 100 : 0;
@@ -311,45 +330,55 @@ export default function Dashboard({ onNavigate }) {
       </div>
 
       <div className="dashboard-main-content">
+        {/* Widgets Section */}
+        <div className="dashboard-widgets-grid">
+          <TodayTasksWidget todos={allTodos} onNavigate={onNavigate} />
+          <UpcomingDeadlinesWidget todos={allTodos} />
+          <HabitsAtRiskWidget habits={habits} />
+          <Reminders todos={allTodos} />
+          <Goals todos={allTodos} />
+          <FocusTimer />
+        </div>
+
         {/* Welcome Screen when app is empty */}
         {rootPages.length <= 1 && allTodos.length === 0 && (
           <section className="dashboard-section-modern welcome-empty-state">
             <div className="welcome-empty-content">
               <div className="welcome-empty-icon">{Icons.page}</div>
-              <h2 className="welcome-empty-title">¡Bienvenido a tu espacio de trabajo!</h2>
+              <h2 className="welcome-empty-title">Welcome to Your Workspace!</h2>
               <p className="welcome-empty-description">
-                Empieza organizando tus tareas, hábitos y notas en un solo lugar. Todo se guarda automáticamente.
+                Start organizing your tasks, habits, and notes in one place. Everything saves automatically.
               </p>
               <div className="welcome-empty-actions">
                 <button
                   className="welcome-action-button primary"
                   onClick={() => {
                     try {
-                      const newPage = addPage("Mi Primera Página", null, "page");
+                      const newPage = addPage("My First Page", null, "page");
                       if (newPage && newPage.id) {
                         onNavigate(newPage.id);
                       }
                     } catch (error) {
                       logger.error("Error creating first page:", error);
-                      showToast("Error al crear la página. Intenta de nuevo.", "error");
+                      showToast("Error creating page. Please try again.", "error");
                     }
                   }}
                 >
                   <span className="action-icon">{Icons.add}</span>
-                  <span>Crear mi primera página</span>
+                  <span>Create my first page</span>
                 </button>
                 <div className="welcome-quick-tips">
                   <div className="quick-tip">
                     <span className="tip-icon">{Icons.task}</span>
-                    <span>Agrega tareas para organizar tu trabajo</span>
+                    <span>Add tasks to organize your work</span>
                   </div>
                   <div className="quick-tip">
                     <span className="tip-icon">{Icons.habit}</span>
-                    <span>Crea hábitos para mantener rutinas</span>
+                    <span>Create habits to maintain routines</span>
                   </div>
                   <div className="quick-tip">
                     <span className="tip-icon">{Icons.calendar}</span>
-                    <span>Usa el calendario para ver tus eventos</span>
+                    <span>Use the calendar to view your events</span>
                   </div>
                 </div>
               </div>
@@ -466,6 +495,22 @@ export default function Dashboard({ onNavigate }) {
         <DashboardCalendar todos={allTodos} onNavigate={onNavigate} />
       </section>
       
+      {/* Achievements Section */}
+      <section className="dashboard-section-modern">
+        <div className="section-header">
+          <h2 className="section-title-modern">Achievements</h2>
+          <p className="section-subtitle">Unlock achievements by completing tasks and habits</p>
+        </div>
+        <button
+          className="dashboard-button-modern"
+          onClick={() => setShowAchievements(true)}
+          aria-label="View achievements"
+        >
+          <span className="button-icon">{Icons.streak}</span>
+          <span className="button-text">View Achievements</span>
+        </button>
+      </section>
+      
       {/* Data Export/Import Section */}
       <section className="dashboard-section-modern">
         <div className="section-header">
@@ -501,6 +546,13 @@ export default function Dashboard({ onNavigate }) {
         <TemplateSelector
           onAccept={handleApplyTemplates}
           onSkip={handleSkipTemplates}
+        />
+      )}
+      
+      {showAchievements && (
+        <Achievements
+          stats={achievementStats}
+          onClose={() => setShowAchievements(false)}
         />
       )}
     </div>
