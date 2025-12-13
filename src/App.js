@@ -30,7 +30,11 @@ function App() {
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [showQuickSearch, setShowQuickSearch] = useState(false);
   const [showShortcuts, setShowShortcuts] = useState(false);
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  // Sidebar collapsed by default on mobile, open on desktop
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return window.innerWidth <= 768; // Collapsed on mobile, open on desktop
+  });
   const { toasts, removeToast, showInfo } = useToast();
 
   useEffect(() => {
@@ -99,10 +103,26 @@ function App() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [showQuickSearch, showShortcuts, sidebarCollapsed, addPage, showInfo]);
 
+  // Update collapsed state when window is resized
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
+    const handleResize = () => {
+      // On desktop (>768px), always show sidebar
+      // On mobile (<=768px), keep current state (user controls it)
+      if (window.innerWidth > 768 && sidebarCollapsed) {
+        setSidebarCollapsed(false);
+      }
+    };
+    
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [sidebarCollapsed]);
+
   return (
     <div className="app-layout">
-      {/* Mobile menu button */}
-      {sidebarCollapsed && (
+      {/* Hamburger menu button - only show on mobile when sidebar is collapsed */}
+      {sidebarCollapsed && typeof window !== 'undefined' && window.innerWidth <= 768 && (
         <button
           className="mobile-menu-button"
           onClick={() => setSidebarCollapsed(false)}
@@ -131,7 +151,7 @@ function App() {
         onToggleCollapse={setSidebarCollapsed}
       />
       {/* Mobile overlay */}
-      {typeof window !== 'undefined' && !sidebarCollapsed && window.innerWidth <= 768 && (
+      {!sidebarCollapsed && typeof window !== 'undefined' && window.innerWidth <= 768 && (
         <div
           className="sidebar-overlay active"
           onClick={() => setSidebarCollapsed(true)}

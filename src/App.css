@@ -4,6 +4,14 @@
   min-height: 100vh;
   background: var(--color-bg);
   position: relative;
+  transition: grid-template-columns var(--transition-base);
+}
+
+/* When sidebar is collapsed on desktop, main takes full width */
+@media (min-width: 769px) {
+  .app-layout .notion-sidebar.collapsed ~ .app-main {
+    grid-column: 1 / -1;
+  }
 }
 
 .app-main {
@@ -99,6 +107,7 @@
   pointer-events: all;
 }
 
+/* Show hamburger menu button only on mobile */
 @media (max-width: 768px) {
   .mobile-menu-button {
     display: flex;

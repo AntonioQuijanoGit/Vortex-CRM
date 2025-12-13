@@ -18,6 +18,16 @@
   min-width: 56px;
 }
 
+/* On desktop, when collapsed, hide completely */
+@media (min-width: 769px) {
+  .notion-sidebar.collapsed {
+    width: 0;
+    min-width: 0;
+    border-right: none;
+    overflow: hidden;
+  }
+}
+
 .sidebar-scroll {
   display: flex;
   flex-direction: column;
@@ -501,6 +511,19 @@
 
   .notion-sidebar:not(.collapsed) {
     transform: translateX(0);
+  }
+}
+
+/* Desktop: sidebar can be collapsed too */
+@media (min-width: 769px) {
+  .notion-sidebar.collapsed {
+    width: 0;
+    min-width: 0;
+    border-right: none;
+  }
+  
+  .notion-sidebar.collapsed ~ .app-main {
+    margin-left: 0;
   }
   
   .sidebar-header {
