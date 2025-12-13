@@ -5,6 +5,7 @@ import { Onboarding, HelpButton, QuickSearch, ToastContainer, ShortcutsModal, Th
 import { usePages } from "./hooks/usePages";
 import { useToast } from "./hooks/useToast";
 import { SHORTCUTS, matchesShortcut } from "./utils/keyboardShortcuts";
+import { safeGetItem, safeSetItem } from "./utils/storage";
 import "./App.css";
 
 function App() {
@@ -34,7 +35,7 @@ function App() {
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    const hasSeenTutorial = localStorage.getItem("has-seen-tutorial");
+    const hasSeenTutorial = safeGetItem("has-seen-tutorial", null);
     if (!hasSeenTutorial) {
       // Small delay to let the page render
       setTimeout(() => setShowOnboarding(true), 500);
