@@ -585,8 +585,8 @@
 .quick-link-modern {
   background: var(--color-bg);
   border: var(--border-thin);
-  border-radius: 8px;
-  padding: var(--spacing-md);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-sm) var(--spacing-md);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -595,6 +595,7 @@
   cursor: pointer;
   text-align: left;
   width: 100%;
+  min-height: auto;
 }
 
 .quick-link-modern::before {
@@ -604,17 +605,17 @@
   top: 0;
   bottom: 0;
   width: 3px;
-  background: linear-gradient(180deg, var(--color-accent) 0%, var(--color-warning) 100%);
+  background: var(--color-accent);
   opacity: 0;
   transition: opacity var(--transition-base);
   border-radius: var(--radius-sm) 0 0 var(--radius-sm);
 }
 
 .quick-link-modern:hover {
-  background: linear-gradient(135deg, var(--color-panel) 0%, var(--color-surface) 100%);
+  background: var(--color-surface);
   border-color: var(--color-stroke-strong);
-  transform: translateX(6px) translateY(-2px);
-  box-shadow: var(--shadow-lg);
+  transform: translateX(4px);
+  box-shadow: var(--shadow-sm);
 }
 
 .quick-link-modern:hover::before {
@@ -624,13 +625,16 @@
 .quick-link-info {
   flex: 1;
   min-width: 0;
+  display: flex;
+  align-items: center;
 }
 
 .quick-link-title-modern {
-  font-size: 15px;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 500;
   color: var(--color-ink);
-  margin-bottom: var(--spacing-xxs);
+  margin: 0;
+  line-height: 1.4;
 }
 
 .quick-link-badge-modern {
