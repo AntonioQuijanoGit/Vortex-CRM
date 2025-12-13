@@ -160,14 +160,38 @@ export function usePages() {
     const deleteRecursive = (id) => {
       const children = getChildren(id);
       children.forEach((child) => deleteRecursive(child.id));
+      
+      // Delete all associated data from localStorage
+      if (typeof window !== 'undefined' && localStorage) {
+        // Delete todos for this page
+        const todosKey = `todos-${id}`;
+        localStorage.removeItem(todosKey);
+        
+        // Delete events for this page
+        const eventsKey = `events-${id}`;
+        localStorage.removeItem(eventsKey);
+        
+        // Delete any other page-specific data
+        // Check all localStorage keys and remove those related to this page
+        const keysToRemove = [];
+        for (let i = 0; i < localStorage.length; i++) {
+          const key = localStorage.key(i);
+          if (key && (key.startsWith(`${id}-`) || key.endsWith(`-${id}`) || key === `page-${id}`)) {
+            keysToRemove.push(key);
+          }
+        }
+        keysToRemove.forEach(key => localStorage.removeItem(key));
+      }
+      
+      // Remove page from state
       setPages((prev) => prev.filter((page) => page.id !== id));
     };
 
     deleteRecursive(pageId);
 
-    // If we deleted the active page, go to first page
+    // If we deleted the active page, go to home
     if (activePage === pageId) {
-      setActivePage(pages[0]?.id || null);
+      setActivePage("home");
     }
   };
 

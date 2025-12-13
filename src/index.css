@@ -6,21 +6,21 @@
   --font-display: "Space Grotesk", "Inter", sans-serif;
   --font-mono: "SF Mono", "Consolas", "Monaco", monospace;
 
-  /* Light Theme - Black & White Color Palette */
+  /* Light Theme - Vercel Style Minimalist Palette */
   --color-bg: #ffffff;
-  --color-panel: #fafafa;
-  --color-surface: #fafafa; /* Alias for panel */
-  --color-ink: #000000;
-  --color-text: #000000; /* Alias for ink */
-  --color-muted: #666666;
-  --color-text-muted: #666666;
-  --color-stroke: #e0e0e0;
-  --color-stroke-strong: #b0b0b0;
-  --color-border: #e0e0e0;
-  --color-border-dark: #b0b0b0;
-  --color-accent: #000000;
-  --color-accent-hover: #333333;
-  --color-accent-light: rgba(0, 0, 0, 0.1);
+  --color-panel: #ffffff;
+  --color-surface: #fafafa;
+  --color-ink: #171717;
+  --color-text: #171717;
+  --color-muted: #737373;
+  --color-text-muted: #737373;
+  --color-stroke: #e5e5e5;
+  --color-stroke-strong: #d4d4d4;
+  --color-border: #e5e5e5;
+  --color-border-dark: #d4d4d4;
+  --color-accent: #171717;
+  --color-accent-hover: #000000;
+  --color-accent-light: rgba(0, 0, 0, 0.05);
   --color-primary: #000000;
   --color-primary-dark: #1a1a1a;
   --color-primary-light: rgba(0, 0, 0, 0.1);
@@ -47,16 +47,16 @@
   --color-shadow: rgba(0, 0, 0, 0.1);
   --color-shadow-strong: rgba(0, 0, 0, 0.2);
 
-  /* Compact Spacing System */
-  --spacing-xxs: 0.125rem;  /* 2px */
-  --spacing-xs: 0.375rem;   /* 6px */
-  --spacing-sm: 0.625rem;   /* 10px */
+  /* Spacing System - Vercel Style (generous but clean) */
+  --spacing-xxs: 0.25rem;   /* 4px */
+  --spacing-xs: 0.5rem;     /* 8px */
+  --spacing-sm: 0.75rem;    /* 12px */
   --spacing-md: 1rem;       /* 16px */
   --spacing-lg: 1.5rem;     /* 24px */
   --spacing-xl: 2rem;       /* 32px */
-  --spacing-2xl: 2.5rem;    /* 40px */
-  --spacing-xxl: 3rem;      /* 48px */
-  --spacing-3xl: 4rem;      /* 64px */
+  --spacing-2xl: 3rem;      /* 48px */
+  --spacing-xxl: 4rem;      /* 64px */
+  --spacing-3xl: 6rem;      /* 96px */
   
   /* Common padding/margin shortcuts */
   --padding-xs: var(--spacing-xs);
@@ -71,24 +71,24 @@
   --margin-lg: var(--spacing-lg);
   --margin-xl: var(--spacing-xl);
   
-  /* Border Radius */
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 16px;
-  --radius-xl: 20px;
+  /* Border Radius - Vercel Style (smaller, cleaner) */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
   --radius-full: 9999px;
 
-  /* Refined Borders */
+  /* Refined Borders - Vercel Style (ultra subtle) */
   --border-thin: 1px solid var(--color-stroke);
-  --border-medium: 1.5px solid var(--color-stroke-strong);
-  --border-thick: 2px solid var(--color-stroke-strong);
+  --border-medium: 1px solid var(--color-stroke-strong);
+  --border-thick: 1px solid var(--color-stroke-strong);
 
-  /* Enhanced Shadows with Depth */
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.1);
-  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
-  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
-  --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1), 0 10px 10px rgba(0, 0, 0, 0.04);
-  --shadow-2xl: 0 25px 50px rgba(0, 0, 0, 0.15), 0 10px 20px rgba(0, 0, 0, 0.1);
+  /* Enhanced Shadows - Vercel Style (ultra subtle) */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 1px 3px rgba(0, 0, 0, 0.06), 0 2px 6px rgba(0, 0, 0, 0.04);
+  --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04);
+  --shadow-xl: 0 8px 24px rgba(0, 0, 0, 0.1), 0 4px 8px rgba(0, 0, 0, 0.06);
+  --shadow-2xl: 0 12px 32px rgba(0, 0, 0, 0.12), 0 6px 12px rgba(0, 0, 0, 0.08);
   
   /* Colored shadows for accent */
   --shadow-accent: 0 4px 14px rgba(99, 102, 241, 0.25);

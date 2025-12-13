@@ -6,12 +6,12 @@
   display: flex;
   align-items: center;
   gap: var(--spacing-xs);
-  padding: var(--spacing-xxs) var(--spacing-xs);
-  border: var(--border-thin);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border: 1px solid var(--color-stroke);
   background: var(--color-panel);
   transition: all var(--transition-base);
   min-height: 32px;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   cursor: pointer;
   animation: fadeInSlide 0.2s ease-out;
 }
@@ -28,30 +28,28 @@
 }
 
 .page-item-content:hover {
-  background: var(--color-bg);
+  background: var(--color-surface);
   border-color: var(--color-stroke-strong);
-  transform: translateX(2px);
 }
 
 .page-item.active .page-item-content {
-  background: var(--color-accent);
-  color: var(--color-panel);
-  border-color: var(--color-accent);
-  box-shadow: var(--shadow-sm);
-  border-left: 4px solid var(--color-accent);
-  padding-left: calc(var(--spacing-xs) - 4px);
+  background: var(--color-ink);
+  color: var(--color-bg);
+  border-color: var(--color-ink);
+  border-left: 2px solid var(--color-ink);
+  padding-left: calc(var(--spacing-sm) - 2px);
 }
 
 .expand-button {
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
   border: var(--border-thin);
   background: var(--color-panel);
   color: var(--color-ink);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: var(--font-size-tiny);
+  font-size: 10px;
   font-weight: 500;
   transition: all var(--transition-base);
   flex-shrink: 0;
@@ -74,13 +72,13 @@
   flex: 1;
   display: flex;
   align-items: center;
-  gap: var(--spacing-xs);
+  gap: var(--spacing-xxs);
   border: none;
   background: transparent;
   color: inherit;
   cursor: pointer;
   padding: 0;
-  font-size: var(--font-size-sm);
+  font-size: 12px;
   font-weight: 500;
   text-align: left;
   min-width: 0;
@@ -206,7 +204,7 @@
 .page-children {
   display: flex;
   flex-direction: column;
-  margin-left: var(--spacing-md);
+  margin-left: var(--spacing-sm);
   margin-top: 2px;
   gap: var(--spacing-xxs);
   border-left: 1px solid var(--color-stroke);

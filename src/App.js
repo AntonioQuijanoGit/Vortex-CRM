@@ -137,14 +137,15 @@ function App() {
           onClick={() => setSidebarCollapsed(true)}
         />
       )}
-      <main className="app-main">
-        <PageContent 
-          page={currentPage} 
-          breadcrumbs={breadcrumbs}
-          onNavigate={setActivePage}
-          onUpdatePage={updatePage}
-        />
-      </main>
+          <main className="app-main">
+            <PageContent 
+              page={currentPage} 
+              breadcrumbs={breadcrumbs}
+              onNavigate={setActivePage}
+              onUpdatePage={updatePage}
+              activePageId={activePage}
+            />
+          </main>
       {showOnboarding && (
         <Onboarding onComplete={() => setShowOnboarding(false)} />
       )}
@@ -161,6 +162,9 @@ function App() {
         <ShortcutsModal onClose={() => setShowShortcuts(false)} />
       )}
       <ToastContainer toasts={toasts} onRemove={removeToast} />
+      <footer className="app-footer">
+        <p>Developed by Antonio Quijano with React</p>
+      </footer>
     </div>
   );
 }

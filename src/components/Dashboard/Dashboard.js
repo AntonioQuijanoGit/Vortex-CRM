@@ -7,7 +7,7 @@ import { getAllTodosWithPages } from "../../utils/todos";
 import { useToast } from "../../hooks/useToast";
 import { logger } from "../../utils/logger";
 import OrphanedItems from "../shared/OrphanedItems/OrphanedItems";
-import { DataExportImport, ProgressCircle, MiniLineChart, ActivityHeatmap, TemplateSelector, Achievements, Reminders, Goals, FocusTimer, QuickActions } from "../shared";
+import { DataExportImport, ProgressCircle, MiniLineChart, ActivityHeatmap, TemplateSelector, Achievements, QuickActions, FocusTimer } from "../shared";
 import { TodayTasksWidget, UpcomingDeadlinesWidget, HabitsAtRiskWidget } from "../shared/DashboardWidgets";
 import { checkAchievements } from "../../utils/achievements";
 import { applyTemplates } from "../../utils/templates";
@@ -334,21 +334,25 @@ export default function Dashboard({ onNavigate }) {
             </div>
           )}
 
-          {activityData.length > 0 ? (
-            <div className="visual-data-card heatmap-card">
-              <ActivityHeatmap data={activityData} days={90} />
-            </div>
-          ) : (
-            <div className="visual-data-card heatmap-card">
-              <div style={{ padding: 'var(--spacing-lg)', textAlign: 'center', color: 'var(--color-muted)' }}>
-                <p>No activity data yet. Start creating tasks and habits to see your activity!</p>
-              </div>
-            </div>
-          )}
+          <div className="visual-data-card heatmap-card">
+            <ActivityHeatmap data={activityData} days={90} />
+          </div>
         </div>
       </div>
 
       <div className="dashboard-main-content">
+        {/* Today's Focus - Primary section */}
+        <section className="dashboard-section-modern dashboard-focus-section">
+          <div className="section-header">
+            <h2 className="section-title-modern">Today's Focus</h2>
+            <p className="section-subtitle">What needs your attention today</p>
+          </div>
+          <div className="focus-content">
+            <TodayTasksWidget todos={allTodos} onNavigate={onNavigate} />
+            <UpcomingDeadlinesWidget todos={allTodos} />
+          </div>
+        </section>
+
         {/* Quick Actions - Compact bar */}
         {rootPages.length > 1 || allTodos.length > 0 ? (
           <section className="dashboard-section-modern dashboard-quick-actions-section">
@@ -363,16 +367,6 @@ export default function Dashboard({ onNavigate }) {
             />
           </section>
         ) : null}
-
-        {/* Widgets Section */}
-        <div className="dashboard-widgets-grid">
-          <TodayTasksWidget todos={allTodos} onNavigate={onNavigate} />
-          <UpcomingDeadlinesWidget todos={allTodos} />
-          <HabitsAtRiskWidget habits={habits} />
-          <Reminders todos={allTodos} />
-          <Goals todos={allTodos} />
-          <FocusTimer />
-        </div>
 
         {/* Welcome Screen when app is empty */}
         {rootPages.length <= 1 && allTodos.length === 0 && (
@@ -467,8 +461,10 @@ export default function Dashboard({ onNavigate }) {
         {allTodos.length > 0 && (
           <section className="dashboard-section-modern">
             <div className="section-header">
-              <h2 className="section-title-modern">Recent Activity</h2>
-              <p className="section-subtitle">Your latest updates</p>
+              <div>
+                <h2 className="section-title-modern">Recent Activity</h2>
+                <p className="section-subtitle">Your latest updates</p>
+              </div>
             </div>
             <div className="activity-list-modern">
               {allTodosWithPages.slice(0, 5).map((todo) => {
