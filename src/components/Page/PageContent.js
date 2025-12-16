@@ -84,6 +84,14 @@ export default function PageContent({
     );
   }
 
+  if (!page) {
+    return (
+      <div className="page-content" role="region" aria-live="polite">
+        <p>Page not found</p>
+      </div>
+    );
+  }
+
   return (
     <div className="page-content" role="region" aria-live="polite">
       {shouldShowBreadcrumbs && <BreadcrumbTrail items={breadcrumbs} onNavigate={onNavigate} />}
@@ -128,6 +136,8 @@ function BreadcrumbTrail({ items, onNavigate }) {
 }
 
 function PageHero({ page, onUpdatePage }) {
+  if (!page) return null;
+  
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [editTitle, setEditTitle] = useState(page.title);
 
