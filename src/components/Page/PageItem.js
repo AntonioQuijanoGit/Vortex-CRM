@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Icons } from "../../utils/icons";
+import { Icons, renderIcon } from "../../utils/icons";
 import { ConfirmDialog } from "../shared";
 import { useTodos } from "../../hooks/useTodos";
 import "./PageItem.css";
@@ -124,7 +124,7 @@ export default function PageItem({
               aria-label={isExpanded ? "Collapse subpages" : "Expand subpages"}
               aria-expanded={isExpanded}
             >
-              {isExpanded ? Icons.expand : Icons.collapse}
+              {renderIcon(isExpanded ? Icons.expand : Icons.collapse, 12)}
             </button>
           )}
 
@@ -179,7 +179,7 @@ export default function PageItem({
                 title="Add subpage"
                 aria-label="Add subpage"
               >
-                {Icons.add}
+                {renderIcon(Icons.add, 14)}
               </button>
               <button
                 className="option-button"
@@ -191,7 +191,7 @@ export default function PageItem({
                 title="Rename"
                 aria-label="Rename page"
               >
-                {Icons.edit}
+                {renderIcon(Icons.edit, 14)}
               </button>
               <button
                 className="option-button delete"
@@ -203,7 +203,7 @@ export default function PageItem({
                 title="Delete"
                 aria-label="Delete page"
               >
-                {Icons.delete}
+                {renderIcon(Icons.delete, 14)}
               </button>
             </div>
           )}

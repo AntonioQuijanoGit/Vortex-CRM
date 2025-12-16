@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Onboarding from "../Onboarding/Onboarding";
 import OrphanedItems from "../OrphanedItems/OrphanedItems";
-import { Icons } from "../../../utils/icons";
+import { Icons, renderIcon } from "../../../utils/icons";
 import { safeGetItem } from "../../../utils/storage";
 import "./HelpButton.css";
 
@@ -95,7 +95,7 @@ export default function HelpButton({ onNavigate }) {
             aria-label={`Show ${orphanedCount} orphaned item${orphanedCount !== 1 ? 's' : ''}`}
             title={`${orphanedCount} item${orphanedCount !== 1 ? 's' : ''} in deleted pages`}
           >
-            {Icons.warning}
+            {renderIcon(Icons.warning, 20)}
             {orphanedCount > 0 && (
               <span className="orphaned-count-badge">{orphanedCount}</span>
             )}
@@ -107,7 +107,7 @@ export default function HelpButton({ onNavigate }) {
           aria-label="Show tutorial"
           title="Show tutorial (Press ? for help)"
         >
-          ?
+          {renderIcon(Icons.help, 22)}
         </button>
       </div>
       {showTutorial && (

@@ -1,4 +1,4 @@
-import { Icons } from "../../../utils/icons";
+import { Icons, renderIcon } from "../../../utils/icons";
 
 export default function EmptyState({ 
   message, 
@@ -12,7 +12,7 @@ export default function EmptyState({
 }) {
   return (
     <div className="emptyState" role="status" aria-live="polite">
-      {icon && <div className="emptyStateIcon" aria-hidden="true">{icon}</div>}
+      {icon && <div className="emptyStateIcon" aria-hidden="true">{renderIcon(icon, 48)}</div>}
       <p className="emptyStateText">{message}</p>
       <p className="emptyStateHint">{hint}</p>
       {showExamples && (
@@ -35,7 +35,7 @@ export default function EmptyState({
               className="emptyStateAction primary"
               onClick={onAction}
             >
-              <span className="actionIcon">{Icons.add}</span>
+              <span className="actionIcon">{renderIcon(Icons.add, 16)}</span>
               {actionLabel}
             </button>
           )}

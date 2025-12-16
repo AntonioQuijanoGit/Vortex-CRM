@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Icons } from "../../../utils/icons";
+import { Icons, renderIcon } from "../../../utils/icons";
 import { safeGetItem, safeSetItem } from "../../../utils/storage";
 import "./Onboarding.css";
 
@@ -101,7 +101,7 @@ export default function Onboarding({ onComplete, forceShow = false }) {
             ))}
           </div>
           <button className="tooltip-close" onClick={handleSkip} aria-label="Skip tutorial">
-            {Icons.close}
+            {renderIcon(Icons.close, 18)}
           </button>
         </div>
         <div className="tooltip-content">

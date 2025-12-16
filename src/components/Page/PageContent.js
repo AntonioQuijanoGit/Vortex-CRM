@@ -5,7 +5,7 @@ import { BlockManager } from "../BlockManager";
 import { getAllTodosWithPages } from "../../utils/todos";
 import { usePages } from "../../hooks/usePages";
 import { ActivityHeatmap, ProgressCircle, MiniLineChart } from "../shared";
-import { Icons } from "../../utils/icons";
+import { Icons, renderIcon } from "../../utils/icons";
 import "./PageContent.css";
 
 export default function PageContent({
@@ -136,10 +136,10 @@ function BreadcrumbTrail({ items, onNavigate }) {
 }
 
 function PageHero({ page, onUpdatePage }) {
-  if (!page) return null;
-  
   const [isEditingTitle, setIsEditingTitle] = useState(false);
-  const [editTitle, setEditTitle] = useState(page.title);
+  const [editTitle, setEditTitle] = useState(page?.title || "");
+  
+  if (!page) return null;
 
   const handleTitleSave = () => {
     if (editTitle.trim() && editTitle !== page.title) {
@@ -344,7 +344,7 @@ function TasksView({ onNavigate }) {
             <div className="task-list">
               {todayTasks.map(task => (
                 <div key={task.id} className="task-item">
-                  <span className="task-icon">{Icons.task}</span>
+                  <span className="task-icon">{renderIcon(Icons.task, 16)}</span>
                   <span className="task-title">{task.title}</span>
                 </div>
               ))}
@@ -414,7 +414,7 @@ function HabitsView({ onNavigate }) {
             <div className="habit-list">
               {activeHabits.slice(0, 5).map(habit => (
                 <div key={habit.id} className="habit-item">
-                  <span className="habit-icon">{Icons.habit}</span>
+                  <span className="habit-icon">{renderIcon(Icons.habit, 16)}</span>
                   <div className="habit-info">
                     <span className="habit-title">{habit.title}</span>
                     <span className="habit-streak">Streak: {habit.streak || 0} days</span>
@@ -436,7 +436,7 @@ function HabitsView({ onNavigate }) {
                 .slice(0, 5)
                 .map(habit => (
                   <div key={habit.id} className="streak-item">
-                    <span className="streak-icon">{Icons.streak}</span>
+                    <span className="streak-icon">{renderIcon(Icons.streak, 16)}</span>
                     <span className="streak-title">{habit.title}</span>
                     <span className="streak-value">{habit.streak || 0} days</span>
                   </div>

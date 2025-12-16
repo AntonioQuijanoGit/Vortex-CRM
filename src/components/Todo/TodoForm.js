@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Icons } from "../../utils/icons";
+import { Icons, renderIcon } from "../../utils/icons";
 
 export default function TodoForm({ title, onTitleChange, onSubmit, typeFilter = "all", onTypeChange }) {
   const inputRef = useRef(null);
@@ -52,7 +52,7 @@ export default function TodoForm({ title, onTitleChange, onSubmit, typeFilter = 
             aria-label="Create a task"
             title="One-time task"
           >
-            <span className="type-icon">{Icons.task}</span>
+            <span className="type-icon">{renderIcon(Icons.task, 16)}</span>
             <span className="type-label">Task</span>
           </button>
           <button
@@ -65,7 +65,7 @@ export default function TodoForm({ title, onTitleChange, onSubmit, typeFilter = 
             aria-label="Create a habit"
             title="Daily habit with streak tracking"
           >
-            <span className="type-icon">{Icons.habit}</span>
+            <span className="type-icon">{renderIcon(Icons.habit, 16)}</span>
             <span className="type-label">Habit</span>
           </button>
         </div>

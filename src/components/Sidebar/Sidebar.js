@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { PageItem } from "../Page";
-import { Icons } from "../../utils/icons";
+import { Icons, renderIcon } from "../../utils/icons";
 import "./Sidebar.css";
 
 export default function Sidebar({
@@ -89,7 +89,7 @@ export default function Sidebar({
             onClick={handleToggleCollapse}
             aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
           >
-            {isCollapsed ? Icons.arrowRight : Icons.arrowLeft}
+            {renderIcon(isCollapsed ? Icons.arrowRight : Icons.arrowLeft, 16)}
           </button>
           {!isCollapsed && (
             <div className="sidebar-workspace">
@@ -109,7 +109,7 @@ export default function Sidebar({
                   onClick={section.action}
                   aria-label={section.label}
                 >
-                  <span className="nav-icon">{section.icon}</span>
+                  <span className="nav-icon">{renderIcon(section.icon, 18)}</span>
                   <span className="nav-label">{section.label}</span>
                 </button>
               ))}
@@ -122,10 +122,10 @@ export default function Sidebar({
                 onClick={() => toggleSection("pages")}
                 aria-expanded={expandedSections.pages}
               >
-                <span className="section-icon">{Icons.page}</span>
+                <span className="section-icon">{renderIcon(Icons.page, 18)}</span>
                 <span className="section-title">Pages</span>
                 <span className="section-toggle">
-                  {expandedSections.pages ? "−" : "+"}
+                  {renderIcon(expandedSections.pages ? Icons.minimize : Icons.add, 14)}
                 </span>
               </button>
               
@@ -138,7 +138,7 @@ export default function Sidebar({
                       aria-label="Add new page"
                       title="Add new page"
                     >
-                      {Icons.add}
+                      {renderIcon(Icons.add, 14)}
                     </button>
                   </div>
 
@@ -206,10 +206,10 @@ export default function Sidebar({
                 onClick={() => toggleSection("tools")}
                 aria-expanded={expandedSections.tools}
               >
-                <span className="section-icon">{Icons.stats}</span>
+                <span className="section-icon">{renderIcon(Icons.settings, 18)}</span>
                 <span className="section-title">Tools</span>
                 <span className="section-toggle">
-                  {expandedSections.tools ? "−" : "+"}
+                  {renderIcon(expandedSections.tools ? Icons.minimize : Icons.add, 14)}
                 </span>
               </button>
               
@@ -220,35 +220,35 @@ export default function Sidebar({
                       className="tool-item"
                       onClick={() => onPageSelect("focus-timer")}
                     >
-                      <span className="tool-icon">{Icons.calendar}</span>
+                      <span className="tool-icon">{renderIcon(Icons.timer, 18)}</span>
                       <span className="tool-label">Focus Timer</span>
                     </button>
                     <button
                       className="tool-item"
                       onClick={() => onPageSelect("quick-notes")}
                     >
-                      <span className="tool-icon">{Icons.note}</span>
+                      <span className="tool-icon">{renderIcon(Icons.note, 18)}</span>
                       <span className="tool-label">Quick Notes</span>
                     </button>
                     <button
                       className="tool-item"
                       onClick={() => onPageSelect("goals")}
                     >
-                      <span className="tool-icon">{Icons.streak}</span>
+                      <span className="tool-icon">{renderIcon(Icons.target, 18)}</span>
                       <span className="tool-label">Goals</span>
                     </button>
                     <button
                       className="tool-item"
                       onClick={() => onPageSelect("achievements")}
                     >
-                      <span className="tool-icon">{Icons.stats}</span>
+                      <span className="tool-icon">{renderIcon(Icons.trophy, 18)}</span>
                       <span className="tool-label">Achievements</span>
                     </button>
                     <button
                       className="tool-item"
                       onClick={() => onPageSelect("settings")}
                     >
-                      <span className="tool-icon">{Icons.page}</span>
+                      <span className="tool-icon">{renderIcon(Icons.settings, 18)}</span>
                       <span className="tool-label">Settings</span>
                     </button>
                   </div>

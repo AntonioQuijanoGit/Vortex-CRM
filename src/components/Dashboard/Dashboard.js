@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { usePages } from "../../hooks/usePages";
 import DashboardCalendar from "./DashboardCalendar";
-import { Icons } from "../../utils/icons";
+import { Icons, renderIcon } from "../../utils/icons";
 import { safeGetItem, safeSetItem } from "../../utils/storage";
 import { getAllTodosWithPages } from "../../utils/todos";
 import { useToast } from "../../hooks/useToast";
@@ -372,7 +372,7 @@ export default function Dashboard({ onNavigate }) {
         {rootPages.length <= 1 && allTodos.length === 0 && (
           <section className="dashboard-section-modern welcome-empty-state">
             <div className="welcome-empty-content">
-              <div className="welcome-empty-icon">{Icons.page}</div>
+              <div className="welcome-empty-icon">{renderIcon(Icons.page, 48)}</div>
               <h2 className="welcome-empty-title">Welcome to Your Workspace!</h2>
               <p className="welcome-empty-description">
                 Your personal productivity hub. Organize tasks, track habits, and manage your content all in one place. Everything saves automatically.
@@ -392,7 +392,7 @@ export default function Dashboard({ onNavigate }) {
                     }
                   }}
                 >
-                  <span className="action-icon">{Icons.add}</span>
+                  <span className="action-icon">{renderIcon(Icons.add, 18)}</span>
                   <span>Create my first page</span>
                 </button>
                 <p className="welcome-hint">
@@ -400,28 +400,28 @@ export default function Dashboard({ onNavigate }) {
                 </p>
                 <div className="welcome-quick-tips">
                   <div className="quick-tip">
-                    <span className="tip-icon">{Icons.task}</span>
+                    <span className="tip-icon">{renderIcon(Icons.task, 18)}</span>
                     <div>
                       <strong>Tasks</strong>
                       <span>Track one-time items with due dates</span>
                     </div>
                   </div>
                   <div className="quick-tip">
-                    <span className="tip-icon">{Icons.habit}</span>
+                    <span className="tip-icon">{renderIcon(Icons.habit, 18)}</span>
                     <div>
                       <strong>Habits</strong>
                       <span>Build daily routines with streak tracking</span>
                     </div>
                   </div>
                   <div className="quick-tip">
-                    <span className="tip-icon">{Icons.calendar}</span>
+                    <span className="tip-icon">{renderIcon(Icons.calendar, 18)}</span>
                     <div>
                       <strong>Calendar</strong>
                       <span>View and manage your events</span>
                     </div>
                   </div>
                   <div className="quick-tip">
-                    <span className="tip-icon">{Icons.search}</span>
+                    <span className="tip-icon">{renderIcon(Icons.search, 18)}</span>
                     <div>
                       <strong>Quick Search</strong>
                       <span>Press ⌘K or Ctrl+K to search everything</span>
@@ -451,7 +451,7 @@ export default function Dashboard({ onNavigate }) {
                   <div className="quick-link-info">
                     <div className="quick-link-title-modern">{page.title}</div>
                   </div>
-                  <div className="quick-link-arrow">{Icons.arrowRight}</div>
+                  <div className="quick-link-arrow">{renderIcon(Icons.arrowRight, 16)}</div>
                 </button>
               ))}
             </div>
@@ -503,7 +503,7 @@ export default function Dashboard({ onNavigate }) {
                     title={isClickable ? (todo.pageTitle !== "Unknown Page" ? `Go to ${todo.pageTitle}` : `Go to page (ID: ${todo.pageId})`) : "Item without associated page"}
                   >
                     <div className={`activity-icon-modern activity-icon-${todo.type} ${todo.completed ? "completed" : ""}`}>
-                      {todo.type === "task" ? Icons.task : Icons.habit}
+                      {renderIcon(todo.type === "task" ? Icons.task : Icons.habit, 16)}
                     </div>
                     <div className="activity-content">
                       <div className="activity-text-modern">
@@ -527,7 +527,7 @@ export default function Dashboard({ onNavigate }) {
                       </div>
                     </div>
                     {isClickable && (
-                      <div className="activity-arrow">{Icons.arrowRight}</div>
+                      <div className="activity-arrow">{renderIcon(Icons.arrowRight, 16)}</div>
                     )}
                   </button>
                 );
@@ -558,7 +558,7 @@ export default function Dashboard({ onNavigate }) {
             onClick={() => setShowAchievements(true)}
             aria-label="View achievements"
           >
-            <span className="tool-icon">{Icons.streak}</span>
+            <span className="tool-icon">{renderIcon(Icons.streak, 18)}</span>
             <span className="tool-text">Achievements</span>
           </button>
           <button
@@ -566,7 +566,7 @@ export default function Dashboard({ onNavigate }) {
             onClick={() => setShowDataExportImport(true)}
             aria-label="Export or import data"
           >
-            <span className="tool-icon">{Icons.arrowDown}</span>
+            <span className="tool-icon">{renderIcon(Icons.arrowDown, 18)}</span>
             <span className="tool-text">Export / Import</span>
           </button>
         </div>
@@ -607,7 +607,7 @@ export default function Dashboard({ onNavigate }) {
             <div className="focus-timer-modal-header">
               <h2>Focus Timer</h2>
               <button onClick={() => setShowFocusTimer(false)} aria-label="Close">
-                {Icons.close}
+                {renderIcon(Icons.close, 18)}
               </button>
             </div>
             <div className="focus-timer-modal-content">

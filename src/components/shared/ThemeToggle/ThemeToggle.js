@@ -1,5 +1,5 @@
 import { useTheme } from "../../../hooks/useTheme";
-import { Icons } from "../../../utils/icons";
+import { Icons, renderIcon } from "../../../utils/icons";
 import "./ThemeToggle.css";
 
 export default function ThemeToggle() {
@@ -13,7 +13,7 @@ export default function ThemeToggle() {
       title={`Switch to ${theme === "light" ? "dark" : "light"} mode`}
     >
       <span className="theme-icon" aria-hidden="true">
-        {theme === "light" ? Icons.moon : Icons.sun}
+        {renderIcon(theme === "light" ? Icons.moon : Icons.sun, 18)}
       </span>
     </button>
   );

@@ -5,7 +5,7 @@ import { Onboarding, HelpButton, QuickSearch, ToastContainer, ShortcutsModal, Th
 import { usePages } from "./hooks/usePages";
 import { useToast } from "./hooks/useToast";
 import { SHORTCUTS, matchesShortcut } from "./utils/keyboardShortcuts";
-import { safeGetItem, safeSetItem } from "./utils/storage";
+import { safeGetItem } from "./utils/storage";
 import "./App.css";
 
 function App() {

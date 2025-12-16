@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { usePages } from "../../../hooks/usePages";
-import { Icons } from "../../../utils/icons";
+import { Icons, renderIcon } from "../../../utils/icons";
 import { getAllTodosWithPages } from "../../../utils/todos";
 import "./QuickSearch.css";
 
@@ -82,7 +82,7 @@ export default function QuickSearch({ onPageSelect, onClose }) {
     <div className="quick-search-overlay" onClick={onClose}>
       <div className="quick-search-modal" onClick={(e) => e.stopPropagation()}>
         <div className="quick-search-header">
-          <span className="quick-search-icon">{Icons.search}</span>
+          <span className="quick-search-icon">{renderIcon(Icons.search, 20)}</span>
           <input
             ref={inputRef}
             type="text"
@@ -94,7 +94,7 @@ export default function QuickSearch({ onPageSelect, onClose }) {
             autoFocus
           />
           <button className="quick-search-close" onClick={onClose}>
-            {Icons.close}
+            {renderIcon(Icons.close, 18)}
           </button>
         </div>
         {results.length > 0 && (
@@ -107,7 +107,7 @@ export default function QuickSearch({ onPageSelect, onClose }) {
                 }`}
                 onClick={() => handleSelect(result)}
               >
-                <span className="result-icon">{result.icon}</span>
+                <span className="result-icon">{renderIcon(result.icon, 16)}</span>
                 <span className="result-title">{result.title}</span>
                 <span className="result-type">{result.type}</span>
               </button>
