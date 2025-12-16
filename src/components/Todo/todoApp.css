@@ -681,19 +681,22 @@
   width: 100%;
 }
 
-/* Estado vacío */
-.emptyState {
+/* Estado vacío - Solo para el contexto de todoApp */
+.todoContainer .emptyState {
   background: var(--color-panel);
   border: var(--border-thin);
   border-radius: var(--radius-lg);
   padding: var(--spacing-2xl) var(--spacing-lg);
+  padding-bottom: var(--spacing-3xl);
   text-align: center;
   animation: fadeIn 0.6s ease 0.5s both;
   box-shadow: var(--shadow-md);
+  margin-top: var(--spacing-xl);
+  margin-bottom: var(--spacing-xl);
 }
 
 
-.emptyStateText {
+.todoContainer .emptyStateText {
   font-family: var(--font-display);
   font-size: 32px;
   font-weight: 700;
@@ -703,7 +706,7 @@
   text-transform: uppercase;
 }
 
-.emptyStateHint {
+.todoContainer .emptyStateHint {
   font-family: var(--font-sans);
   font-size: 14px;
   color: var(--color-text-muted);
@@ -713,7 +716,7 @@
   line-height: 1.6;
 }
 
-.emptyStateExamples {
+.todoContainer .emptyStateExamples {
   margin-top: var(--spacing-lg);
   padding-top: var(--spacing-lg);
   border-top: 1px solid var(--color-border);

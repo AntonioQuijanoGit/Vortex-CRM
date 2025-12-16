@@ -1,4 +1,5 @@
 import { Icons, renderIcon } from "../../../utils/icons";
+import "./EmptyState.css";
 
 export default function EmptyState({ 
   message, 

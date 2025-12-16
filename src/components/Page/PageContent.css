@@ -466,44 +466,7 @@
   opacity: 1;
 }
 
-.emptyState {
-  text-align: center;
-  padding: var(--spacing-xl) var(--spacing-md);
-}
-
-.emptyStateText {
-  font-size: 20px;
-  font-family: var(--font-display);
-  font-weight: 600;
-  margin-bottom: var(--spacing-xs);
-  color: var(--color-ink);
-}
-
-.emptyStateHint {
-  font-size: 14px;
-  color: var(--color-muted);
-  line-height: 1.5;
-}
-
-.emptyStateExamples {
-  margin-top: var(--spacing-md);
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-xs);
-  font-size: 13px;
-  color: var(--color-muted);
-  text-align: left;
-  max-width: 400px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.emptyStateExamples .exampleItem {
-  padding: var(--spacing-xs) var(--spacing-sm);
-  border: var(--border-thin);
-  background: var(--color-bg);
-  border-radius: 6px;
-}
+/* EmptyState styles are now in EmptyState.css component */
 
 /* Responsive */
 @media (max-width: 1024px) {
@@ -637,6 +600,84 @@
 }
 
 .task-list,
+.habit-list-full {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.habit-item-full {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: var(--border-thin);
+  border-radius: var(--radius-md);
+  background: var(--color-panel);
+  transition: all var(--transition-base);
+}
+
+.habit-item-full:hover {
+  background: var(--color-surface);
+  border-color: var(--color-stroke-strong);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.habit-info-full {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xxs);
+  flex: 1;
+}
+
+.habit-title {
+  font-weight: 500;
+  color: var(--color-ink);
+  font-size: 14px;
+}
+
+.habit-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  font-size: 12px;
+  color: var(--color-muted);
+}
+
+.habit-page {
+  color: var(--color-muted);
+  font-size: 11px;
+}
+
+.habit-delete-button {
+  width: 32px;
+  height: 32px;
+  border: var(--border-thin);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-error);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  flex-shrink: 0;
+  position: relative;
+  z-index: 10;
+  pointer-events: auto;
+}
+
+.habit-delete-button:hover {
+  background: var(--color-error-light);
+  border-color: var(--color-error);
+  transform: scale(1.1);
+}
+
+.habit-delete-button:active {
+  transform: scale(0.95);
+}
+
 .habit-list,
 .streak-list {
   display: flex;
