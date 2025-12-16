@@ -1,41 +1,57 @@
 # Workspace
 
-A clean and elegant workspace for organizing tasks, habits, and notes. Everything you need to stay productive in one place.
+A productivity app for managing tasks, habits, and notes. Built with React.
 
 ## Features
 
-- **Hierarchical Pages** - Organize your content in a clear tree structure
-- **Task Management** - Track tasks with priorities, due dates, and completion status
-- **Habit Tracking** - Build routines with streak counters and daily tracking
-- **Multiple Views** - Switch between list, board, table, and calendar views
-- **Productivity Dashboard** - Monitor your progress with visual analytics
-- **Quick Notes** - Capture thoughts instantly with sticky notes
-- **Focus Timer** - Pomodoro timer for focused work sessions
-- **Achievements** - Unlock achievements by completing tasks and habits
-- **Goals** - Set and track weekly and monthly goals
-- **Reminders** - Browser notifications for important tasks
-- **Data Export** - Export your data in JSON, Markdown, or CSV formats
+- Hierarchical pages with tree structure navigation
+- Task management with priorities, due dates, and status tracking
+- Habit tracking with streak counters
+- Multiple view modes: list, board, table, and calendar
+- Dashboard with analytics and activity visualization
+- Quick notes for fast capture
+- Focus timer (Pomodoro technique)
+- Achievements system
+- Weekly and monthly goals
+- Browser notifications for reminders
+- Data export and import in JSON, Markdown, and CSV
+- Dark and light themes
+- Keyboard shortcuts
+- Responsive design for all devices
 
 ## Tech Stack
 
-- React
+- React 18
 - CSS Variables for theming
 - LocalStorage for data persistence
-- Responsive design
+- Drag and drop with @dnd-kit
 
 ## Getting Started
 
+Install dependencies:
+
 ```bash
 npm install
+```
+
+Run development server:
+
+```bash
 npm start
 ```
 
-## Build
+Build for production:
 
 ```bash
 npm run build
 ```
 
+## Deployment
+
+The project is configured for Vercel deployment. Push to GitHub and import in Vercel.
+
 ## License
 
 MIT
+
+Developed by Antonio Quijano
