@@ -121,3 +121,4 @@
 4. **Progressive disclosure**: Mostrar solo lo necesario
 5. **Contextual actions**: Acciones relevantes en cada sección
 
+

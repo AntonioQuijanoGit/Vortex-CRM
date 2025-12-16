@@ -66,3 +66,4 @@
 5. ⚠️ Crear Settings view (opcional)
 6. ⚠️ Limpiar warnings de ESLint (opcional)
 
+

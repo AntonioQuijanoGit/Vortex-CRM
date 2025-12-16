@@ -83,14 +83,27 @@ export default function PageItem({
         onMouseEnter={() => setShowOptions(true)}
         onMouseLeave={(e) => {
           // Don't hide if moving to options buttons
-          if (!e.currentTarget.querySelector('.page-options')?.contains(e.relatedTarget)) {
+          // Check if relatedTarget is a valid Node before using contains
+          const relatedTarget = e.relatedTarget;
+          const pageOptions = e.currentTarget.querySelector('.page-options');
+          if (relatedTarget && relatedTarget instanceof Node && pageOptions) {
+            if (!pageOptions.contains(relatedTarget)) {
+              setShowOptions(false);
+            }
+          } else {
             setShowOptions(false);
           }
         }}
         onFocus={() => setShowOptions(true)}
         onBlur={(e) => {
           // Don't hide if clicking on options buttons
-          if (!e.currentTarget.contains(e.relatedTarget)) {
+          // Check if relatedTarget is a valid Node before using contains
+          const relatedTarget = e.relatedTarget;
+          if (relatedTarget && relatedTarget instanceof Node) {
+            if (!e.currentTarget.contains(relatedTarget)) {
+              setShowOptions(false);
+            }
+          } else {
             setShowOptions(false);
           }
         }}
