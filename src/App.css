@@ -124,7 +124,7 @@
   background: var(--color-bg);
   border-top: 1px solid var(--color-stroke);
   text-align: center;
-  z-index: var(--z-sidebar);
+  z-index: 100; /* Below help button and other floating elements */
   font-size: 11px;
   color: var(--color-muted);
   font-family: var(--font-sans);

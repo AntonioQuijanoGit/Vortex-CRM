@@ -28,7 +28,7 @@ export default function Sidebar({
   const [showNewPageInput, setShowNewPageInput] = useState(false);
   const [newPageTitle, setNewPageTitle] = useState("");
   const [expandedSections, setExpandedSections] = useState({
-    pages: true, // Expanded by default on mobile
+    pages: false,
     tools: false
   });
 
