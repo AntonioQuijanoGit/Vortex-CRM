@@ -88,7 +88,7 @@ export default function Sidebar({
           </button>
           {!isCollapsed && (
             <div className="sidebar-workspace">
-              <span className="workspace-name">Productivity</span>
+              <span className="workspace-name">Taskline</span>
             </div>
           )}
         </div>

@@ -150,26 +150,33 @@ function App() {
       {/* Simple Header */}
       <header className="app-header">
         <div className="app-header-content">
-          <h1 className="app-header-title">Productivity</h1>
-          {isMobile && (
-            <span className="app-header-context" aria-label="Current section">
-              {activeContextLabel}
-            </span>
-          )}
-          <ThemeToggle />
+          <div className="app-header-left">
+            {/* Hamburger menu button - only show on mobile */}
+            {typeof window !== 'undefined' && window.innerWidth <= 768 && (
+              <button
+                className="mobile-menu-button"
+                onClick={() => setSidebarCollapsed(false)}
+                aria-label="Open menu"
+              >
+                ☰
+              </button>
+            )}
+          </div>
+
+          <div className="app-header-title-wrap">
+            <h1 className="app-header-title">Taskline</h1>
+            {isMobile && (
+              <span className="app-header-context" aria-label="Current section">
+                {activeContextLabel}
+              </span>
+            )}
+          </div>
+
+          <div className="app-header-right">
+            <ThemeToggle />
+          </div>
         </div>
       </header>
-      
-      {/* Hamburger menu button - only show on mobile when sidebar is collapsed */}
-      {sidebarCollapsed && typeof window !== 'undefined' && window.innerWidth <= 768 && (
-        <button
-          className="mobile-menu-button"
-          onClick={() => setSidebarCollapsed(false)}
-          aria-label="Open menu"
-        >
-          ☰
-        </button>
-      )}
       <Sidebar
         pages={getRootPages()}
         activePage={activePage}
