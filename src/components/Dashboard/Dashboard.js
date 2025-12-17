@@ -571,6 +571,10 @@ export default function Dashboard({ onNavigate }) {
           </div>
 
           <div className="visual-data-card heatmap-card">
+            <div className="visual-data-card-header">
+              <h3 className="visual-data-title">Activity Heatmap</h3>
+              <p className="visual-data-subtitle">Created and completed items over the last 90 days</p>
+            </div>
             <ActivityHeatmap data={activityData} days={90} />
           </div>
         </div>

@@ -1210,7 +1210,7 @@
 
 .visual-data-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
   gap: var(--spacing-xl);
   margin-top: var(--spacing-lg);
 }
@@ -1224,6 +1224,16 @@
   transition: all var(--transition-base);
   position: relative;
   overflow: hidden;
+}
+
+.visual-data-card-header {
+  margin-bottom: var(--spacing-sm);
+}
+
+.visual-data-subtitle {
+  font-size: 13px;
+  color: var(--color-muted);
+  margin: 0;
 }
 
 .visual-data-card::before {
