@@ -72,6 +72,8 @@ export default function Dashboard({ onNavigate }) {
   const tasks = allTodos.filter((t) => t.type === "task");
   const habits = allTodos.filter((t) => t.type === "habit");
   const completedTasks = tasks.filter((t) => t.completed).length;
+  const pendingTasks = tasks.length - completedTasks;
+  const activeStreaks = habits.filter((h) => (h.streak || 0) > 0).length;
   const totalStreaks = habits.reduce((sum, h) => sum + (h.streak || 0), 0);
   const maxStreak = habits.length > 0 ? Math.max(...habits.map(h => h.streak || 0)) : 0;
   
@@ -92,6 +94,16 @@ export default function Dashboard({ onNavigate }) {
 
   // Calculate completion percentage
   const completionPercentage = tasks.length > 0 ? (completedTasks / tasks.length) * 100 : 0;
+  const todayStr = new Date().toISOString().split("T")[0];
+  const completedToday = tasks.filter(
+    (t) => t.completedAt && new Date(t.completedAt).toISOString().startsWith(todayStr)
+  ).length;
+  const createdThisWeek = allTodos.filter((t) => {
+    if (!t.createdAt) return false;
+    const created = new Date(t.createdAt);
+    const diff = (Date.now() - created.getTime()) / (1000 * 60 * 60 * 24);
+    return diff <= 7;
+  }).length;
 
   // Generate trend data for last 7 days
   const trendData = useMemo(() => {
@@ -205,6 +217,13 @@ export default function Dashboard({ onNavigate }) {
 
   const isEmptyWorkspace = rootPages.length <= 1 && allTodos.length === 0;
   const hasQuickActions = rootPages.length > 1 || allTodos.length > 0;
+
+  const kpiItems = [
+    { label: "Pending tasks", value: pendingTasks, icon: Icons.task },
+    { label: "Done today", value: completedToday, icon: Icons.completed },
+    { label: "Active streaks", value: activeStreaks, icon: Icons.streak },
+    { label: "New this week", value: createdThisWeek, icon: Icons.add },
+  ];
 
   // Compact empty state: show only hero + CTA, avoid empty charts/cards
   if (isEmptyWorkspace) {
@@ -323,6 +342,21 @@ export default function Dashboard({ onNavigate }) {
           />
         </section>
       )}
+
+      {/* KPI glance to fill whitespace and give context */}
+      <section className="dashboard-section-modern kpi-bar">
+        <div className="kpi-grid">
+          {kpiItems.map((item) => (
+            <div key={item.label} className="kpi-card">
+              <div className="kpi-icon">{renderIcon(item.icon, 18)}</div>
+              <div className="kpi-meta">
+                <div className="kpi-value">{item.value}</div>
+                <div className="kpi-label">{item.label}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
 
       {/* Focus first, then charts, then secondary stats */}
       <div className="dashboard-main-content">
@@ -492,7 +526,7 @@ export default function Dashboard({ onNavigate }) {
             </div>
           </div>
           <div className="activity-list-modern">
-            {allTodosWithPages.slice(0, 5).map((todo) => {
+            {allTodosWithPages.slice(0, 8).map((todo) => {
               // Allow navigation if we have a pageId, even if title is "Unknown Page"
               // The page might exist but just not be found in the current state
               const isClickable = todo.pageId && todo.pageTitle !== "Orphaned";
