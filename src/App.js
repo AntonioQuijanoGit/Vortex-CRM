@@ -152,13 +152,15 @@ function App() {
 
   return (
     <div className="app-layout">
-      <button
-        className="back-dashboard-floating"
-        onClick={() => setActivePage("home")}
-        aria-label="Back to dashboard"
-      >
-        ← Dashboard
-      </button>
+      {activePage !== "home" && (
+        <button
+          className="back-dashboard-floating"
+          onClick={() => setActivePage("home")}
+          aria-label="Back to dashboard"
+        >
+          ← Dashboard
+        </button>
+      )}
       {/* Simple Header */}
       <header className="app-header">
         <div className="app-header-content">
