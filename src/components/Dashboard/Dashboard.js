@@ -249,26 +249,26 @@ export default function Dashboard({ onNavigate }) {
     { title: "Study", desc: "Courses, reading and review", icon: Icons.book },
   ];
 
-  // Compact empty state: show only hero + CTA, avoid empty charts/cards
-  if (isEmptyWorkspace) {
-    return (
-      <div className="dashboard-container">
-        <div className="dashboard-hero">
-          <div className="dashboard-hero-content">
-            <div className="dashboard-hero-header">
-              <h1 className="dashboard-title">Overview</h1>
-              <div className="dashboard-hero-stats">
-                {stats.slice(0, 3).map((stat) => (
-                  <div key={stat.label} className="hero-stat">
-                    <div className="hero-stat-value">{stat.value}</div>
-                    <div className="hero-stat-label">{stat.label}</div>
-                  </div>
-                ))}
-              </div>
+  return (
+    <div className="dashboard-container">
+      <div className="dashboard-hero">
+        <div className="dashboard-hero-content">
+          <div className="dashboard-hero-header">
+            <h1 className="dashboard-title">Overview</h1>
+            <div className="dashboard-hero-stats">
+              {stats.slice(0, 3).map((stat) => (
+                <div key={stat.label} className="hero-stat">
+                  <div className="hero-stat-value">{stat.value}</div>
+                  <div className="hero-stat-label">{stat.label}</div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
+      </div>
 
+      {/* Getting started inline when empty, but keep full dashboard visible */}
+      {isEmptyWorkspace && (
         <section className="dashboard-section-modern welcome-empty-state">
           <div className="welcome-empty-content">
             <div className="welcome-empty-icon">{renderIcon(Icons.page, 48)}</div>
@@ -297,60 +297,10 @@ export default function Dashboard({ onNavigate }) {
               <p className="welcome-hint">
                 Or use the <strong>+</strong> button in the sidebar to create a page
               </p>
-              <div className="welcome-quick-tips">
-                <div className="quick-tip">
-                  <span className="tip-icon">{renderIcon(Icons.task, 18)}</span>
-                  <div>
-                    <strong>Tasks</strong>
-                    <span>Track one-time items with due dates</span>
-                  </div>
-                </div>
-                <div className="quick-tip">
-                  <span className="tip-icon">{renderIcon(Icons.habit, 18)}</span>
-                  <div>
-                    <strong>Habits</strong>
-                    <span>Build daily routines with streak tracking</span>
-                  </div>
-                </div>
-                <div className="quick-tip">
-                  <span className="tip-icon">{renderIcon(Icons.calendar, 18)}</span>
-                  <div>
-                    <strong>Calendar</strong>
-                    <span>View and manage your events</span>
-                  </div>
-                </div>
-                <div className="quick-tip">
-                  <span className="tip-icon">{renderIcon(Icons.search, 18)}</span>
-                  <div>
-                    <strong>Quick Search</strong>
-                    <span>Press ⌘K or Ctrl+K to search everything</span>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </section>
-      </div>
-    );
-  }
-
-  return (
-    <div className="dashboard-container">
-      <div className="dashboard-hero">
-        <div className="dashboard-hero-content">
-          <div className="dashboard-hero-header">
-            <h1 className="dashboard-title">Overview</h1>
-            <div className="dashboard-hero-stats">
-              {stats.slice(0, 3).map((stat) => (
-                <div key={stat.label} className="hero-stat">
-                  <div className="hero-stat-value">{stat.value}</div>
-                  <div className="hero-stat-label">{stat.label}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
+      )}
 
       {/* Quick Actions prioritized near the top */}
       {hasQuickActions && (
