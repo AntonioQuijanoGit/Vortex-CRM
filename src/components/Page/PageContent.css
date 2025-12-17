@@ -1,13 +1,17 @@
 .page-content {
   flex: 1;
-  min-height: 100vh;
-  padding: var(--spacing-lg) var(--spacing-lg) var(--spacing-md);
+  min-height: auto;
+  padding: var(--spacing-lg) var(--spacing-lg) var(--spacing-sm);
   max-width: 1400px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   gap: var(--spacing-md);
   animation: fadeInUp 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.page-content > *:last-child {
+  margin-bottom: 0;
 }
 
 .page-content-dashboard {
