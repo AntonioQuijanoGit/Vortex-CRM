@@ -105,6 +105,9 @@ export default function Dashboard({ onNavigate }) {
     return diff <= 7;
   }).length;
 
+  // Activity summary for heatmap (90d)
+  const heatmapDays = 90;
+
   // Generate trend data for last 7 days
   const trendData = useMemo(() => {
     const days = 7;
@@ -143,24 +146,38 @@ export default function Dashboard({ onNavigate }) {
     return activities;
   }, [allTodos]);
 
-  // Recent 7-day activity for summary card
-  const recentActivity = useMemo(() => {
-    const today = new Date();
-    const days = [];
-    for (let i = 6; i >= 0; i--) {
-      const date = new Date(today);
-      date.setDate(today.getDate() - i);
-      const key = date.toISOString().split("T")[0];
-      const label = date.toLocaleDateString(undefined, { month: "short", day: "numeric" });
-      const created = activityData.filter(
-        (a) => a.type === "created" && new Date(a.date).toISOString().startsWith(key)
-      ).length;
-      const completed = activityData.filter(
-        (a) => a.type === "completed" && new Date(a.date).toISOString().startsWith(key)
-      ).length;
-      days.push({ key, label, created, completed, total: created + completed });
-    }
-    return days;
+  const activitySummary = useMemo(() => {
+    const cutoff = new Date();
+    cutoff.setDate(cutoff.getDate() - (heatmapDays - 1));
+    let created = 0;
+    let completed = 0;
+    let mostActiveDay = null;
+    let mostActiveTotal = 0;
+    const perDay = new Map();
+
+    activityData.forEach(({ date, type }) => {
+      if (!date) return;
+      const d = new Date(date);
+      if (isNaN(d.getTime()) || d < cutoff) return;
+      const key = d.toISOString().split("T")[0];
+      if (!perDay.has(key)) perDay.set(key, { created: 0, completed: 0 });
+      const entry = perDay.get(key);
+      if (type === "created") {
+        entry.created += 1;
+        created += 1;
+      }
+      if (type === "completed") {
+        entry.completed += 1;
+        completed += 1;
+      }
+      const total = entry.created + entry.completed;
+      if (total > mostActiveTotal) {
+        mostActiveTotal = total;
+        mostActiveDay = key;
+      }
+    });
+
+    return { created, completed, mostActiveDay, mostActiveTotal };
   }, [activityData]);
 
   // Movies functionality has been removed, so we don't count them anymore
@@ -528,7 +545,7 @@ export default function Dashboard({ onNavigate }) {
           <div className="visual-data-card heatmap-card">
             <div className="visual-data-card-header heatmap-header">
               <div>
-                <h3 className="visual-data-title">Activity Heatmap</h3>
+                <h3 className="visual-data-title">Activity Overview</h3>
                 <p className="visual-data-subtitle">Created vs completed over the last 90 days</p>
               </div>
               <div className="heatmap-legend">
@@ -540,7 +557,29 @@ export default function Dashboard({ onNavigate }) {
                 </span>
               </div>
             </div>
-            <ActivityHeatmap data={activityData} days={90} hideHeader />
+            <div className="heatmap-stats">
+              <div className="heatmap-stat">
+                <span className="heatmap-stat-label">Created (90d)</span>
+                <span className="heatmap-stat-value">{activitySummary.created}</span>
+              </div>
+              <div className="heatmap-stat">
+                <span className="heatmap-stat-label">Completed (90d)</span>
+                <span className="heatmap-stat-value">{activitySummary.completed}</span>
+              </div>
+              <div className="heatmap-stat">
+                <span className="heatmap-stat-label">Most active</span>
+                <span className="heatmap-stat-value">
+                  {activitySummary.mostActiveDay
+                    ? `${new Date(activitySummary.mostActiveDay).toLocaleDateString(undefined, { month: "short", day: "numeric" })} (${activitySummary.mostActiveTotal})`
+                    : "—"}
+                </span>
+              </div>
+            </div>
+            <ActivityHeatmap
+              data={activityData}
+              days={90}
+              hideHeader
+            />
           </div>
         </div>
       </div>
