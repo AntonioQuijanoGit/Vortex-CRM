@@ -143,6 +143,26 @@ export default function Dashboard({ onNavigate }) {
     return activities;
   }, [allTodos]);
 
+  // Recent 7-day activity for summary card
+  const recentActivity = useMemo(() => {
+    const today = new Date();
+    const days = [];
+    for (let i = 6; i >= 0; i--) {
+      const date = new Date(today);
+      date.setDate(today.getDate() - i);
+      const key = date.toISOString().split("T")[0];
+      const label = date.toLocaleDateString(undefined, { month: "short", day: "numeric" });
+      const created = activityData.filter(
+        (a) => a.type === "created" && new Date(a.date).toISOString().startsWith(key)
+      ).length;
+      const completed = activityData.filter(
+        (a) => a.type === "completed" && new Date(a.date).toISOString().startsWith(key)
+      ).length;
+      days.push({ key, label, created, completed, total: created + completed });
+    }
+    return days;
+  }, [activityData]);
+
   // Movies functionality has been removed, so we don't count them anymore
 
   // Only show stats that have content
@@ -508,7 +528,7 @@ export default function Dashboard({ onNavigate }) {
           <div className="visual-data-card heatmap-card">
             <div className="visual-data-card-header heatmap-header">
               <div>
-                <h3 className="visual-data-title">Activity (90d)</h3>
+                <h3 className="visual-data-title">Activity Heatmap</h3>
                 <p className="visual-data-subtitle">Created vs completed over the last 90 days</p>
               </div>
               <div className="heatmap-legend">
@@ -520,7 +540,7 @@ export default function Dashboard({ onNavigate }) {
                 </span>
               </div>
             </div>
-            <ActivityHeatmap data={activityData} days={90} />
+            <ActivityHeatmap data={activityData} days={90} hideHeader />
           </div>
         </div>
       </div>

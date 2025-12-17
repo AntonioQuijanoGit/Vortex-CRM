@@ -1,7 +1,7 @@
 import React from "react";
 import "./ActivityHeatmap.css";
 
-export default function ActivityHeatmap({ data, days = 90, startDate }) {
+export default function ActivityHeatmap({ data, days = 90, startDate, hideHeader = false }) {
   // Generate dates for the last N days
   const today = new Date();
   const dates = [];
@@ -59,22 +59,24 @@ export default function ActivityHeatmap({ data, days = 90, startDate }) {
 
   return (
     <div className="activity-heatmap">
-      <div className="heatmap-header">
-        <h3 className="heatmap-title">Activity Heatmap</h3>
-        <div className="heatmap-legend">
-          <span className="legend-label">Less</span>
-          <div className="legend-squares">
-            {[0, 1, 2, 3, 4].map((level) => (
-              <div
-                key={level}
-                className={`legend-square level-${level}`}
-                aria-label={`Activity level ${level}`}
-              />
-            ))}
+      {!hideHeader && (
+        <div className="heatmap-header">
+          <h3 className="heatmap-title">Activity Heatmap</h3>
+          <div className="heatmap-legend">
+            <span className="legend-label">Less</span>
+            <div className="legend-squares">
+              {[0, 1, 2, 3, 4].map((level) => (
+                <div
+                  key={level}
+                  className={`legend-square level-${level}`}
+                  aria-label={`Activity level ${level}`}
+                />
+              ))}
+            </div>
+            <span className="legend-label">More</span>
           </div>
-          <span className="legend-label">More</span>
         </div>
-      </div>
+      )}
       <div className="heatmap-grid">
         {weeks.map((week, weekIndex) => (
           <div key={weekIndex} className="heatmap-week">
