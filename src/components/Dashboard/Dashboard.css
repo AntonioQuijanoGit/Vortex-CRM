@@ -4,7 +4,7 @@
   gap: var(--spacing-xl);
   animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
   width: 100% !important;
-  max-width: 1400px !important;
+  max-width: 1600px !important;
   margin: 0 auto;
   padding: var(--spacing-xl) var(--spacing-lg) var(--spacing-xl) var(--spacing-lg) !important;
 }
