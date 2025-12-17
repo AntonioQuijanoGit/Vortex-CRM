@@ -1274,25 +1274,25 @@
   border-color: rgba(16, 185, 129, 0.4);
 }
 
-.activity-highlights-card {
+.activity-breakdown-card {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-md);
 }
 
-.activity-highlights-grid {
+.activity-breakdown-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
   gap: var(--spacing-sm);
 }
 
-.activity-highlights-list {
+.activity-breakdown-list {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: var(--spacing-xs);
 }
 
-.activity-highlights-item {
+.activity-breakdown-item {
   display: grid;
   grid-template-columns: 1fr auto auto;
   align-items: center;
@@ -1302,17 +1302,17 @@
   background: var(--color-panel);
 }
 
-.activity-highlights-date {
+.activity-breakdown-date {
   font-weight: 600;
   color: var(--color-ink);
 }
 
-.activity-highlights-badges {
+.activity-breakdown-badges {
   display: flex;
   gap: var(--spacing-xxs);
 }
 
-.activity-highlights-total {
+.activity-breakdown-total {
   font-weight: 700;
   color: var(--color-ink);
 }

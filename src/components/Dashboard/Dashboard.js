@@ -198,6 +198,38 @@ export default function Dashboard({ onNavigate }) {
     return days;
   }, [activityByDate, today]);
 
+  const last30Cutoff = useMemo(() => {
+    const d = new Date();
+    d.setDate(d.getDate() - 29);
+    return d;
+  }, []);
+
+  const activityBreakdown = useMemo(() => {
+    let createdTasks = 0;
+    let createdHabits = 0;
+    let completedTasks = 0;
+    let completedHabits = 0;
+
+    allTodos.forEach((todo) => {
+      if (todo.createdAt) {
+        const d = new Date(todo.createdAt);
+        if (d >= last30Cutoff) {
+          if (todo.type === "task") createdTasks += 1;
+          if (todo.type === "habit") createdHabits += 1;
+        }
+      }
+      if (todo.completedAt) {
+        const d = new Date(todo.completedAt);
+        if (d >= last30Cutoff) {
+          if (todo.type === "task") completedTasks += 1;
+          if (todo.type === "habit") completedHabits += 1;
+        }
+      }
+    });
+
+    return { createdTasks, createdHabits, completedTasks, completedHabits };
+  }, [allTodos, last30Cutoff]);
+
   // Movies functionality has been removed, so we don't count them anymore
 
   // Only show stats that have content
@@ -578,40 +610,38 @@ export default function Dashboard({ onNavigate }) {
             <ActivityHeatmap data={activityData} days={90} />
           </div>
 
-          <div className="visual-data-card activity-highlights-card">
+          <div className="visual-data-card activity-breakdown-card">
             <div className="visual-data-card-header">
-              <h3 className="visual-data-title">Activity Highlights</h3>
-              <p className="visual-data-subtitle">Summary and recent days</p>
+              <h3 className="visual-data-title">Activity Breakdown</h3>
+              <p className="visual-data-subtitle">Last 30 days by type</p>
             </div>
-            <div className="activity-highlights-grid">
+            <div className="activity-breakdown-grid">
               <div className="visual-stat">
-                <span className="visual-stat-value">{activityTotals.created}</span>
-                <span className="visual-stat-label">Created (90d)</span>
+                <span className="visual-stat-value">{activityBreakdown.createdTasks}</span>
+                <span className="visual-stat-label">Created tasks</span>
               </div>
               <div className="visual-stat">
-                <span className="visual-stat-value">{activityTotals.completed}</span>
-                <span className="visual-stat-label">Completed (90d)</span>
+                <span className="visual-stat-value">{activityBreakdown.createdHabits}</span>
+                <span className="visual-stat-label">Created habits</span>
               </div>
               <div className="visual-stat">
-                <span className="visual-stat-value">
-                  {activityTotals.mostActiveDay
-                    ? new Date(activityTotals.mostActiveDay).toLocaleDateString(undefined, { month: "short", day: "numeric" })
-                    : "—"}
-                </span>
-                <span className="visual-stat-label">
-                  Most active ({activityTotals.mostActiveTotal || 0})
-                </span>
+                <span className="visual-stat-value">{activityBreakdown.completedTasks}</span>
+                <span className="visual-stat-label">Completed tasks</span>
+              </div>
+              <div className="visual-stat">
+                <span className="visual-stat-value">{activityBreakdown.completedHabits}</span>
+                <span className="visual-stat-label">Completed habits</span>
               </div>
             </div>
-            <div className="activity-highlights-list">
+            <div className="activity-breakdown-list">
               {last7DaysActivity.map((day) => (
-                <div key={day.key} className="activity-highlights-item">
-                  <div className="activity-highlights-date">{day.label}</div>
-                  <div className="activity-highlights-badges">
+                <div key={day.key} className="activity-breakdown-item">
+                  <div className="activity-breakdown-date">{day.label}</div>
+                  <div className="activity-breakdown-badges">
                     <span className="badge badge-created">C {day.created}</span>
                     <span className="badge badge-completed">D {day.completed}</span>
                   </div>
-                  <div className="activity-highlights-total">{day.total}</div>
+                  <div className="activity-breakdown-total">{day.total}</div>
                 </div>
               ))}
             </div>
