@@ -1,7 +1,7 @@
 .page-content {
   flex: 1;
   min-height: 100vh;
-  padding: var(--spacing-lg) var(--spacing-lg);
+  padding: var(--spacing-lg) var(--spacing-lg) var(--spacing-md);
   max-width: 1400px;
   margin: 0 auto;
   display: flex;

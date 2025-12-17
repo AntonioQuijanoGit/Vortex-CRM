@@ -6,7 +6,7 @@
   width: 100% !important;
   max-width: 1600px !important;
   margin: 0 auto;
-  padding: var(--spacing-xl) var(--spacing-lg) var(--spacing-xl) var(--spacing-lg) !important;
+  padding: var(--spacing-xl) var(--spacing-lg) var(--spacing-lg) var(--spacing-lg) !important;
 }
 
 @media (max-width: 768px) {
