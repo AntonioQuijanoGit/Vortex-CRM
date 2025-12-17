@@ -227,26 +227,26 @@ export default function Dashboard({ onNavigate }) {
 
   const smartSuggestions = [
     {
-      title: "Plan mañana",
-      desc: "Reserva 5 minutos para definir 3 tareas clave",
+      title: "Plan tomorrow",
+      desc: "Take 5 minutes to pick your top 3 tasks",
       icon: Icons.calendar,
     },
     {
-      title: "Revisa hábitos en riesgo",
-      desc: "Marca los hábitos activos antes de romper streaks",
+      title: "Protect streaks",
+      desc: "Mark active habits before streaks break",
       icon: Icons.streak,
     },
     {
-      title: "Vacía tu inbox",
-      desc: "Captura ideas rápidas en Quick Notes",
+      title: "Inbox zero (quick)",
+      desc: "Capture ideas fast in Quick Notes",
       icon: Icons.note,
     },
   ];
 
   const starterTemplates = [
-    { title: "Trabajo", desc: "Tareas, reuniones y deadlines", icon: Icons.briefcase },
-    { title: "Personal", desc: "Hábitos, salud y finanzas", icon: Icons.heart },
-    { title: "Estudio", desc: "Cursos, lecturas y repaso", icon: Icons.book },
+    { title: "Work", desc: "Tasks, meetings and deadlines", icon: Icons.briefcase },
+    { title: "Personal", desc: "Habits, health and finances", icon: Icons.heart },
+    { title: "Study", desc: "Courses, reading and review", icon: Icons.book },
   ];
 
   // Compact empty state: show only hero + CTA, avoid empty charts/cards
@@ -272,7 +272,7 @@ export default function Dashboard({ onNavigate }) {
         <section className="dashboard-section-modern welcome-empty-state">
           <div className="welcome-empty-content">
             <div className="welcome-empty-icon">{renderIcon(Icons.page, 48)}</div>
-            <h2 className="welcome-empty-title">Welcome to Productivity!</h2>
+            <h2 className="welcome-empty-title">Welcome to Taskline!</h2>
             <p className="welcome-empty-description">
               Your personal productivity hub. Organize tasks, track habits, and manage your content all in one place. Everything saves automatically.
             </p>
@@ -389,28 +389,28 @@ export default function Dashboard({ onNavigate }) {
             <div className="timeline-header">
               <span className="timeline-dot today"></span>
               <div>
-                <div className="timeline-title">Hoy</div>
-                <div className="timeline-subtitle">Lo inmediato</div>
+                <div className="timeline-title">Today</div>
+                <div className="timeline-subtitle">Immediate priorities</div>
               </div>
             </div>
             <ul className="timeline-list">
-              <li>Revisa tareas pendientes ({pendingTasks})</li>
-              <li>Marca hábitos activos ({activeStreaks} streaks)</li>
-              <li>Completa 1 foco corto (Focus Timer)</li>
+              <li>Review pending tasks ({pendingTasks})</li>
+              <li>Check active habits ({activeStreaks} streaks)</li>
+              <li>Run one short Focus Timer</li>
             </ul>
           </div>
           <div className="timeline-card">
             <div className="timeline-header">
               <span className="timeline-dot tomorrow"></span>
               <div>
-                <div className="timeline-title">Mañana</div>
-                <div className="timeline-subtitle">Preparación rápida</div>
+                <div className="timeline-title">Tomorrow</div>
+                <div className="timeline-subtitle">Quick prep</div>
               </div>
             </div>
             <ul className="timeline-list">
-              <li>Planifica 3 tareas clave</li>
-              <li>Agenda un bloque de foco</li>
-              <li>Revisa próximos deadlines</li>
+              <li>Plan 3 key tasks</li>
+              <li>Schedule one focus block</li>
+              <li>Check upcoming deadlines</li>
             </ul>
           </div>
         </div>
@@ -527,6 +527,48 @@ export default function Dashboard({ onNavigate }) {
               </div>
             </div>
           )}
+
+          <div className="visual-data-card">
+            <h3 className="visual-data-title">Habit Streaks</h3>
+            <div className="visual-data-content">
+              <div className="visual-data-stats">
+                <div className="visual-stat">
+                  <span className="visual-stat-value">{activeStreaks}</span>
+                  <span className="visual-stat-label">Active streaks</span>
+                </div>
+                <div className="visual-stat">
+                  <span className="visual-stat-value">{maxStreak}</span>
+                  <span className="visual-stat-label">Best streak</span>
+                </div>
+                <div className="visual-stat">
+                  <span className="visual-stat-value">{totalStreaks}</span>
+                  <span className="visual-stat-label">Total streak days</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="visual-data-card">
+            <h3 className="visual-data-title">Quick Focus</h3>
+            <div className="visual-data-content">
+              <div className="visual-data-stats">
+                <div className="visual-stat">
+                  <span className="visual-stat-value">{pendingTasks}</span>
+                  <span className="visual-stat-label">Pending tasks</span>
+                </div>
+                <div className="visual-stat">
+                  <span className="visual-stat-value">{completedToday}</span>
+                  <span className="visual-stat-label">Done today</span>
+                </div>
+              </div>
+              <button
+                className="dashboard-button-modern"
+                onClick={() => setShowFocusTimer(true)}
+              >
+                {renderIcon(Icons.timer, 16)} Start Focus Timer
+              </button>
+            </div>
+          </div>
 
           <div className="visual-data-card heatmap-card">
             <ActivityHeatmap data={activityData} days={90} />
@@ -678,7 +720,7 @@ export default function Dashboard({ onNavigate }) {
                 className="template-cta"
                 onClick={() => setShowTemplateSelector(true)}
               >
-                Usar
+                Use template
               </button>
             </div>
           ))}
