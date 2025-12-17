@@ -225,6 +225,30 @@ export default function Dashboard({ onNavigate }) {
     { label: "New this week", value: createdThisWeek, icon: Icons.add },
   ];
 
+  const smartSuggestions = [
+    {
+      title: "Plan mañana",
+      desc: "Reserva 5 minutos para definir 3 tareas clave",
+      icon: Icons.calendar,
+    },
+    {
+      title: "Revisa hábitos en riesgo",
+      desc: "Marca los hábitos activos antes de romper streaks",
+      icon: Icons.streak,
+    },
+    {
+      title: "Vacía tu inbox",
+      desc: "Captura ideas rápidas en Quick Notes",
+      icon: Icons.note,
+    },
+  ];
+
+  const starterTemplates = [
+    { title: "Trabajo", desc: "Tareas, reuniones y deadlines", icon: Icons.briefcase },
+    { title: "Personal", desc: "Hábitos, salud y finanzas", icon: Icons.heart },
+    { title: "Estudio", desc: "Cursos, lecturas y repaso", icon: Icons.book },
+  ];
+
   // Compact empty state: show only hero + CTA, avoid empty charts/cards
   if (isEmptyWorkspace) {
     return (
@@ -355,6 +379,40 @@ export default function Dashboard({ onNavigate }) {
               </div>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* Today & Tomorrow strip */}
+      <section className="dashboard-section-modern timeline-strip">
+        <div className="timeline-grid">
+          <div className="timeline-card">
+            <div className="timeline-header">
+              <span className="timeline-dot today"></span>
+              <div>
+                <div className="timeline-title">Hoy</div>
+                <div className="timeline-subtitle">Lo inmediato</div>
+              </div>
+            </div>
+            <ul className="timeline-list">
+              <li>Revisa tareas pendientes ({pendingTasks})</li>
+              <li>Marca hábitos activos ({activeStreaks} streaks)</li>
+              <li>Completa 1 foco corto (Focus Timer)</li>
+            </ul>
+          </div>
+          <div className="timeline-card">
+            <div className="timeline-header">
+              <span className="timeline-dot tomorrow"></span>
+              <div>
+                <div className="timeline-title">Mañana</div>
+                <div className="timeline-subtitle">Preparación rápida</div>
+              </div>
+            </div>
+            <ul className="timeline-list">
+              <li>Planifica 3 tareas clave</li>
+              <li>Agenda un bloque de foco</li>
+              <li>Revisa próximos deadlines</li>
+            </ul>
+          </div>
         </div>
       </section>
 
@@ -594,6 +652,38 @@ export default function Dashboard({ onNavigate }) {
           </div>
         </section>
       )}
+
+      {/* Smart suggestions and starter templates */}
+      <section className="dashboard-section-modern suggestions-section">
+        <div className="suggestions-grid">
+          {smartSuggestions.map((item) => (
+            <div key={item.title} className="suggestion-card">
+              <div className="suggestion-icon">{renderIcon(item.icon, 18)}</div>
+              <div className="suggestion-meta">
+                <div className="suggestion-title">{item.title}</div>
+                <div className="suggestion-desc">{item.desc}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="templates-grid">
+          {starterTemplates.map((item) => (
+            <div key={item.title} className="template-card">
+              <div className="template-icon">{renderIcon(item.icon, 18)}</div>
+              <div className="template-meta">
+                <div className="template-title">{item.title}</div>
+                <div className="template-desc">{item.desc}</div>
+              </div>
+              <button
+                className="template-cta"
+                onClick={() => setShowTemplateSelector(true)}
+              >
+                Usar
+              </button>
+            </div>
+          ))}
+        </div>
+      </section>
 
       {/* Calendar at the bottom */}
       <section className="dashboard-section-modern dashboard-calendar-section">
