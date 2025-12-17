@@ -129,34 +129,74 @@ export default function Dashboard({ onNavigate }) {
     return trend;
   }, [tasks]);
 
-  // Prepare activity data for heatmap
-  // Include both completed tasks (completedAt) and created todos (createdAt) for better activity tracking
+  // Prepare activity data for heatmap (created/completed)
   const activityData = useMemo(() => {
     const activities = [];
-    
     allTodos.forEach((todo) => {
-      // Add completion activity if task/habit was completed
       if (todo.completedAt) {
-        activities.push({
-          date: todo.completedAt,
-          createdAt: todo.createdAt,
-          completedAt: todo.completedAt,
-          type: 'completed'
-        });
+        activities.push({ date: todo.completedAt, type: "completed" });
       }
-      // Also add creation activity for new todos
       if (todo.createdAt) {
-        activities.push({
-          date: todo.createdAt,
-          createdAt: todo.createdAt,
-          completedAt: todo.completedAt,
-          type: 'created'
-        });
+        activities.push({ date: todo.createdAt, type: "created" });
       }
     });
-    
     return activities;
   }, [allTodos]);
+
+  // Summaries for highlights
+  const heatmapDays = 90;
+  const today = new Date();
+  const heatmapCutoff = new Date(today);
+  heatmapCutoff.setDate(today.getDate() - (heatmapDays - 1));
+
+  const activityByDate = useMemo(() => {
+    const map = new Map();
+    activityData.forEach(({ date, type }) => {
+      if (!date) return;
+      const d = new Date(date).toISOString().split("T")[0];
+      if (!map.has(d)) map.set(d, { created: 0, completed: 0 });
+      if (type === "created") map.get(d).created += 1;
+      if (type === "completed") map.get(d).completed += 1;
+    });
+    return map;
+  }, [activityData]);
+
+  const activityTotals = useMemo(() => {
+    let created = 0;
+    let completed = 0;
+    let mostActiveDay = null;
+    let mostActiveTotal = 0;
+    activityByDate.forEach((value, key) => {
+      const dateObj = new Date(key);
+      if (dateObj >= heatmapCutoff) {
+        created += value.created;
+        completed += value.completed;
+      }
+      const total = value.created + value.completed;
+      if (total > mostActiveTotal) {
+        mostActiveTotal = total;
+        mostActiveDay = key;
+      }
+    });
+    return { created, completed, mostActiveDay, mostActiveTotal };
+  }, [activityByDate, heatmapCutoff]);
+
+  const last7DaysActivity = useMemo(() => {
+    const days = [];
+    for (let i = 6; i >= 0; i--) {
+      const date = new Date(today);
+      date.setDate(today.getDate() - i);
+      const key = date.toISOString().split("T")[0];
+      const data = activityByDate.get(key) || { created: 0, completed: 0 };
+      days.push({
+        key,
+        label: date.toLocaleDateString(undefined, { month: "short", day: "numeric" }),
+        ...data,
+        total: data.created + data.completed,
+      });
+    }
+    return days;
+  }, [activityByDate, today]);
 
   // Movies functionality has been removed, so we don't count them anymore
 
@@ -521,11 +561,66 @@ export default function Dashboard({ onNavigate }) {
           </div>
 
           <div className="visual-data-card heatmap-card">
-            <div className="visual-data-card-header">
-              <h3 className="visual-data-title">Activity Heatmap</h3>
-              <p className="visual-data-subtitle">Created and completed items over the last 90 days</p>
+            <div className="visual-data-card-header heatmap-header">
+              <div>
+                <h3 className="visual-data-title">Activity (90d)</h3>
+                <p className="visual-data-subtitle">Created vs completed over the last 90 days</p>
+              </div>
+              <div className="heatmap-legend">
+                <span className="legend-item">
+                  <span className="legend-dot created"></span> Created
+                </span>
+                <span className="legend-item">
+                  <span className="legend-dot completed"></span> Completed
+                </span>
+              </div>
             </div>
             <ActivityHeatmap data={activityData} days={90} />
+          </div>
+
+          <div className="visual-data-card activity-highlights-card">
+            <div className="visual-data-card-header">
+              <h3 className="visual-data-title">Activity Highlights</h3>
+              <p className="visual-data-subtitle">Summary and recent days</p>
+            </div>
+            <div className="activity-highlights-grid">
+              <div className="visual-stat">
+                <span className="visual-stat-value">{activityTotals.created}</span>
+                <span className="visual-stat-label">Created (90d)</span>
+              </div>
+              <div className="visual-stat">
+                <span className="visual-stat-value">{activityTotals.completed}</span>
+                <span className="visual-stat-label">Completed (90d)</span>
+              </div>
+              <div className="visual-stat">
+                <span className="visual-stat-value">
+                  {activityTotals.mostActiveDay
+                    ? new Date(activityTotals.mostActiveDay).toLocaleDateString(undefined, { month: "short", day: "numeric" })
+                    : "—"}
+                </span>
+                <span className="visual-stat-label">
+                  Most active ({activityTotals.mostActiveTotal || 0})
+                </span>
+              </div>
+            </div>
+            <div className="activity-highlights-list">
+              {last7DaysActivity.map((day) => (
+                <div key={day.key} className="activity-highlights-item">
+                  <div className="activity-highlights-date">{day.label}</div>
+                  <div className="activity-highlights-badges">
+                    <span className="badge badge-created">C {day.created}</span>
+                    <span className="badge badge-completed">D {day.completed}</span>
+                  </div>
+                  <div className="activity-highlights-total">{day.total}</div>
+                </div>
+              ))}
+            </div>
+            <button
+              className="dashboard-button-modern activity-feed-cta"
+              onClick={() => onNavigate("analytics")}
+            >
+              {renderIcon(Icons.stats, 16)} See activity feed
+            </button>
           </div>
         </div>
       </div>
