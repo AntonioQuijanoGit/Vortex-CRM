@@ -1,8 +1,7 @@
 .page-content {
   flex: 1;
   min-height: 100vh;
-  padding: var(--spacing-lg) var(--spacing-md);
-  padding-right: calc(var(--spacing-md) + 60px); /* Space for theme toggle */
+  padding: var(--spacing-lg) var(--spacing-lg);
   max-width: 1200px;
   margin: 0 auto;
   display: flex;
@@ -13,8 +12,7 @@
 
 .page-content-dashboard {
   max-width: 100% !important;
-  padding: var(--spacing-2xl) var(--spacing-2xl) !important;
-  padding-right: calc(var(--spacing-2xl) + 60px) !important; /* Space for theme toggle */
+  padding: var(--spacing-2xl) var(--spacing-xl) !important;
   width: 100% !important;
 }
 
@@ -224,7 +222,7 @@
 }
 
 .page-title-large {
-  font-size: clamp(36px, 5vw, 56px);
+  font-size: clamp(32px, 4vw, 44px);
   font-weight: 800;
   letter-spacing: -0.04em;
   color: var(--color-ink);
@@ -246,7 +244,7 @@
 }
 
 .page-title-edit {
-  font-size: clamp(28px, 4vw, 42px);
+  font-size: clamp(26px, 3.5vw, 38px);
   font-weight: 700;
   letter-spacing: -0.02em;
   color: var(--color-ink);

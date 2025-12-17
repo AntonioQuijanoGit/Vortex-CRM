@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Icons } from "../../../utils/icons";
+import { Icons, renderIcon } from "../../../utils/icons";
 import { requestNotificationPermission, showNotification } from "../../../utils/notifications";
 import { safeGetItem, safeSetItem } from "../../../utils/storage";
 import "./Reminders.css";
@@ -65,7 +65,7 @@ export default function Reminders({ todos = [] }) {
     <div className="reminders-widget">
       <div className="reminders-header">
         <div className="reminders-title">
-          <span className="reminders-icon">{Icons.alert}</span>
+          <span className="reminders-icon">{renderIcon(Icons.alert, 18)}</span>
           <span>Reminders</span>
         </div>
         <button
@@ -83,7 +83,7 @@ export default function Reminders({ todos = [] }) {
             <div className="reminders-list">
               {upcomingTasks.map((task) => (
                 <div key={task.id} className="reminder-item">
-                  <span className="reminder-icon">{Icons.task}</span>
+                  <span className="reminder-icon">{renderIcon(Icons.task, 16)}</span>
                   <div className="reminder-info">
                     <div className="reminder-title">{task.title}</div>
                     <div className="reminder-date">

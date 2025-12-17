@@ -1,5 +1,5 @@
 import React from "react";
-import { Icons } from "../../../utils/icons";
+import { Icons, renderIcon } from "../../../utils/icons";
 import { SHORTCUTS, getShortcutDisplay } from "../../../utils/keyboardShortcuts";
 import "./ShortcutsModal.css";
 
@@ -29,7 +29,7 @@ export default function ShortcutsModal({ onClose }) {
         <div className="shortcuts-modal-header">
           <h2>Keyboard Shortcuts</h2>
           <button className="shortcuts-modal-close" onClick={onClose} aria-label="Close">
-            {Icons.close}
+            {renderIcon(Icons.close, 18)}
           </button>
         </div>
         <div className="shortcuts-modal-content">

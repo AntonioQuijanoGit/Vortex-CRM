@@ -52,23 +52,23 @@
 }
 
 .quick-action-primary .quick-action-icon-wrapper {
-  background: var(--color-accent-light);
-  color: var(--color-accent);
+  background: transparent;
+  color: var(--color-ink);
 }
 
 .quick-action-info .quick-action-icon-wrapper {
-  background: var(--color-info-light);
-  color: var(--color-info);
+  background: transparent;
+  color: var(--color-ink);
 }
 
 .quick-action-success .quick-action-icon-wrapper {
-  background: var(--color-success-light);
-  color: var(--color-success);
+  background: transparent;
+  color: var(--color-ink);
 }
 
 .quick-action-accent .quick-action-icon-wrapper {
-  background: var(--color-accent-light);
-  color: var(--color-accent);
+  background: transparent;
+  color: var(--color-ink);
 }
 
 .quick-action-content {

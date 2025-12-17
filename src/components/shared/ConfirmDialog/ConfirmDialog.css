@@ -100,9 +100,9 @@
 }
 
 .confirm-dialog-button-confirm {
-  background: var(--color-ink);
-  color: var(--color-bg);
-  border-color: var(--color-ink);
+  background: var(--color-accent);
+  color: var(--color-panel);
+  border-color: var(--color-accent);
 }
 
 .confirm-dialog-button-confirm:hover {

@@ -1,29 +1,29 @@
 .help-buttons-container {
   position: fixed;
-  bottom: var(--spacing-lg);
+  bottom: calc(var(--footer-height, 50px) + var(--spacing-lg));
   right: var(--spacing-lg);
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: var(--spacing-sm);
+  align-items: flex-end;
   z-index: 5000; /* Above footer (3000) and other elements */
 }
 
 .help-button {
-  width: 48px;
-  height: 48px;
-  border: var(--border-medium);
-  background: var(--color-bg);
+  width: 44px;
+  height: 44px;
+  border: var(--border-thin);
+  background: var(--color-panel);
   color: var(--color-ink);
-  border-radius: 50%;
+  border-radius: var(--radius-md);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 22px;
-  font-weight: 700;
   cursor: pointer;
   transition: all var(--transition-base);
-  box-shadow: var(--shadow-md);
-  animation: subtlePulse 3s ease-in-out infinite;
+  box-shadow: var(--shadow-sm);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 .orphaned-items-button {
@@ -59,26 +59,16 @@
   border: 2px solid var(--color-bg);
 }
 
-@keyframes subtlePulse {
-  0%,
-  100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.02);
-  }
-}
-
 .help-button:hover {
-  background: var(--color-accent);
-  color: var(--color-bg);
-  border-color: var(--color-accent);
-  transform: scale(1.08) translateY(-2px);
-  box-shadow: var(--shadow-lg);
+  background: var(--color-surface);
+  border-color: var(--color-stroke-strong);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
 }
 
 .help-button:active {
-  transform: scale(0.96);
+  transform: translateY(0);
+  box-shadow: var(--shadow-sm);
 }
 
 .help-button:focus-visible {
@@ -88,32 +78,13 @@
 
 @media (max-width: 768px) {
   .help-buttons-container {
-    bottom: var(--spacing-md);
+    bottom: calc(var(--footer-height-mobile, 45px) + var(--spacing-sm));
     right: var(--spacing-md);
     gap: var(--spacing-xs);
   }
   
   .help-button {
-    width: 44px;
-    height: 44px;
-    font-size: 20px;
-  }
-  .help-buttons-container {
-    bottom: var(--spacing-md);
-    right: var(--spacing-md);
-    gap: var(--spacing-xs);
-  }
-  
-  .help-button {
-    width: 44px;
-    height: 44px;
-    font-size: 20px;
-  }
-  .help-button {
-    bottom: var(--spacing-sm);
-    right: var(--spacing-sm);
     width: 40px;
     height: 40px;
-    font-size: 18px;
   }
 }

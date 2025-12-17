@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Icons } from "../../../utils/icons";
+import { Icons, renderIcon } from "../../../utils/icons";
 import { safeGetItem, safeSetItem } from "../../../utils/storage";
 import { logger } from "../../../utils/logger";
 import ConfirmDialog from "../ConfirmDialog/ConfirmDialog";
@@ -68,7 +68,7 @@ export default function OrphanedItems({ onNavigate, onClose }) {
           <div className="event-form-header">
             <h4>Orphaned Items</h4>
             <button className="event-form-close" onClick={onClose}>
-              {Icons.close}
+              {renderIcon(Icons.close, 18)}
             </button>
           </div>
           <div className="orphaned-items-empty">
@@ -89,7 +89,7 @@ export default function OrphanedItems({ onNavigate, onClose }) {
           <div className="event-form-header">
             <h4>Orphaned Items ({orphanedItems.length})</h4>
             <button className="event-form-close" onClick={onClose}>
-              {Icons.close}
+              {renderIcon(Icons.close, 18)}
             </button>
           </div>
           <div className="orphaned-items-content">
@@ -101,7 +101,7 @@ export default function OrphanedItems({ onNavigate, onClose }) {
                 <div key={item.id} className="orphaned-item">
                   <div className="orphaned-item-content">
                     <span className={`orphaned-item-icon ${item.type === "habit" ? "habit" : "task"}`}>
-                      {item.type === "task" ? Icons.task : Icons.habit}
+                      {renderIcon(item.type === "task" ? Icons.task : Icons.habit, 16)}
                     </span>
                     <div className="orphaned-item-info">
                       <strong className="orphaned-item-title">{item.title}</strong>
@@ -116,14 +116,14 @@ export default function OrphanedItems({ onNavigate, onClose }) {
                       onClick={() => handleTryNavigate(item.pageId)}
                       title="Try to navigate to page (may not exist)"
                     >
-                      {Icons.arrowRight} Try Navigate
+                      {renderIcon(Icons.arrowRight, 14)} Try Navigate
                     </button>
                     <button
                       className="orphaned-item-button delete"
                       onClick={() => setShowDeleteConfirm(item)}
                       title="Delete this item"
                     >
-                      {Icons.delete}
+                      {renderIcon(Icons.delete, 16)}
                     </button>
                   </div>
                 </div>

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useMovies } from "../../hooks/useMovies";
-import { Icons } from "../../utils/icons";
+import { Icons, renderIcon } from "../../utils/icons";
 import "./MovieTracker.css";
 
 export default function MovieTracker({ pageId }) {
@@ -89,7 +89,7 @@ export default function MovieTracker({ pageId }) {
                   onClick={() => deleteMovie(movie.id)}
                   aria-label="Delete movie"
                 >
-                  {Icons.delete}
+                  {renderIcon(Icons.delete, 16)}
                 </button>
               </div>
             </div>

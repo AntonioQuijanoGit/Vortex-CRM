@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { TextBlock, NoteBlock, TaskBlock, CalendarBlock } from "../blocks";
-import { Icons } from "../../utils/icons";
+import { Icons, renderIcon } from "../../utils/icons";
 import { EmptyState } from "../shared";
 import "./BlockManager.css";
 
@@ -91,7 +91,7 @@ export default function BlockManager({ pageId, blocks = [], onUpdateBlocks }) {
               onClick={() => setShowAddMenu(false)}
               aria-label="Close menu"
             >
-              {Icons.close}
+              {renderIcon(Icons.close, 18)}
             </button>
             <div className="block-types-grid">
               {blockTypes.map(({ type, icon, label }) => (
@@ -101,7 +101,7 @@ export default function BlockManager({ pageId, blocks = [], onUpdateBlocks }) {
                   onClick={() => addBlock(type)}
                   aria-label={`Add ${label} block`}
                 >
-                  <span className="block-type-icon">{icon}</span>
+                  <span className="block-type-icon">{renderIcon(icon, 20)}</span>
                   <span className="block-type-label">{label}</span>
                 </button>
               ))}
@@ -113,7 +113,7 @@ export default function BlockManager({ pageId, blocks = [], onUpdateBlocks }) {
             onClick={() => setShowAddMenu(true)}
             aria-label="Add block"
           >
-            <span className="add-block-icon">{Icons.add}</span>
+            <span className="add-block-icon">{renderIcon(Icons.add, 18)}</span>
             <span className="add-block-text">Add block</span>
           </button>
         )}
@@ -168,7 +168,7 @@ function BlockControls({
             aria-label="Move up"
             title="Move up"
           >
-            {Icons.arrowUp}
+            {renderIcon(Icons.arrowUp, 16)}
           </button>
           <button
             className="block-control-btn"
@@ -177,7 +177,7 @@ function BlockControls({
             aria-label="Move down"
             title="Move down"
           >
-            {Icons.arrowDown}
+            {renderIcon(Icons.arrowDown, 16)}
           </button>
           <button
             className="block-control-btn delete"
@@ -185,7 +185,7 @@ function BlockControls({
             aria-label="Delete block"
             title="Delete block"
           >
-            {Icons.delete}
+            {renderIcon(Icons.delete, 16)}
           </button>
         </div>
       )}

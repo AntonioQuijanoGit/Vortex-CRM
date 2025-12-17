@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Icons } from "../../../utils/icons";
+import { Icons, renderIcon } from "../../../utils/icons";
 import { safeGetItem } from "../../../utils/storage";
 import { logger } from "../../../utils/logger";
 import ConfirmDialog from "../ConfirmDialog/ConfirmDialog";
@@ -63,7 +63,7 @@ export default function DateDetailsModal({
         <div className="event-form-header">
           <h4>{formatDate(date)}</h4>
           <button className="event-form-close" onClick={onClose}>
-            {Icons.close}
+            {renderIcon(Icons.close, 18)}
           </button>
         </div>
 
@@ -71,7 +71,7 @@ export default function DateDetailsModal({
           {items.tasks.length > 0 && (
             <div className="date-details-section">
               <h5 className="date-details-section-title">
-                {Icons.task} Tasks ({items.tasks.length})
+                {renderIcon(Icons.task, 16)} Tasks ({items.tasks.length})
               </h5>
               <div className="date-details-list">
                 {items.tasks.map((task) => {
@@ -97,7 +97,7 @@ export default function DateDetailsModal({
                       title={isClickable ? (pageInfo.pageTitle !== "Unknown Page" ? `Go to ${pageInfo.pageTitle}` : `Go to page (ID: ${pageInfo.pageId})`) : "Item without associated page"}
                     >
                       <span className={`date-details-icon ${task.completed ? "completed" : ""}`}>
-                        {task.completed ? Icons.check : Icons.task}
+                        {renderIcon(task.completed ? Icons.check : Icons.task, 16)}
                       </span>
                       <span className="date-details-text">
                         <strong>{task.title}</strong>
@@ -106,7 +106,7 @@ export default function DateDetailsModal({
                         )}
                       </span>
                       {isClickable && (
-                        <span className="date-details-arrow">{Icons.arrowRight}</span>
+                        <span className="date-details-arrow">{renderIcon(Icons.arrowRight, 14)}</span>
                       )}
                     </div>
                   );
@@ -118,7 +118,7 @@ export default function DateDetailsModal({
           {items.habits.length > 0 && (
             <div className="date-details-section">
               <h5 className="date-details-section-title">
-                {Icons.habit} Habits Completed ({items.habits.length})
+                {renderIcon(Icons.habit, 16)} Habits Completed ({items.habits.length})
               </h5>
               <div className="date-details-list">
                 {items.habits.map((habit) => {
@@ -144,7 +144,7 @@ export default function DateDetailsModal({
                       title={isClickable ? (pageInfo.pageTitle !== "Unknown Page" ? `Go to ${pageInfo.pageTitle}` : `Go to page (ID: ${pageInfo.pageId})`) : "Item without associated page"}
                     >
                       <span className="date-details-icon completed">
-                        {Icons.check}
+                        {renderIcon(Icons.check, 16)}
                       </span>
                       <span className="date-details-text">
                         <strong>{habit.title}</strong>
@@ -156,7 +156,7 @@ export default function DateDetailsModal({
                         )}
                       </span>
                       {isClickable && (
-                        <span className="date-details-arrow">{Icons.arrowRight}</span>
+                        <span className="date-details-arrow">{renderIcon(Icons.arrowRight, 14)}</span>
                       )}
                     </div>
                   );
@@ -168,7 +168,7 @@ export default function DateDetailsModal({
           {items.events.length > 0 && (
             <div className="date-details-section">
               <h5 className="date-details-section-title">
-                {Icons.calendar} Events ({items.events.length})
+                {renderIcon(Icons.calendar, 16)} Events ({items.events.length})
               </h5>
               <div className="date-details-list">
                 {items.events.map((event) => (
@@ -184,7 +184,7 @@ export default function DateDetailsModal({
                         className="date-details-icon"
                         style={{ color: event.color }}
                       >
-                        {Icons.calendar}
+                        {renderIcon(Icons.calendar, 16)}
                       </span>
                       <span className="date-details-text">
                         <strong>{event.title}</strong>
@@ -192,7 +192,7 @@ export default function DateDetailsModal({
                           <span className="date-details-meta"> • {event.time}</span>
                         )}
                       </span>
-                      <span className="date-details-arrow">{Icons.arrowRight}</span>
+                      <span className="date-details-arrow">{renderIcon(Icons.arrowRight, 16)}</span>
                     </div>
                     {onDeleteEvent && (
                       <button
@@ -205,7 +205,7 @@ export default function DateDetailsModal({
                         aria-label={`Delete event: ${event.title}`}
                         title={`Delete event: ${event.title}`}
                       >
-                        {Icons.delete}
+                        {renderIcon(Icons.delete, 16)}
                       </button>
                     )}
                   </div>
@@ -223,7 +223,7 @@ export default function DateDetailsModal({
 
         <div className="event-form-actions">
           <button type="button" onClick={onAddEvent}>
-            {Icons.add} Add Event
+            {renderIcon(Icons.add, 16)} Add Event
           </button>
           <button type="button" onClick={onClose}>
             Close

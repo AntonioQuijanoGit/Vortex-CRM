@@ -21,4 +21,6 @@ export { default as Reminders } from './Reminders/Reminders';
 export { default as Goals } from './Goals/Goals';
 export { default as FocusTimer } from './FocusTimer/FocusTimer';
 export { default as QuickActions } from './QuickActions/QuickActions';
+export { default as PagePreview } from './PagePreview/PagePreview';
+export { default as Tooltip } from './Tooltip/Tooltip';
 export * from './Toast';

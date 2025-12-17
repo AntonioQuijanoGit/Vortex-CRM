@@ -1,6 +1,6 @@
 .quick-notes-container {
   position: fixed;
-  bottom: calc(var(--spacing-lg) + 60px); /* Above help button when expanded */
+  bottom: calc(var(--footer-height, 50px) + 44px + var(--spacing-md) + var(--spacing-sm)); /* Above buttons and footer when expanded */
   right: var(--spacing-lg);
   width: 320px;
   max-height: 500px;
@@ -17,55 +17,58 @@
 /* When expanded, move it to the left to avoid blocking buttons */
 @media (min-width: 769px) {
   .quick-notes-container {
-    right: calc(var(--spacing-lg) + 60px);
+    right: calc(var(--spacing-lg) + 44px + var(--spacing-sm) + 44px + var(--spacing-sm)); /* Account for both buttons */
   }
 }
 
 .quick-notes-collapsed {
   position: fixed;
-  bottom: calc(var(--spacing-lg) + 48px + var(--spacing-sm)); /* Above help button */
-  right: var(--spacing-lg); /* Same position as help button */
+  bottom: calc(var(--footer-height, 50px) + var(--spacing-lg));
+  right: calc(var(--spacing-lg) + 44px + var(--spacing-sm)); /* To the left of help button */
   z-index: 5001; /* Above help button (5000) */
 }
 
 .quick-notes-toggle {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  background: var(--color-accent);
-  color: white;
-  border: none;
-  font-size: 22px;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  background: var(--color-panel);
+  color: var(--color-ink);
+  border: var(--border-thin);
   cursor: pointer;
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-sm);
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
   transition: all var(--transition-base);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 .quick-notes-toggle:hover {
-  background: var(--color-accent-hover);
-  transform: scale(1.08) translateY(-2px);
-  box-shadow: var(--shadow-lg);
+  background: var(--color-surface);
+  border-color: var(--color-stroke-strong);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
 }
 
 .quick-notes-count {
   position: absolute;
-  top: -4px;
-  right: -4px;
-  background: var(--color-error);
-  color: white;
-  font-size: 12px;
-  font-weight: 700;
-  width: 20px;
-  height: 20px;
+  top: -6px;
+  right: -6px;
+  background: var(--color-ink);
+  color: var(--color-bg);
+  font-size: 10px;
+  font-weight: 600;
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 2px solid var(--color-bg);
+  border: 2px solid var(--color-panel);
+  box-shadow: var(--shadow-sm);
 }
 
 .quick-notes-header {
@@ -248,14 +251,13 @@
   }
   
   .quick-notes-collapsed {
-    bottom: calc(var(--spacing-md) + 44px + var(--spacing-xs));
-    right: var(--spacing-md);
+    bottom: calc(var(--footer-height-mobile, 45px) + var(--spacing-sm));
+    right: calc(var(--spacing-md) + 40px + var(--spacing-xs)); /* To the left of help button on mobile */
   }
   
   .quick-notes-toggle {
-    width: 44px;
-    height: 44px;
-    font-size: 20px;
+    width: 40px;
+    height: 40px;
   }
 }
 

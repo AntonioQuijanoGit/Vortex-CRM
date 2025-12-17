@@ -1,5 +1,5 @@
 import React from "react";
-import { Icons } from "../../../utils/icons";
+import { Icons, renderIcon } from "../../../utils/icons";
 import "./DashboardWidgets.css";
 
 export default function TodayTasksWidget({ todos, onNavigate }) {
@@ -16,7 +16,6 @@ export default function TodayTasksWidget({ todos, onNavigate }) {
     return (
       <div className="dashboard-widget">
         <div className="widget-header">
-          <span className="widget-icon">{Icons.calendar}</span>
           <h3 className="widget-title">Today's Tasks</h3>
         </div>
         <div className="widget-content">
@@ -29,14 +28,13 @@ export default function TodayTasksWidget({ todos, onNavigate }) {
   return (
     <div className="dashboard-widget">
       <div className="widget-header">
-        <span className="widget-icon">{Icons.calendar}</span>
-          <h3 className="widget-title">Today's Tasks ({todayTasks.length})</h3>
+        <h3 className="widget-title">Today's Tasks ({todayTasks.length})</h3>
       </div>
       <div className="widget-content">
         <div className="widget-tasks-list">
           {todayTasks.slice(0, 5).map((task) => (
             <div key={task.id} className="widget-task-item">
-              <span className="widget-task-icon">{Icons.task}</span>
+              <span className="widget-task-icon">{renderIcon(Icons.task, 16)}</span>
               <span className="widget-task-title">{task.title}</span>
               {task.priority && (
                 <span className={`widget-task-priority priority-${task.priority}`}>

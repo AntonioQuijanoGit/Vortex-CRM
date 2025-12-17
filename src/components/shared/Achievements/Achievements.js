@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Icons } from "../../../utils/icons";
+import { Icons, renderIcon } from "../../../utils/icons";
 import { ACHIEVEMENTS, getAchievementProgress } from "../../../utils/achievements";
 import { safeGetItem, safeSetItem } from "../../../utils/storage";
 import "./Achievements.css";
@@ -52,7 +52,7 @@ export default function Achievements({ stats, onClose }) {
         <div className="achievement-notification">
           {newAchievements.map((achievement) => (
             <div key={achievement.id} className="achievement-notification-card">
-              <div className="achievement-notification-icon">{achievement.icon}</div>
+              <div className="achievement-notification-icon">{renderIcon(achievement.icon, 32)}</div>
               <div className="achievement-notification-content">
                 <div className="achievement-notification-title">
                   Achievement Unlocked!
@@ -75,7 +75,7 @@ export default function Achievements({ stats, onClose }) {
         >
           <div className="achievements-header">
             <h2 className="achievements-title">
-              <span className="achievements-title-icon">{Icons.streak}</span>
+              <span className="achievements-title-icon">{renderIcon(Icons.streak, 24)}</span>
               Achievements
             </h2>
             <button
@@ -83,7 +83,7 @@ export default function Achievements({ stats, onClose }) {
               onClick={onClose}
               aria-label="Close"
             >
-              {Icons.close}
+              {renderIcon(Icons.close, 18)}
             </button>
           </div>
 
@@ -111,7 +111,7 @@ export default function Achievements({ stats, onClose }) {
                     key={achievement.id}
                     className="achievement-card unlocked"
                   >
-                    <div className="achievement-icon">{achievement.icon}</div>
+                    <div className="achievement-icon">{renderIcon(achievement.icon, 32)}</div>
                     <div className="achievement-info">
                       <div className="achievement-name">{achievement.title}</div>
                       <div className="achievement-description">
@@ -141,7 +141,7 @@ export default function Achievements({ stats, onClose }) {
                         className="achievement-card locked"
                       >
                         <div className="achievement-icon locked-icon">
-                          {achievement.icon}
+                          {renderIcon(achievement.icon, 32)}
                         </div>
                         <div className="achievement-info">
                           <div className="achievement-name locked-name">

@@ -8,8 +8,7 @@ import { useToast } from "../../hooks/useToast";
 import { logger } from "../../utils/logger";
 import OrphanedItems from "../shared/OrphanedItems/OrphanedItems";
 import { DataExportImport, ProgressCircle, MiniLineChart, ActivityHeatmap, TemplateSelector, Achievements, QuickActions, FocusTimer } from "../shared";
-import { TodayTasksWidget, UpcomingDeadlinesWidget, HabitsAtRiskWidget } from "../shared/DashboardWidgets";
-import { checkAchievements } from "../../utils/achievements";
+import { TodayTasksWidget, UpcomingDeadlinesWidget } from "../shared/DashboardWidgets";
 import { applyTemplates } from "../../utils/templates";
 import "./Dashboard.css";
 
@@ -24,9 +23,12 @@ export default function Dashboard({ onNavigate }) {
 
   const rootPages = getRootPages();
 
-  // Use centralized utility to get all todos with page info
-  const allTodosWithPages = getAllTodosWithPages(getPage);
-  const allTodos = allTodosWithPages.map(({ pageId, pageTitle, ...todo }) => todo);
+  // Use centralized utility to get all todos with page info - memoized for performance
+  const allTodosWithPages = useMemo(() => getAllTodosWithPages(getPage), [getPage]);
+  const allTodos = useMemo(() => 
+    allTodosWithPages.map(({ pageId, pageTitle, ...todo }) => todo),
+    [allTodosWithPages]
+  );
   
   // Check if we should show template selector
   useEffect(() => {
@@ -201,12 +203,100 @@ export default function Dashboard({ onNavigate }) {
     onClick: () => onNavigate(page.id),
   }));
 
+  const isEmptyWorkspace = rootPages.length <= 1 && allTodos.length === 0;
+  const hasQuickActions = rootPages.length > 1 || allTodos.length > 0;
+
+  // Compact empty state: show only hero + CTA, avoid empty charts/cards
+  if (isEmptyWorkspace) {
+    return (
+      <div className="dashboard-container">
+        <div className="dashboard-hero">
+          <div className="dashboard-hero-content">
+            <div className="dashboard-hero-header">
+              <h1 className="dashboard-title">Overview</h1>
+              <div className="dashboard-hero-stats">
+                {stats.slice(0, 3).map((stat) => (
+                  <div key={stat.label} className="hero-stat">
+                    <div className="hero-stat-value">{stat.value}</div>
+                    <div className="hero-stat-label">{stat.label}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <section className="dashboard-section-modern welcome-empty-state">
+          <div className="welcome-empty-content">
+            <div className="welcome-empty-icon">{renderIcon(Icons.page, 48)}</div>
+            <h2 className="welcome-empty-title">Welcome to Productivity!</h2>
+            <p className="welcome-empty-description">
+              Your personal productivity hub. Organize tasks, track habits, and manage your content all in one place. Everything saves automatically.
+            </p>
+            <div className="welcome-empty-actions">
+              <button
+                className="welcome-action-button primary"
+                onClick={() => {
+                  try {
+                    const newPage = addPage("My First Page", null, "page");
+                    if (newPage && newPage.id) {
+                      onNavigate(newPage.id);
+                    }
+                  } catch (error) {
+                    logger.error("Error creating first page:", error);
+                    showToast("Error creating page. Please try again.", "error");
+                  }
+                }}
+              >
+                <span className="action-icon">{renderIcon(Icons.add, 18)}</span>
+                <span>Create my first page</span>
+              </button>
+              <p className="welcome-hint">
+                Or use the <strong>+</strong> button in the sidebar to create a page
+              </p>
+              <div className="welcome-quick-tips">
+                <div className="quick-tip">
+                  <span className="tip-icon">{renderIcon(Icons.task, 18)}</span>
+                  <div>
+                    <strong>Tasks</strong>
+                    <span>Track one-time items with due dates</span>
+                  </div>
+                </div>
+                <div className="quick-tip">
+                  <span className="tip-icon">{renderIcon(Icons.habit, 18)}</span>
+                  <div>
+                    <strong>Habits</strong>
+                    <span>Build daily routines with streak tracking</span>
+                  </div>
+                </div>
+                <div className="quick-tip">
+                  <span className="tip-icon">{renderIcon(Icons.calendar, 18)}</span>
+                  <div>
+                    <strong>Calendar</strong>
+                    <span>View and manage your events</span>
+                  </div>
+                </div>
+                <div className="quick-tip">
+                  <span className="tip-icon">{renderIcon(Icons.search, 18)}</span>
+                  <div>
+                    <strong>Quick Search</strong>
+                    <span>Press ⌘K or Ctrl+K to search everything</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    );
+  }
+
   return (
     <div className="dashboard-container">
       <div className="dashboard-hero">
         <div className="dashboard-hero-content">
           <div className="dashboard-hero-header">
-            <h1 className="dashboard-title">Dashboard</h1>
+            <h1 className="dashboard-title">Overview</h1>
             <div className="dashboard-hero-stats">
               {stats.slice(0, 3).map((stat) => (
                 <div key={stat.label} className="hero-stat">
@@ -219,23 +309,35 @@ export default function Dashboard({ onNavigate }) {
         </div>
       </div>
 
-      {stats.length > 3 && (
-        <div className="dashboard-stats-grid">
-          {stats.slice(3).map((stat) => (
-            <div key={stat.label} className="stat-card-modern">
-              <div className="stat-card-icon" style={{ color: stat.color }}>
-                {stat.icon}
-              </div>
-              <div className="stat-card-content">
-                <div className="stat-card-value">{stat.value}</div>
-                <div className="stat-card-label">{stat.label}</div>
-              </div>
-            </div>
-          ))}
-        </div>
+      {/* Quick Actions prioritized near the top */}
+      {hasQuickActions && (
+        <section className="dashboard-section-modern dashboard-quick-actions-section">
+          <div className="section-header">
+            <h2 className="section-title-modern">Quick Actions</h2>
+          </div>
+          <QuickActions
+            onNavigate={onNavigate}
+            onAddPage={addPage}
+            onShowAchievements={() => setShowAchievements(true)}
+            onShowFocusTimer={() => setShowFocusTimer(true)}
+          />
+        </section>
       )}
 
-      {/* Visual Data Section - Always visible */}
+      {/* Focus first, then charts, then secondary stats */}
+      <div className="dashboard-main-content">
+        <section className="dashboard-section-modern dashboard-focus-section">
+          <div className="section-header">
+            <h2 className="section-title-modern">Today's Focus</h2>
+            <p className="section-subtitle">What needs your attention today</p>
+          </div>
+          <div className="focus-content">
+            <TodayTasksWidget todos={allTodos} onNavigate={onNavigate} />
+            <UpcomingDeadlinesWidget todos={allTodos} />
+          </div>
+        </section>
+      </div>
+
       <div className="dashboard-visual-data">
         <div className="visual-data-grid">
           {tasks.length > 0 ? (
@@ -340,202 +442,124 @@ export default function Dashboard({ onNavigate }) {
         </div>
       </div>
 
-      <div className="dashboard-main-content">
-        {/* Today's Focus - Primary section */}
-        <section className="dashboard-section-modern dashboard-focus-section">
+      {stats.length > 3 && (
+        <div className="dashboard-stats-grid">
+          {stats.slice(3).map((stat) => (
+            <div key={stat.label} className="stat-card-modern">
+                  <div className="stat-card-icon">
+                    {stat.icon ? renderIcon(stat.icon, 24) : null}
+                  </div>
+              <div className="stat-card-content">
+                <div className="stat-card-value">{stat.value}</div>
+                <div className="stat-card-label">{stat.label}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Quick Access - Only show if there are pages */}
+      {quickLinks.length > 0 && (
+        <section className="dashboard-section-modern">
           <div className="section-header">
-            <h2 className="section-title-modern">Today's Focus</h2>
-            <p className="section-subtitle">What needs your attention today</p>
+            <h2 className="section-title-modern">Quick Access</h2>
+            <p className="section-subtitle">Your recent pages</p>
           </div>
-          <div className="focus-content">
-            <TodayTasksWidget todos={allTodos} onNavigate={onNavigate} />
-            <UpcomingDeadlinesWidget todos={allTodos} />
+          <div className="quick-links-modern">
+            {quickLinks.slice(0, 6).map((page) => (
+              <button
+                key={page.id}
+                className="quick-link-modern"
+                onClick={page.onClick}
+                title={`Go to ${page.title}`}
+              >
+                <div className="quick-link-info">
+                  <div className="quick-link-title-modern">{page.title}</div>
+                </div>
+                <div className="quick-link-arrow">{renderIcon(Icons.arrowRight, 16)}</div>
+              </button>
+            ))}
           </div>
         </section>
+      )}
 
-        {/* Quick Actions - Compact bar */}
-        {rootPages.length > 1 || allTodos.length > 0 ? (
-          <section className="dashboard-section-modern dashboard-quick-actions-section">
-            <div className="section-header">
-              <h2 className="section-title-modern">Quick Actions</h2>
+      {allTodos.length > 0 && (
+        <section className="dashboard-section-modern">
+          <div className="section-header">
+            <div>
+              <h2 className="section-title-modern">Recent Activity</h2>
+              <p className="section-subtitle">Your latest updates</p>
             </div>
-            <QuickActions
-              onNavigate={onNavigate}
-              onAddPage={addPage}
-              onShowAchievements={() => setShowAchievements(true)}
-              onShowFocusTimer={() => setShowFocusTimer(true)}
-            />
-          </section>
-        ) : null}
-
-        {/* Welcome Screen when app is empty */}
-        {rootPages.length <= 1 && allTodos.length === 0 && (
-          <section className="dashboard-section-modern welcome-empty-state">
-            <div className="welcome-empty-content">
-              <div className="welcome-empty-icon">{renderIcon(Icons.page, 48)}</div>
-              <h2 className="welcome-empty-title">Welcome to Your Workspace!</h2>
-              <p className="welcome-empty-description">
-                Your personal productivity hub. Organize tasks, track habits, and manage your content all in one place. Everything saves automatically.
-              </p>
-              <div className="welcome-empty-actions">
-                <button
-                  className="welcome-action-button primary"
-                  onClick={() => {
-                    try {
-                      const newPage = addPage("My First Page", null, "page");
-                      if (newPage && newPage.id) {
-                        onNavigate(newPage.id);
-                      }
-                    } catch (error) {
-                      logger.error("Error creating first page:", error);
-                      showToast("Error creating page. Please try again.", "error");
-                    }
-                  }}
-                >
-                  <span className="action-icon">{renderIcon(Icons.add, 18)}</span>
-                  <span>Create my first page</span>
-                </button>
-                <p className="welcome-hint">
-                  Or use the <strong>+</strong> button in the sidebar to create a page
-                </p>
-                <div className="welcome-quick-tips">
-                  <div className="quick-tip">
-                    <span className="tip-icon">{renderIcon(Icons.task, 18)}</span>
-                    <div>
-                      <strong>Tasks</strong>
-                      <span>Track one-time items with due dates</span>
-                    </div>
-                  </div>
-                  <div className="quick-tip">
-                    <span className="tip-icon">{renderIcon(Icons.habit, 18)}</span>
-                    <div>
-                      <strong>Habits</strong>
-                      <span>Build daily routines with streak tracking</span>
-                    </div>
-                  </div>
-                  <div className="quick-tip">
-                    <span className="tip-icon">{renderIcon(Icons.calendar, 18)}</span>
-                    <div>
-                      <strong>Calendar</strong>
-                      <span>View and manage your events</span>
-                    </div>
-                  </div>
-                  <div className="quick-tip">
-                    <span className="tip-icon">{renderIcon(Icons.search, 18)}</span>
-                    <div>
-                      <strong>Quick Search</strong>
-                      <span>Press ⌘K or Ctrl+K to search everything</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-        )}
-
-        {/* Quick Access - Only show if there are pages */}
-        {quickLinks.length > 0 && (
-          <section className="dashboard-section-modern">
-            <div className="section-header">
-              <h2 className="section-title-modern">Quick Access</h2>
-              <p className="section-subtitle">Your recent pages</p>
-            </div>
-            <div className="quick-links-modern">
-              {quickLinks.slice(0, 6).map((page) => (
-                <button
-                  key={page.id}
-                  className="quick-link-modern"
-                  onClick={page.onClick}
-                  title={`Go to ${page.title}`}
-                >
-                  <div className="quick-link-info">
-                    <div className="quick-link-title-modern">{page.title}</div>
-                  </div>
-                  <div className="quick-link-arrow">{renderIcon(Icons.arrowRight, 16)}</div>
-                </button>
-              ))}
-            </div>
-          </section>
-        )}
-
-        {allTodos.length > 0 && (
-          <section className="dashboard-section-modern">
-            <div className="section-header">
-              <div>
-                <h2 className="section-title-modern">Recent Activity</h2>
-                <p className="section-subtitle">Your latest updates</p>
-              </div>
-            </div>
-            <div className="activity-list-modern">
-              {allTodosWithPages.slice(0, 5).map((todo) => {
-                // Allow navigation if we have a pageId, even if title is "Unknown Page"
-                // The page might exist but just not be found in the current state
-                const isClickable = todo.pageId && todo.pageTitle !== "Orphaned";
-                const handleClick = () => {
-                  if (isClickable && todo.pageId) {
-                    // Verify the page exists before navigating
-                    const page = getPage(todo.pageId);
-                    if (page) {
+          </div>
+          <div className="activity-list-modern">
+            {allTodosWithPages.slice(0, 5).map((todo) => {
+              // Allow navigation if we have a pageId, even if title is "Unknown Page"
+              // The page might exist but just not be found in the current state
+              const isClickable = todo.pageId && todo.pageTitle !== "Orphaned";
+              const handleClick = () => {
+                if (isClickable && todo.pageId) {
+                  // Verify the page exists before navigating
+                  const page = getPage(todo.pageId);
+                  if (page) {
+                    onNavigate(todo.pageId);
+                  } else {
+                    // Page doesn't exist - try to find it in localStorage
+                    const allPages = safeGetItem("notion-pages", []);
+                    const foundPage = allPages.find(p => p.id === todo.pageId);
+                    if (foundPage) {
+                      // Page exists in localStorage but not in state - navigate anyway
+                      // The state should update on next render
                       onNavigate(todo.pageId);
                     } else {
-                      // Page doesn't exist - try to find it in localStorage
-                      const allPages = safeGetItem("notion-pages", []);
-                      const foundPage = allPages.find(p => p.id === todo.pageId);
-                      if (foundPage) {
-                        // Page exists in localStorage but not in state - navigate anyway
-                        // The state should update on next render
-                        onNavigate(todo.pageId);
-                      } else {
-                        // Page truly doesn't exist - show toast and open orphaned items
-                        logger.warn(`Page ${todo.pageId} not found. Todo: ${todo.title}`);
-                        showToast(`The page containing "${todo.title}" no longer exists. Opening Orphaned Items...`, "warning", 3000);
-                        setTimeout(() => setShowOrphanedItems(true), 500);
-                      }
+                      // Page truly doesn't exist - show toast and open orphaned items
+                      logger.warn(`Page ${todo.pageId} not found. Todo: ${todo.title}`);
+                      showToast(`The page containing "${todo.title}" no longer exists. Opening Orphaned Items...`, "warning", 3000);
+                      setTimeout(() => setShowOrphanedItems(true), 500);
                     }
                   }
-                };
-                return (
-                  <button
-                    key={todo.id}
-                    className={`activity-item-modern ${isClickable ? "activity-item-clickable" : ""}`}
-                    onClick={handleClick}
-                    disabled={!isClickable}
-                    title={isClickable ? (todo.pageTitle !== "Unknown Page" ? `Go to ${todo.pageTitle}` : `Go to page (ID: ${todo.pageId})`) : "Item without associated page"}
-                  >
-                    <div className={`activity-icon-modern activity-icon-${todo.type} ${todo.completed ? "completed" : ""}`}>
-                      {renderIcon(todo.type === "task" ? Icons.task : Icons.habit, 16)}
+                }
+              };
+              return (
+                <button
+                  key={todo.id}
+                  className={`activity-item-modern ${isClickable ? "activity-item-clickable" : ""}`}
+                  onClick={handleClick}
+                  disabled={!isClickable}
+                  title={isClickable ? (todo.pageTitle !== "Unknown Page" ? `Go to ${todo.pageTitle}` : `Go to page (ID: ${todo.pageId})`) : "Item without associated page"}
+                >
+                  <div className={`activity-icon-modern activity-icon-${todo.type} ${todo.completed ? "completed" : ""}`}>
+                    {renderIcon(todo.type === "task" ? Icons.task : Icons.habit, 16)}
+                  </div>
+                  <div className="activity-content">
+                    <div className="activity-text-modern">
+                      <span className="activity-action">
+                        {todo.completed ? "Completed" : "Created"}
+                      </span>{" "}
+                      <strong className="activity-title">{todo.title}</strong>
                     </div>
-                    <div className="activity-content">
-                      <div className="activity-text-modern">
-                        <span className="activity-action">
-                          {todo.completed ? "Completed" : "Created"}
-                        </span>{" "}
-                        <strong className="activity-title">{todo.title}</strong>
-                      </div>
-                      <div className="activity-meta">
-                        <span className={`activity-type-modern activity-type-${todo.type}`}>
-                          {todo.type}
-                        </span>
-                        {todo.pageTitle && todo.pageId && (
-                          <>
-                            <span className="activity-separator">•</span>
-                            <span className="activity-page" title={todo.pageTitle !== "Unknown Page" ? `In page: ${todo.pageTitle}` : `Page ID: ${todo.pageId}`}>
-                              {todo.pageTitle !== "Unknown Page" ? todo.pageTitle : "Page"}
-                            </span>
-                          </>
-                        )}
-                      </div>
+                    <div className="activity-meta">
+                      <span className={`activity-type-modern activity-type-${todo.type}`}>
+                        {todo.type}
+                      </span>
+                      {todo.pageTitle && todo.pageId && (
+                        <>
+                          <span className="activity-separator">•</span>
+                          <span className="activity-page" title={todo.pageTitle !== "Unknown Page" ? `In page: ${todo.pageTitle}` : `Page ID: ${todo.pageId}`}>
+                            {todo.pageTitle !== "Unknown Page" ? todo.pageTitle : "Page"}
+                          </span>
+                        </>
+                      )}
                     </div>
-                    {isClickable && (
-                      <div className="activity-arrow">{renderIcon(Icons.arrowRight, 16)}</div>
-                    )}
-                  </button>
-                );
-              })}
-            </div>
-          </section>
-        )}
-      </div>
+                  </div>
+                  {isClickable && (
+                    <div className="activity-arrow">{renderIcon(Icons.arrowRight, 16)}</div>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </section>
+      )}
 
       {/* Calendar at the bottom */}
       <section className="dashboard-section-modern dashboard-calendar-section">

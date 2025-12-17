@@ -131,8 +131,8 @@
 }
 
 .achievement-card.unlocked {
-  border-color: var(--color-accent);
-  background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-panel) 100%);
+  border-color: var(--color-stroke-strong);
+  background: var(--color-surface);
 }
 
 .achievement-card.locked {
@@ -146,7 +146,7 @@
 
 .achievement-icon {
   font-size: 32px;
-  color: var(--color-accent);
+  color: var(--color-ink);
   flex-shrink: 0;
 }
 
@@ -191,7 +191,7 @@
 
 .achievement-progress-fill {
   height: 100%;
-  background: var(--color-accent);
+  background: var(--color-ink);
   transition: width 0.3s ease;
 }
 

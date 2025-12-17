@@ -33,11 +33,12 @@
 }
 
 .page-item.active .page-item-content {
-  background: var(--color-ink);
-  color: var(--color-bg);
-  border-color: var(--color-ink);
-  border-left: 2px solid var(--color-ink);
+  background: var(--color-accent);
+  color: var(--color-panel);
+  border-color: var(--color-accent);
+  border-left: 2px solid var(--color-accent);
   padding-left: calc(var(--spacing-sm) - 2px);
+  box-shadow: var(--shadow-sm);
 }
 
 .expand-button {
@@ -88,6 +89,18 @@
   font-size: var(--font-size-base);
   line-height: 1;
   flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  color: currentColor;
+}
+
+.page-icon svg {
+  width: 100%;
+  height: 100%;
+  display: block;
 }
 
 .page-title {
@@ -209,4 +222,12 @@
   gap: var(--spacing-xxs);
   border-left: 1px solid var(--color-stroke);
   padding-left: var(--spacing-xs);
+}
+
+.page-preview-container {
+  pointer-events: none;
+}
+
+.page-preview-container:hover {
+  pointer-events: auto;
 }

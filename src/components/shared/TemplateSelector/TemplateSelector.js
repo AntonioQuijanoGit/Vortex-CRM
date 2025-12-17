@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Icons } from "../../../utils/icons";
+import { Icons, renderIcon } from "../../../utils/icons";
 import { getTemplateDescription, initialTemplates } from "../../../utils/templates";
 import "./TemplateSelector.css";
 
@@ -25,7 +25,7 @@ export default function TemplateSelector({ onAccept, onSkip }) {
     <div className="template-selector-overlay">
       <div className="template-selector-modal">
         <div className="template-selector-header">
-          <div className="template-selector-icon">{Icons.page}</div>
+          <div className="template-selector-icon">{renderIcon(Icons.page, 24)}</div>
           <h2 className="template-selector-title">{templateInfo.title}</h2>
           <p className="template-selector-description">{templateInfo.description}</p>
         </div>
@@ -33,7 +33,7 @@ export default function TemplateSelector({ onAccept, onSkip }) {
         <div className="template-selector-features">
           {templateInfo.features.map((feature, index) => (
             <div key={index} className="template-feature-card">
-              <div className="template-feature-icon">{feature.icon}</div>
+              <div className="template-feature-icon">{renderIcon(feature.icon, 20)}</div>
               <div className="template-feature-content">
                 <h3 className="template-feature-title">{feature.title}</h3>
                 <p className="template-feature-description">{feature.description}</p>
@@ -84,7 +84,7 @@ export default function TemplateSelector({ onAccept, onSkip }) {
               </>
             ) : (
               <>
-                <span className="template-action-icon">{Icons.add}</span>
+                <span className="template-action-icon">{renderIcon(Icons.add, 16)}</span>
                 Use templates
               </>
             )}

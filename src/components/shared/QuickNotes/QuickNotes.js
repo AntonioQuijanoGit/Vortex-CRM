@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Icons } from "../../../utils/icons";
+import { Icons, renderIcon } from "../../../utils/icons";
 import { safeGetItem, safeSetItem } from "../../../utils/storage";
 import "./QuickNotes.css";
 
@@ -58,7 +58,7 @@ export default function QuickNotes() {
           onClick={() => setIsExpanded(true)}
           title="Show quick notes"
         >
-          {Icons.note}
+          {renderIcon(Icons.note, 22)}
           {notes.length > 0 && (
             <span className="quick-notes-count">{notes.length}</span>
           )}
@@ -71,7 +71,7 @@ export default function QuickNotes() {
     <div className="quick-notes-container">
       <div className="quick-notes-header">
         <div className="quick-notes-title">
-          <span className="quick-notes-icon">{Icons.note}</span>
+          <span className="quick-notes-icon">{renderIcon(Icons.note, 18)}</span>
           <span>Quick Notes</span>
           {notes.length > 0 && (
             <span className="quick-notes-badge">{notes.length}</span>
@@ -83,14 +83,14 @@ export default function QuickNotes() {
             onClick={addNote}
             title="Add note"
           >
-            {Icons.add}
+            {renderIcon(Icons.add, 18)}
           </button>
           <button
             className="quick-notes-action"
             onClick={() => setIsExpanded(false)}
             title="Minimize"
           >
-            {Icons.minimize}
+            {renderIcon(Icons.minimize, 18)}
           </button>
         </div>
       </div>
@@ -123,7 +123,7 @@ export default function QuickNotes() {
                 onClick={() => deleteNote(note.id)}
                 title="Delete note"
               >
-                {Icons.delete}
+                {renderIcon(Icons.delete, 16)}
               </button>
             </div>
             <textarea
@@ -138,7 +138,7 @@ export default function QuickNotes() {
 
         {notes.length === 0 && (
           <div className="quick-notes-empty">
-            <div className="quick-notes-empty-icon">{Icons.note}</div>
+            <div className="quick-notes-empty-icon">{renderIcon(Icons.note, 48)}</div>
             <p>No notes yet</p>
             <button className="quick-notes-empty-button" onClick={addNote}>
               Create first note

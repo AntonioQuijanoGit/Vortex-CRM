@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { safeGetItem, safeSetItem } from "../../../utils/storage";
 import { useToast } from "../../../hooks/useToast";
-import { Icons } from "../../../utils/icons";
+import { Icons, renderIcon } from "../../../utils/icons";
 import { logger } from "../../../utils/logger";
 import "./DataExportImport.css";
 
@@ -211,7 +211,7 @@ export default function DataExportImport({ onClose }) {
           onClick={onClose}
           aria-label="Close"
         >
-          {Icons.close}
+          {renderIcon(Icons.close, 18)}
         </button>
       </div>
       
@@ -225,7 +225,7 @@ export default function DataExportImport({ onClose }) {
               onClick={() => exportData("json")}
               aria-label="Export as JSON"
             >
-              <span className="buttonIcon">{Icons.arrowDown}</span>
+              <span className="buttonIcon">{renderIcon(Icons.arrowDown, 16)}</span>
               <span className="buttonText">Export JSON</span>
             </button>
             <button
@@ -233,7 +233,7 @@ export default function DataExportImport({ onClose }) {
               onClick={() => exportData("markdown")}
               aria-label="Export as Markdown"
             >
-              <span className="buttonIcon">{Icons.arrowDown}</span>
+              <span className="buttonIcon">{renderIcon(Icons.arrowDown, 16)}</span>
               <span className="buttonText">Export Markdown</span>
             </button>
             <button
@@ -241,7 +241,7 @@ export default function DataExportImport({ onClose }) {
               onClick={() => exportData("csv")}
               aria-label="Export as CSV"
             >
-              <span className="buttonIcon">{Icons.arrowDown}</span>
+              <span className="buttonIcon">{renderIcon(Icons.arrowDown, 16)}</span>
               <span className="buttonText">Export CSV</span>
             </button>
           </div>
@@ -251,7 +251,7 @@ export default function DataExportImport({ onClose }) {
           <h4>Import Data</h4>
           <p>Import data from a previously exported JSON file. This will replace all current data.</p>
           <label className="button buttonImport" htmlFor="import-file">
-            <span className="buttonIcon">{Icons.arrowUp}</span>
+            <span className="buttonIcon">{renderIcon(Icons.arrowUp, 16)}</span>
             <span className="buttonText">
               {isImporting ? "Importing..." : "Import Data"}
             </span>

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Icons } from "../../../utils/icons";
+import { Icons, renderIcon } from "../../../utils/icons";
 import "./BoardCard.css";
 
 export default function BoardCard({
@@ -51,7 +51,7 @@ export default function BoardCard({
         )}
         {item.type === "habit" && item.streak > 0 && (
           <span className="card-streak">
-            {Icons.streak} {item.streak}
+            {renderIcon(Icons.streak, 14)} {item.streak}
           </span>
         )}
       </div>
@@ -103,7 +103,7 @@ export default function BoardCard({
           onClick={() => onDelete(item.id)}
           title="Delete"
         >
-          {Icons.delete}
+          {renderIcon(Icons.delete, 16)}
         </button>
       </div>
     </div>

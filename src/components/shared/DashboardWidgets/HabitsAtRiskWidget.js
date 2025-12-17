@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { Icons } from "../../../utils/icons";
+import { Icons, renderIcon } from "../../../utils/icons";
 import "./DashboardWidgets.css";
 
 export default function HabitsAtRiskWidget({ habits }) {
@@ -23,7 +23,7 @@ export default function HabitsAtRiskWidget({ habits }) {
   return (
     <div className="dashboard-widget widget-warning">
       <div className="widget-header">
-        <span className="widget-icon">{Icons.warning}</span>
+        <span className="widget-icon">{renderIcon(Icons.warning, 20)}</span>
         <h3 className="widget-title">Habits at Risk</h3>
       </div>
       <div className="widget-content">
@@ -33,7 +33,7 @@ export default function HabitsAtRiskWidget({ habits }) {
         <div className="widget-habits-list">
           {atRiskHabits.map((habit) => (
             <div key={habit.id} className="widget-habit-item">
-              <span className="widget-habit-icon">{Icons.habit}</span>
+              <span className="widget-habit-icon">{renderIcon(Icons.habit, 16)}</span>
               <div className="widget-habit-info">
                 <div className="widget-habit-title">{habit.title}</div>
                 <div className="widget-habit-streak">

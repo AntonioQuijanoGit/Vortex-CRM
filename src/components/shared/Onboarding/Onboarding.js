@@ -21,46 +21,46 @@ export default function Onboarding({ onComplete, forceShow = false }) {
 
   const steps = [
     {
-      title: "Welcome to Your Workspace",
-      description: "Your personal productivity hub. Everything is organized into clear sections: Home, Tasks, Habits, Pages, Analytics, and Tools. Everything saves automatically.",
+      title: "Welcome",
+      description: "Your personal productivity hub. Everything saves automatically.\n\n• Create tasks and habits\n• Organize with pages\n• Track your progress",
       position: "center",
-      action: "Let's get started!"
+      action: "Next",
+      highlight: null
     },
     {
-      title: "Navigation is Simple",
-      description: "Use the sidebar to navigate:\n\n🏠 Home - Your dashboard with overview\n✓ Tasks - Manage all your tasks\n↻ Habits - Track daily habits\n📄 Pages - Your content pages\n📊 Analytics - View your progress\n🛠️ Tools - Utilities and settings",
-      position: "center",
-      action: "Got it!"
+      title: "Navigation",
+      description: "Use the sidebar to navigate:\n\n• Home: Your main workspace\n• Tasks: View all tasks\n• Habits: Track daily routines\n• Pages: Organize content\n• Analytics: See your progress",
+      position: "left",
+      action: "Next",
+      highlight: "sidebar"
     },
     {
-      title: "Start with Home",
-      description: "The Home section shows:\n• Your key stats\n• Today's focus (tasks for today)\n• Quick actions to create content\n• Recent activity\n\nThis is your starting point every day!",
+      title: "Creating Content",
+      description: "Add tasks and habits to any page:\n\n• Type in the input field at the top\n• Press Enter to create\n• Set due dates for tasks\n• Mark habits complete daily",
       position: "center",
-      action: "Next"
+      action: "Next",
+      highlight: "content"
     },
     {
-      title: "Tasks Section",
-      description: "Click 'Tasks' in the sidebar to:\n• See all your tasks in one place\n• Filter by today, upcoming, or completed\n• Switch between List, Board, Table, or Calendar views\n• Create and manage tasks easily",
-      position: "center",
-      action: "Next"
+      title: "Pages",
+      description: "Organize everything with pages:\n\n• Click the + button to create pages\n• Add subpages for hierarchy\n• Each page can have tasks, habits, and notes",
+      position: "left",
+      action: "Next",
+      highlight: "pages"
     },
     {
-      title: "Habits Section",
-      description: "Click 'Habits' to:\n• View all your active habits\n• See streak counters\n• Track daily progress\n• Build consistent routines",
+      title: "Quick Actions",
+      description: "Use keyboard shortcuts for speed:\n\n• Cmd/Ctrl + K: Quick search\n• Cmd/Ctrl + N: New page\n• Cmd/Ctrl + /: View shortcuts\n• ?: Help anytime",
       position: "center",
-      action: "Next"
-    },
-    {
-      title: "Quick Search (⌘K / Ctrl+K)",
-      description: "Press Cmd/Ctrl + K anytime to quickly search across all your pages, tasks, and habits. Navigate directly to any item instantly!",
-      position: "center",
-      action: "Next"
+      action: "Next",
+      highlight: null
     },
     {
       title: "You're All Set!",
-      description: "Start by clicking 'Tasks' or 'Habits' in the sidebar, or create your first page. Need help? Click the '?' button anytime to see this tutorial again.",
+      description: "Start by creating your first task or habit.\n\n💡 Tip: Hover over buttons to see what they do.\n\nClick the '?' button anytime for help.",
       position: "center",
-      action: "Get Started!"
+      action: "Get Started",
+      highlight: null
     }
   ];
 
@@ -89,16 +89,19 @@ export default function Onboarding({ onComplete, forceShow = false }) {
 
   return (
     <>
-      <div className="onboarding-overlay" onClick={handleSkip} />
+      <div className={`onboarding-overlay ${current.highlight ? `highlight-${current.highlight}` : ''}`} onClick={handleSkip} />
       <div className={`onboarding-tooltip onboarding-${current.position}`}>
         <div className="tooltip-header">
           <div className="tooltip-progress">
-            {steps.map((_, index) => (
-              <div
-                key={index}
-                className={`progress-dot ${index === currentStep ? "active" : index < currentStep ? "completed" : ""}`}
-              />
-            ))}
+            <span className="progress-text">{currentStep + 1} of {steps.length}</span>
+            <div className="progress-dots">
+              {steps.map((_, index) => (
+                <div
+                  key={index}
+                  className={`progress-dot ${index === currentStep ? "active" : index < currentStep ? "completed" : ""}`}
+                />
+              ))}
+            </div>
           </div>
           <button className="tooltip-close" onClick={handleSkip} aria-label="Skip tutorial">
             {renderIcon(Icons.close, 18)}
@@ -110,7 +113,7 @@ export default function Onboarding({ onComplete, forceShow = false }) {
         </div>
         <div className="tooltip-footer">
           <button className="tooltip-skip" onClick={handleSkip}>
-            Skip
+            Skip Tutorial
           </button>
           <button className="tooltip-next" onClick={handleNext}>
             {current.action || (isLast ? "Get Started" : "Next")}

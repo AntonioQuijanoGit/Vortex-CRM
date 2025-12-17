@@ -4,8 +4,9 @@ import { Dashboard } from "../Dashboard";
 import { BlockManager } from "../BlockManager";
 import { getAllTodosWithPages } from "../../utils/todos";
 import { usePages } from "../../hooks/usePages";
-import { ActivityHeatmap, ProgressCircle, MiniLineChart } from "../shared";
+import { ActivityHeatmap, ProgressCircle, MiniLineChart, EmptyState, ConfirmDialog } from "../shared";
 import { Icons, renderIcon } from "../../utils/icons";
+import { safeGetItem, safeSetItem } from "../../utils/storage";
 import "./PageContent.css";
 
 export default function PageContent({
@@ -35,7 +36,7 @@ export default function PageContent({
   // Show dashboard when no page or when on home page, but always show breadcrumbs
   // Check both page?.id and activePageId for special views
   const pageId = page?.id || activePageId;
-  const isDashboard = !pageId || pageId === "home" || pageId === "dashboard";
+  const isDashboard = !pageId || pageId === "home" || pageId === "overview";
   const isTasks = pageId === "tasks";
   const isHabits = pageId === "habits";
   const isAnalytics = pageId === "analytics";
@@ -79,15 +80,27 @@ export default function PageContent({
     return (
       <div className="page-content" role="region" aria-live="polite">
         {shouldShowBreadcrumbs && <BreadcrumbTrail items={breadcrumbs} onNavigate={onNavigate} />}
-        <AnalyticsView />
+        <AnalyticsView onNavigate={onNavigate} />
       </div>
     );
   }
 
   if (!page) {
     return (
-      <div className="page-content" role="region" aria-live="polite">
-        <p>Page not found</p>
+      <div className="page-content page-not-found" role="region" aria-live="polite">
+        <EmptyState
+          icon={Icons.page}
+          message="Page Not Found"
+          hint="The page you're looking for doesn't exist or has been deleted."
+          detailedHint="This might happen if the page was deleted or the link is incorrect. You can navigate back to Home or create a new page."
+          actionLabel="Go to Home"
+          onAction={() => onNavigate("home")}
+          tips={[
+            "Use the sidebar to navigate between pages",
+            "Press Cmd/Ctrl + K to search for pages",
+            "Create new pages using the + button in the sidebar"
+          ]}
+        />
       </div>
     );
   }
@@ -268,7 +281,7 @@ function WelcomePage() {
   return (
     <div className="welcome-content">
       <section className="welcome-hero">
-        <h2>Welcome to Your Workspace</h2>
+        <h2>Welcome to Productivity</h2>
         <p>
           A productivity app designed for clarity and efficiency. Manage tasks,
           track habits, and organize your work with a clean, functional
@@ -337,36 +350,59 @@ function TasksView({ onNavigate }) {
         </div>
       </div>
 
-      <div className="section-content-grid">
-        <div className="section-card">
-          <h2 className="card-title">Today's Tasks</h2>
-          {todayTasks.length > 0 ? (
-            <div className="task-list">
-              {todayTasks.map(task => (
-                <div key={task.id} className="task-item">
-                  <span className="task-icon">{renderIcon(Icons.task, 16)}</span>
-                  <span className="task-title">{task.title}</span>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <p className="empty-state">No tasks for today</p>
-          )}
-        </div>
-
-        <div className="section-card">
-          <h2 className="card-title">All Tasks</h2>
-          <p className="card-hint">View and manage all tasks across your workspace</p>
-          <button
-            className="primary-action"
-            onClick={() => {
-              onNavigate("home");
-            }}
-          >
-            View All Tasks
-          </button>
-        </div>
+      {/* Inline task manager so users can create and switch views without ir a Home */}
+      <div className="section-card">
+        <h2 className="card-title">Manage your tasks</h2>
+        <p className="card-hint">Create tasks, switch between list/board/table/calendar and filter without salir de esta vista.</p>
+        <TodoApp pageId="tasks" initialTypeFilter="task" />
       </div>
+
+      {tasks.length === 0 ? (
+        <EmptyState
+          icon={Icons.task}
+          message="No Tasks Yet"
+          hint="Get started by creating your first task"
+          detailedHint="Tasks help you organize one-time items with due dates. You can add tasks to any page, set priorities, and track completion."
+          actionLabel="Create Task"
+          onAction={() => {
+            // Navigate to home and show task creation
+            onNavigate("home");
+          }}
+          showExamples={true}
+          tips={[
+            "Click the + button in the sidebar to create a new page",
+            "Add tasks directly to any page using the task input",
+            "Set due dates to track deadlines and priorities",
+            "Use filters to view tasks by date or completion status"
+          ]}
+        />
+      ) : (
+        <div className="section-content-grid">
+          <div className="section-card">
+            <h2 className="card-title">Today's Tasks</h2>
+            {todayTasks.length > 0 ? (
+              <div className="task-list">
+                {todayTasks.map(task => (
+                  <div key={task.id} className="task-item">
+                    <span className="task-icon">{renderIcon(Icons.task, 16)}</span>
+                    <span className="task-title">{task.title}</span>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="empty-state-card">
+                <p className="empty-state">No tasks for today</p>
+                <p className="empty-hint">You're all caught up! 🎉</p>
+              </div>
+            )}
+          </div>
+
+          <div className="section-card">
+            <h2 className="card-title">All Tasks</h2>
+            <p className="card-hint">Usa el gestor superior para ver todas las tareas por vista o aplicar filtros.</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -380,6 +416,84 @@ function HabitsView({ onNavigate }) {
   const activeHabits = habits.filter(h => !h.completed);
   const totalStreaks = habits.reduce((sum, h) => sum + (h.streak || 0), 0);
   const maxStreak = habits.length > 0 ? Math.max(...habits.map(h => h.streak || 0)) : 0;
+
+  const [habitToDelete, setHabitToDelete] = useState(null);
+
+  const handleDeleteHabit = (habitId, pageId, habitTitle) => {
+    setHabitToDelete({ habitId, pageId, habitTitle });
+  };
+
+  const confirmDeleteHabit = () => {
+    if (!habitToDelete) return;
+    
+    const { habitId, pageId, habitTitle } = habitToDelete;
+    console.log("Attempting to delete habit:", { habitId, pageId, habitTitle });
+    
+    try {
+      let deleted = false;
+      let deletedFrom = null;
+      
+      // If pageId exists, try to delete from that page first
+      if (pageId) {
+        const todosKey = `todos-${pageId}`;
+        const pageTodos = safeGetItem(todosKey, []);
+        console.log(`Checking page ${pageId}, found ${pageTodos.length} todos`);
+        if (pageTodos.some(t => t.id === habitId)) {
+          const updatedTodos = pageTodos.filter(t => t.id !== habitId);
+          safeSetItem(todosKey, updatedTodos);
+          deleted = true;
+          deletedFrom = todosKey;
+          console.log(`Deleted from ${todosKey}`);
+        }
+      }
+      
+      // If not found in page or pageId is null, search in all localStorage keys
+      if (!deleted && typeof window !== 'undefined' && localStorage) {
+        console.log("Searching in all localStorage keys...");
+        for (let i = 0; i < localStorage.length; i++) {
+          const key = localStorage.key(i);
+          if (key && key.startsWith("todos-")) {
+            const todos = safeGetItem(key, []);
+            if (todos.some(t => t.id === habitId)) {
+              const updatedTodos = todos.filter(t => t.id !== habitId);
+              safeSetItem(key, updatedTodos);
+              deleted = true;
+              deletedFrom = key;
+              console.log(`Deleted from ${key}`);
+              break;
+            }
+          }
+        }
+      }
+      
+      // Also check old format (todos without page)
+      if (!deleted) {
+        const oldTodos = safeGetItem("todos", []);
+        console.log(`Checking old format, found ${oldTodos.length} todos`);
+        if (oldTodos.some(t => t.id === habitId)) {
+          const updatedTodos = oldTodos.filter(t => t.id !== habitId);
+          safeSetItem("todos", updatedTodos);
+          deleted = true;
+          deletedFrom = "todos";
+          console.log("Deleted from old format");
+        }
+      }
+      
+      if (deleted) {
+        console.log(`Successfully deleted habit from ${deletedFrom}`);
+        // Force re-render by reloading the component
+        setTimeout(() => {
+          window.location.reload();
+        }, 100);
+      } else {
+        console.error("Habit not found in any location");
+      }
+    } catch (error) {
+      console.error("Error deleting habit:", error);
+    } finally {
+      setHabitToDelete(null);
+    }
+  };
 
   return (
     <div className="section-view">
@@ -407,23 +521,63 @@ function HabitsView({ onNavigate }) {
         </div>
       </div>
 
+      {/* Inline habit manager to add and view habits without cambiar de vista */}
+      <div className="section-card">
+        <h2 className="card-title">Manage your habits</h2>
+        <p className="card-hint">Crea hábitos y cambia de lista a tablero/tabla/calendario desde aquí.</p>
+        <TodoApp pageId="habits" initialTypeFilter="habit" />
+      </div>
+
       <div className="section-content-grid">
         <div className="section-card">
-          <h2 className="card-title">Active Habits</h2>
-          {activeHabits.length > 0 ? (
-            <div className="habit-list">
-              {activeHabits.slice(0, 5).map(habit => (
-                <div key={habit.id} className="habit-item">
-                  <span className="habit-icon">{renderIcon(Icons.habit, 16)}</span>
-                  <div className="habit-info">
-                    <span className="habit-title">{habit.title}</span>
-                    <span className="habit-streak">Streak: {habit.streak || 0} days</span>
+          <h2 className="card-title">All Habits</h2>
+          <p className="card-hint">Manage all your habits. Click the delete button to remove a habit.</p>
+          {habits.length > 0 ? (
+            <div className="habit-list-full">
+              {allTodosWithPages
+                .filter(({ type }) => type === "habit")
+                .map(({ pageId, pageTitle, ...habit }) => (
+                  <div key={habit.id} className="habit-item-full">
+                    <span className="habit-icon">{renderIcon(Icons.habit, 16)}</span>
+                    <div className="habit-info-full">
+                      <span className="habit-title">{habit.title}</span>
+                      <span className="habit-meta">
+                        <span className="habit-streak">Streak: {habit.streak || 0} days</span>
+                        {pageTitle && pageTitle !== "Unknown Page" && (
+                          <span className="habit-page">• {pageTitle}</span>
+                        )}
+                      </span>
+                    </div>
+                    <button
+                      className="habit-delete-button"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        handleDeleteHabit(habit.id, pageId, habit.title);
+                      }}
+                      aria-label={`Delete habit: ${habit.title}`}
+                      title="Delete habit"
+                    >
+                      {renderIcon(Icons.delete, 16)}
+                    </button>
                   </div>
-                </div>
-              ))}
+                ))}
             </div>
           ) : (
-            <p className="empty-state">No active habits. Create one to get started!</p>
+            <EmptyState
+              icon={Icons.habit}
+              message="No Habits Yet"
+              hint="Start building daily routines with habits"
+              detailedHint="Habits help you track recurring activities and build streaks. Mark them complete each day to maintain your progress."
+              actionLabel="Go to Home"
+              onAction={() => onNavigate("home")}
+              tips={[
+                "Add habits to any page using the habit input",
+                "Mark habits complete daily to build streaks",
+                "Track your progress with visual streak counters",
+                "Habits reset daily, so you can track them consistently"
+              ]}
+            />
           )}
         </div>
 
@@ -443,16 +597,40 @@ function HabitsView({ onNavigate }) {
                 ))}
             </div>
           ) : (
-            <p className="empty-state">No habits yet</p>
+            <div className="streak-list">
+              {[
+                { title: "Drink 2L of water", streak: 0 },
+                { title: "Read 10 pages", streak: 0 },
+                { title: "Walk 20 minutes", streak: 0 },
+              ].map((item) => (
+                <div key={item.title} className="streak-item streak-placeholder">
+                  <span className="streak-icon">{renderIcon(Icons.streak, 16)}</span>
+                  <span className="streak-title">{item.title}</span>
+                  <span className="streak-value">{item.streak} days</span>
+                </div>
+              ))}
+              <p className="empty-state">Add your first habit above to start building streaks.</p>
+            </div>
           )}
         </div>
       </div>
+
+      <ConfirmDialog
+        isOpen={!!habitToDelete}
+        title="Delete Habit"
+        message={habitToDelete ? `Are you sure you want to delete "${habitToDelete.habitTitle}"? This action cannot be undone.` : ""}
+        confirmText="Delete"
+        cancelText="Cancel"
+        type="danger"
+        onConfirm={confirmDeleteHabit}
+        onCancel={() => setHabitToDelete(null)}
+      />
     </div>
   );
 }
 
 // Analytics View - Dedicated section for analytics
-function AnalyticsView() {
+function AnalyticsView({ onNavigate }) {
   const { getPage } = usePages();
   const allTodosWithPages = getAllTodosWithPages(getPage);
   const allTodos = allTodosWithPages.map(({ pageId, pageTitle, ...todo }) => todo);
@@ -482,6 +660,51 @@ function AnalyticsView() {
       createdAt: todo.createdAt,
       completedAt: todo.completedAt,
     }));
+
+  // Habits statistics
+  const habits = allTodos.filter(t => t.type === "habit");
+  const activeHabits = habits.filter(h => !h.completed);
+  const totalStreaks = habits.reduce((sum, h) => sum + (h.streak || 0), 0);
+  const maxStreak = habits.length > 0 ? Math.max(...habits.map(h => h.streak || 0), 0) : 0;
+  const avgStreak = habits.length > 0 ? Math.round(totalStreaks / habits.length) : 0;
+
+  // Habit trend data (last 7 days)
+  const habitTrendData = [];
+  for (let i = 6; i >= 0; i--) {
+    const date = new Date(today);
+    date.setDate(date.getDate() - i);
+    const dateKey = date.toISOString().split("T")[0];
+    const dayHabits = habits.filter(h => h.completedDates?.includes(dateKey));
+    habitTrendData.push(dayHabits.length);
+  }
+
+  // Check if there's any data
+  const hasData = tasks.length > 0 || habits.length > 0;
+
+  if (!hasData) {
+    return (
+      <div className="section-view">
+        <div className="section-hero">
+          <h1 className="section-title">Analytics</h1>
+          <p className="section-description">Track your productivity and progress over time</p>
+        </div>
+        <EmptyState
+          icon={Icons.stats}
+          message="No Data Yet"
+          hint="Start tracking to see your productivity insights"
+          detailedHint="Analytics will show your completion rates, streaks, and productivity trends once you start creating tasks and habits."
+          actionLabel="Create Your First Task"
+          onAction={() => onNavigate("tasks")}
+          tips={[
+            "Create tasks and habits to generate data",
+            "Complete items daily to see progress trends",
+            "View detailed stats in the Analytics section",
+            "Track streaks and completion rates over time"
+          ]}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="section-view">
@@ -537,8 +760,64 @@ function AnalyticsView() {
           </div>
         </div>
 
+        {habits.length > 0 && (
+          <div className="analytics-card">
+            <h2 className="card-title">Habit Performance</h2>
+            <div className="analytics-content">
+              <MiniLineChart
+                data={habitTrendData}
+                width={240}
+                height={100}
+                color="var(--color-success)"
+                showPoints={true}
+              />
+              <div className="analytics-stats">
+                <div className="analytics-stat">
+                  <span className="stat-value">{activeHabits.length}</span>
+                  <span className="stat-label">Active Habits</span>
+                </div>
+                <div className="analytics-stat">
+                  <span className="stat-value">{maxStreak}</span>
+                  <span className="stat-label">Best Streak</span>
+                </div>
+                <div className="analytics-stat">
+                  <span className="stat-value">{avgStreak}</span>
+                  <span className="stat-label">Avg Streak</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {tasks.length > 0 && (
+          <div className="analytics-card">
+            <h2 className="card-title">Task Statistics</h2>
+            <div className="analytics-content">
+              <div className="analytics-stats-grid">
+                <div className="analytics-stat-large">
+                  <span className="stat-value-large">{tasks.length}</span>
+                  <span className="stat-label">Total Tasks</span>
+                </div>
+                <div className="analytics-stat-large">
+                  <span className="stat-value-large">{completedTasks}</span>
+                  <span className="stat-label">Completed</span>
+                </div>
+                <div className="analytics-stat-large">
+                  <span className="stat-value-large">{tasks.length - completedTasks}</span>
+                  <span className="stat-label">Pending</span>
+                </div>
+                <div className="analytics-stat-large">
+                  <span className="stat-value-large">{Math.round(completionPercentage)}%</span>
+                  <span className="stat-label">Completion Rate</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         {activityData.length > 0 && (
           <div className="analytics-card heatmap-card">
+            <h2 className="card-title">Activity Heatmap</h2>
             <ActivityHeatmap data={activityData} days={90} />
           </div>
         )}

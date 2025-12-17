@@ -8,6 +8,7 @@ export default function QuickSearch({ onPageSelect, onClose }) {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [filterType, setFilterType] = useState("all"); // all, page, task, habit
   const inputRef = useRef(null);
   const { pages, getPage } = usePages();
 
@@ -25,34 +26,54 @@ export default function QuickSearch({ onPageSelect, onClose }) {
     const searchResults = [];
 
     // Search pages
-    pages.forEach((page) => {
-      if (page.title.toLowerCase().includes(searchQuery)) {
-        searchResults.push({
-          type: "page",
-          id: page.id,
-          title: page.title,
-          icon: Icons.page,
-        });
-      }
-    });
+    if (filterType === "all" || filterType === "page") {
+      pages.forEach((page) => {
+        if (page.title.toLowerCase().includes(searchQuery)) {
+          searchResults.push({
+            type: "page",
+            id: page.id,
+            title: page.title,
+            icon: Icons.page,
+            pageType: page.type,
+          });
+        }
+      });
+    }
 
     // Search todos
-    const todosWithPages = getAllTodosWithPages(getPage);
-    todosWithPages.forEach(({ todo, pageId }) => {
-      if (todo.title.toLowerCase().includes(searchQuery)) {
-        searchResults.push({
-          type: "todo",
-          id: todo.id,
-          title: todo.title,
-          icon: todo.type === "task" ? Icons.task : Icons.habit,
-          pageId: pageId, // Store pageId to navigate later
-        });
-      }
+    if (filterType === "all" || filterType === "task" || filterType === "habit") {
+      const todosWithPages = getAllTodosWithPages(getPage);
+      todosWithPages.forEach(({ todo, pageId, pageTitle }) => {
+        const matchesType = filterType === "all" || 
+          (filterType === "task" && todo.type === "task") ||
+          (filterType === "habit" && todo.type === "habit");
+        
+        if (matchesType && todo.title.toLowerCase().includes(searchQuery)) {
+          searchResults.push({
+            type: "todo",
+            id: todo.id,
+            title: todo.title,
+            icon: todo.type === "task" ? Icons.task : Icons.habit,
+            pageId: pageId,
+            pageTitle: pageTitle,
+            todoType: todo.type,
+            completed: todo.completed,
+            dueDate: todo.dueDate,
+          });
+        }
+      });
+    }
+
+    // Sort results: pages first, then todos
+    searchResults.sort((a, b) => {
+      if (a.type === "page" && b.type !== "page") return -1;
+      if (a.type !== "page" && b.type === "page") return 1;
+      return 0;
     });
 
     setResults(searchResults);
     setSelectedIndex(0);
-  }, [query, pages, getPage]);
+  }, [query, pages, getPage, filterType]);
 
   const handleKeyDown = (e) => {
     if (e.key === "Escape") {
@@ -93,6 +114,36 @@ export default function QuickSearch({ onPageSelect, onClose }) {
             onKeyDown={handleKeyDown}
             autoFocus
           />
+          <div className="quick-search-filters">
+            <button
+              className={`quick-search-filter ${filterType === "all" ? "active" : ""}`}
+              onClick={() => setFilterType("all")}
+              title="All"
+            >
+              All
+            </button>
+            <button
+              className={`quick-search-filter ${filterType === "page" ? "active" : ""}`}
+              onClick={() => setFilterType("page")}
+              title="Pages"
+            >
+              {renderIcon(Icons.page, 14)}
+            </button>
+            <button
+              className={`quick-search-filter ${filterType === "task" ? "active" : ""}`}
+              onClick={() => setFilterType("task")}
+              title="Tasks"
+            >
+              {renderIcon(Icons.task, 14)}
+            </button>
+            <button
+              className={`quick-search-filter ${filterType === "habit" ? "active" : ""}`}
+              onClick={() => setFilterType("habit")}
+              title="Habits"
+            >
+              {renderIcon(Icons.habit, 14)}
+            </button>
+          </div>
           <button className="quick-search-close" onClick={onClose}>
             {renderIcon(Icons.close, 18)}
           </button>
@@ -108,7 +159,17 @@ export default function QuickSearch({ onPageSelect, onClose }) {
                 onClick={() => handleSelect(result)}
               >
                 <span className="result-icon">{renderIcon(result.icon, 16)}</span>
-                <span className="result-title">{result.title}</span>
+                <div className="result-content">
+                  <span className="result-title">{result.title}</span>
+                  {result.pageTitle && result.type === "todo" && (
+                    <span className="result-meta">in {result.pageTitle}</span>
+                  )}
+                  {result.dueDate && (
+                    <span className="result-meta">
+                      Due {new Date(result.dueDate).toLocaleDateString()}
+                    </span>
+                  )}
+                </div>
                 <span className="result-type">{result.type}</span>
               </button>
             ))}

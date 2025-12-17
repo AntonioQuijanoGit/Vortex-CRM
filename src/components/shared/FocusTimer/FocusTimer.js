@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Icons } from "../../../utils/icons";
+import { Icons, renderIcon } from "../../../utils/icons";
 import "./FocusTimer.css";
 
 const POMODORO_DURATION = 25 * 60; // 25 minutes in seconds
@@ -100,7 +100,7 @@ export default function FocusTimer({ onStart, onComplete }) {
   return (
     <div className="focus-timer">
       <div className="focus-timer-header">
-        <span className="focus-timer-icon">{Icons.calendar}</span>
+        <span className="focus-timer-icon">{renderIcon(Icons.timer, 20)}</span>
         <h3 className="focus-timer-title">Focus Timer</h3>
       </div>
 
@@ -160,7 +160,7 @@ export default function FocusTimer({ onStart, onComplete }) {
       <div className="focus-timer-controls">
         {!isRunning ? (
           <button className="focus-timer-button primary" onClick={handleStart}>
-            {Icons.check} Start
+            {renderIcon(Icons.check, 16)} Start
           </button>
         ) : (
           <button className="focus-timer-button secondary" onClick={handlePause}>

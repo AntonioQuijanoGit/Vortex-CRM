@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import BoardCard from "./BoardCard";
-import { Icons } from "../../../utils/icons";
+import { Icons, renderIcon } from "../../../utils/icons";
 import "./BoardView.css";
 
 export default function BoardView({ todos, onUpdate, onDelete, onToggleComplete, onUpdateProperties }) {
@@ -63,7 +63,7 @@ export default function BoardView({ todos, onUpdate, onDelete, onToggleComplete,
           onDrop={(e) => handleDrop(e, column.id)}
         >
           <div className="board-column-header">
-            <span className="column-icon">{column.icon}</span>
+            <span className="column-icon">{renderIcon(column.icon, 18)}</span>
             <h3 className="column-title">{column.title}</h3>
             <span className="column-count">{column.items.length}</span>
           </div>

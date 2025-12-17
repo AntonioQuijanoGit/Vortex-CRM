@@ -1,24 +1,86 @@
 .app-layout {
+  --header-height: 56px;
+  --header-height-mobile: 48px;
+  --footer-height: 50px; /* Footer height with padding */
+  --footer-height-mobile: 45px;
   display: grid;
   grid-template-columns: 260px 1fr;
+  grid-template-rows: auto 1fr;
   min-height: 100vh;
   background: var(--color-bg);
   position: relative;
   transition: grid-template-columns var(--transition-base);
 }
 
-/* When sidebar is collapsed on desktop, main takes full width */
-@media (min-width: 769px) {
-  .app-layout .notion-sidebar.collapsed ~ .app-main {
-    grid-column: 1 / -1;
+.app-header {
+  grid-column: 1 / -1;
+  height: 56px;
+  border-bottom: 1px solid var(--color-stroke);
+  background: var(--color-bg);
+  display: flex;
+  align-items: center;
+  padding: 0 var(--spacing-lg);
+  position: sticky;
+  top: 0;
+  z-index: var(--z-sticky);
+}
+
+.app-header-content {
+  width: 100%;
+  max-width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-md);
+}
+
+.app-header-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-ink);
+  margin: 0;
+  font-family: var(--font-sans);
+  letter-spacing: -0.01em;
+}
+
+.app-header-context {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-muted);
+  padding: 4px 8px;
+  border: 1px solid var(--color-stroke);
+  border-radius: var(--radius-sm);
+  background: var(--color-panel);
+}
+
+@media (max-width: 768px) {
+  .app-header {
+    padding: 0 var(--spacing-md);
+    height: 48px;
+  }
+
+  .app-header-title {
+    font-size: 15px;
+  }
+
+  .notion-sidebar {
+    top: 48px;
+    height: calc(100vh - 48px);
   }
 }
 
 .app-main {
+  grid-column: 2;
+  grid-row: 2;
   position: relative;
   overflow-y: auto;
   overflow-x: hidden;
   background: var(--color-bg);
+}
+
+/* When sidebar is collapsed, main takes full width */
+.app-layout .notion-sidebar.collapsed ~ .app-main {
+  grid-column: 1 / -1;
 }
 
 .app-main::-webkit-scrollbar {
@@ -44,19 +106,17 @@
 @media (max-width: 768px) {
   .app-layout {
     grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
   }
-  
+
   .app-main {
+    grid-column: 1;
+    grid-row: 2;
     padding: 0;
     width: 100%;
     overflow-x: hidden;
     /* Ensure content doesn't show behind sidebar when closed */
     margin-left: 0;
-  }
-  
-  /* Hide any content that might show "Home" when sidebar is closed */
-  .notion-sidebar.collapsed ~ .app-main .breadcrumbs {
-    display: none !important;
   }
 }
 
@@ -141,7 +201,7 @@
     font-size: 10px;
     left: 0;
   }
-  
+
   .app-layout {
     padding-bottom: 40px;
   }

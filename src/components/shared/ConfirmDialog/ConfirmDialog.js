@@ -1,6 +1,6 @@
 import React from "react";
 import { createPortal } from "react-dom";
-import { Icons } from "../../../utils/icons";
+import { Icons, renderIcon } from "../../../utils/icons";
 import "./ConfirmDialog.css";
 
 export default function ConfirmDialog({
@@ -34,7 +34,7 @@ export default function ConfirmDialog({
             onClick={onCancel}
             aria-label="Close dialog"
           >
-            {Icons.close}
+            {renderIcon(Icons.close, 18)}
           </button>
         </div>
         <div id="confirm-dialog-message" className="confirm-dialog-message">

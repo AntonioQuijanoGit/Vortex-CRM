@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useEvents } from "../../hooks/useEvents";
 import { usePages } from "../../hooks/usePages";
-import { Icons } from "../../utils/icons";
+import { Icons, renderIcon } from "../../utils/icons";
 import { DateDetailsModal, EventForm } from "../shared";
 import "./DashboardCalendar.css";
 
@@ -236,7 +236,7 @@ export default function DashboardCalendar({ todos, onNavigate }) {
               className="calendar-nav-btn"
               aria-label="Previous month"
             >
-              {Icons.arrowLeft}
+              {renderIcon(Icons.arrowLeft, 18)}
             </button>
             <span className="calendar-month-year">
               {monthNames[month]} {year}
@@ -246,7 +246,7 @@ export default function DashboardCalendar({ todos, onNavigate }) {
               className="calendar-nav-btn"
               aria-label="Next month"
             >
-              {Icons.arrowRight}
+              {renderIcon(Icons.arrowRight, 18)}
             </button>
             <button
               onClick={() => setCurrentDate(new Date())}
@@ -337,7 +337,7 @@ export default function DashboardCalendar({ todos, onNavigate }) {
                     className="dashboard-cal-indicator habits"
                     title={`${dayInfo.habitsCompleted} habits completed`}
                   >
-                    {Icons.check}
+                    {renderIcon(Icons.check, 12)}
                   </span>
                 )}
                 {allDayEvents.length > 0 && (
@@ -383,7 +383,7 @@ export default function DashboardCalendar({ todos, onNavigate }) {
                     .slice(0, 5)
                     .map((todo) => (
                       <div key={todo.id} className="pending-task-item">
-                        <span className="pending-task-icon">{Icons.task}</span>
+                        <span className="pending-task-icon">{renderIcon(Icons.task, 14)}</span>
                         <span className="pending-task-title">{todo.title}</span>
                       </div>
                     ))}
@@ -408,7 +408,7 @@ export default function DashboardCalendar({ todos, onNavigate }) {
                         className="pending-task-icon"
                         style={{ color: event.color }}
                       >
-                        {Icons.calendar}
+                        {renderIcon(Icons.calendar, 14)}
                       </span>
                       <span className="pending-task-title">
                         {event.title}

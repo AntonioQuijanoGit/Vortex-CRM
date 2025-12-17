@@ -1,5 +1,5 @@
 import React from "react";
-import { Icons } from "../../../utils/icons";
+import { Icons, renderIcon } from "../../../utils/icons";
 import "./QuickActions.css";
 
 export default function QuickActions({ onNavigate, onAddPage, onShowAchievements, onShowFocusTimer }) {
@@ -67,7 +67,7 @@ export default function QuickActions({ onNavigate, onAddPage, onShowAchievements
           title={action.description}
         >
           <div className="quick-action-icon-wrapper">
-            <span className="quick-action-icon">{action.icon}</span>
+            <span className="quick-action-icon">{renderIcon(action.icon, 24)}</span>
           </div>
           <span className="quick-action-title">{action.title}</span>
         </button>

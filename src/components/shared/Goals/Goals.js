@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Icons } from "../../../utils/icons";
+import { Icons, renderIcon } from "../../../utils/icons";
 import {
   getWeeklyGoal,
   setWeeklyGoal,
@@ -49,7 +49,7 @@ export default function Goals({ todos = [] }) {
   return (
     <div className="goals-widget">
       <div className="goals-header">
-        <span className="goals-icon">{Icons.calendar}</span>
+        <span className="goals-icon">{renderIcon(Icons.target, 20)}</span>
         <h3 className="goals-title">Goals</h3>
       </div>
 
@@ -64,7 +64,7 @@ export default function Goals({ todos = [] }) {
                 onClick={() => setShowWeeklyEditor(true)}
                 title="Edit weekly goal"
               >
-                {Icons.edit}
+                {renderIcon(Icons.edit, 16)}
               </button>
             )}
           </div>
@@ -133,7 +133,7 @@ export default function Goals({ todos = [] }) {
                 onClick={() => setShowMonthlyEditor(true)}
                 title="Edit monthly goal"
               >
-                {Icons.edit}
+                {renderIcon(Icons.edit, 16)}
               </button>
             )}
           </div>

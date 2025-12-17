@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { Icons } from "../../../utils/icons";
+import { Icons, renderIcon } from "../../../utils/icons";
 import "./DashboardWidgets.css";
 
 export default function UpcomingDeadlinesWidget({ todos }) {
@@ -39,7 +39,7 @@ export default function UpcomingDeadlinesWidget({ todos }) {
   return (
     <div className="dashboard-widget">
       <div className="widget-header">
-        <span className="widget-icon">{Icons.date}</span>
+        <span className="widget-icon">{renderIcon(Icons.date, 20)}</span>
         <h3 className="widget-title">Upcoming Deadlines</h3>
       </div>
       <div className="widget-content">

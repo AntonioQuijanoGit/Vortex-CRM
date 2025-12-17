@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Icons } from "../../../utils/icons";
+import { Icons, renderIcon } from "../../../utils/icons";
 import "./EventForm.css";
 
 export default function EventForm({ date, event, onSave, onCancel }) {
@@ -40,7 +40,7 @@ export default function EventForm({ date, event, onSave, onCancel }) {
         <div className="event-form-header">
           <h4>{event ? "Edit Event" : "New Event"}</h4>
           <button className="event-form-close" onClick={onCancel}>
-            {Icons.close}
+            {renderIcon(Icons.close, 18)}
           </button>
         </div>
         {date && <p className="event-form-date">{formatDate(date)}</p>}
