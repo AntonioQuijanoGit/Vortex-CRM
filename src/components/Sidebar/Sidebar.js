@@ -22,11 +22,18 @@ export default function Sidebar({
 }) {
   const [internalCollapsed, setInternalCollapsed] = useState(false);
   const isCollapsed = externalCollapsed !== undefined ? externalCollapsed : internalCollapsed;
+  const isMobileWidth = typeof window !== "undefined" && window.innerWidth <= 768;
   const handleToggleCollapse = () => {
-    if (onToggleCollapse) {
-      onToggleCollapse(!isCollapsed);
+    // Allow collapsing only on mobile
+    if (isMobileWidth) {
+      if (onToggleCollapse) {
+        onToggleCollapse(!isCollapsed);
+      } else {
+        setInternalCollapsed(!isCollapsed);
+      }
     } else {
-      setInternalCollapsed(!isCollapsed);
+      if (onToggleCollapse) onToggleCollapse(false);
+      setInternalCollapsed(false);
     }
   };
   // Filter out the default "Home" page from the pages list
@@ -122,7 +129,7 @@ export default function Sidebar({
                     className="nav-item"
                     onClick={() => {
                       onShowFocusTimer();
-                      if (onToggleCollapse) onToggleCollapse(true);
+                      if (onToggleCollapse && isMobileWidth) onToggleCollapse(true);
                     }}
                   >
                     <span className="nav-icon">{renderIcon(Icons.timer, 18)}</span>
@@ -134,7 +141,7 @@ export default function Sidebar({
                     className="nav-item"
                     onClick={() => {
                       onShowGoals();
-                      if (onToggleCollapse) onToggleCollapse(true);
+                      if (onToggleCollapse && isMobileWidth) onToggleCollapse(true);
                     }}
                   >
                     <span className="nav-icon">{renderIcon(Icons.target, 18)}</span>
@@ -146,7 +153,7 @@ export default function Sidebar({
                     className="nav-item"
                     onClick={() => {
                       onShowAchievements();
-                      if (onToggleCollapse) onToggleCollapse(true);
+                      if (onToggleCollapse && isMobileWidth) onToggleCollapse(true);
                     }}
                   >
                     <span className="nav-icon">{renderIcon(Icons.trophy, 18)}</span>

@@ -6,7 +6,7 @@ export default function WelcomeGuide({ onGetStarted }) {
   return (
     <div className="welcome-guide">
       <div className="guide-header">
-        <h2>Welcome to Productivity</h2>
+        <h2>Welcome to Taskline</h2>
         <p>Your all-in-one productivity hub</p>
       </div>
 

@@ -1210,7 +1210,7 @@
 
 .visual-data-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(480px, 1fr));
   gap: var(--spacing-xl);
   margin-top: var(--spacing-lg);
 }
@@ -1274,6 +1274,76 @@
   border-color: rgba(16, 185, 129, 0.4);
 }
 
+.heatmap-card {
+  grid-column: span 2;
+}
+
+@media (max-width: 1280px) {
+  .heatmap-card {
+    grid-column: span 1;
+  }
+}
+
+.recent-activity-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.recent-activity-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--spacing-xs);
+}
+
+.recent-activity-item {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border: 1px solid var(--color-stroke);
+  border-radius: var(--radius-md);
+  background: var(--color-panel);
+}
+
+.recent-activity-date {
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+.recent-activity-badges {
+  display: flex;
+  gap: var(--spacing-xxs);
+}
+
+.recent-activity-total {
+  font-weight: 700;
+  color: var(--color-ink);
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  border: 1px solid var(--color-stroke);
+}
+
+.badge-created {
+  background: var(--color-info-light);
+  color: var(--color-info);
+  border-color: rgba(59, 130, 246, 0.4);
+}
+
+.badge-completed {
+  background: var(--color-success-light);
+  color: var(--color-success-dark);
+  border-color: rgba(16, 185, 129, 0.4);
+}
 .visual-data-card::before {
   content: '';
   position: absolute;

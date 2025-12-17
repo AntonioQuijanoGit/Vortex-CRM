@@ -69,6 +69,10 @@
   border-radius: var(--radius-sm);
 }
 
+.sidebar-toggle.desktop-hidden {
+  display: none;
+}
+
 .sidebar-toggle:hover,
 .sidebar-toggle:focus-visible {
   background: var(--color-bg);
@@ -689,5 +693,10 @@
     width: 32px;
     height: 32px;
     font-size: 16px;
+  }
+
+  /* Hide collapse toggle on desktop */
+  .sidebar-toggle {
+    display: none;
   }
 }
