@@ -97,7 +97,12 @@ function App() {
       // Toggle Sidebar (Cmd/Ctrl + B)
       if (matchesShortcut(e, SHORTCUTS.TOGGLE_SIDEBAR)) {
         e.preventDefault();
-        setSidebarCollapsed(!sidebarCollapsed);
+        if (typeof window !== "undefined" && window.innerWidth <= 768) {
+          setSidebarCollapsed(!sidebarCollapsed);
+        } else {
+          // Keep sidebar fixed on desktop
+          setSidebarCollapsed(false);
+        }
         return;
       }
 
@@ -147,6 +152,13 @@ function App() {
 
   return (
     <div className="app-layout">
+      <button
+        className="back-dashboard-floating"
+        onClick={() => setActivePage("home")}
+        aria-label="Back to dashboard"
+      >
+        ← Dashboard
+      </button>
       {/* Simple Header */}
       <header className="app-header">
         <div className="app-header-content">

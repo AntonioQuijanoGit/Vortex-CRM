@@ -28,19 +28,65 @@
 .app-header-content {
   width: 100%;
   max-width: 100%;
-  display: flex;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
-  justify-content: space-between;
   gap: var(--spacing-md);
 }
 
+.app-header-left {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
 .app-header-title {
-  font-size: 16px;
+  font-size: 17px;
   font-weight: 600;
   color: var(--color-ink);
   margin: 0;
   font-family: var(--font-sans);
   letter-spacing: -0.01em;
+}
+
+.app-header-title-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--spacing-xs);
+  width: 100%;
+}
+
+.app-header-right {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.back-dashboard-floating {
+  position: fixed;
+  top: var(--spacing-sm);
+  right: var(--spacing-sm);
+  z-index: calc(var(--z-modal) + 10);
+  border: 1px solid var(--color-stroke);
+  background: var(--color-panel);
+  color: var(--color-ink);
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+  font-size: 13px;
+  font-weight: 700;
+  box-shadow: var(--shadow-md);
+  transition: all var(--transition-base);
+}
+
+.back-dashboard-floating:hover {
+  background: var(--color-surface);
+  border-color: var(--color-stroke-strong);
+  transform: translateY(-1px);
+}
+
+.back-dashboard-floating:active {
+  transform: translateY(0);
 }
 
 .app-header-context {
@@ -122,12 +168,9 @@
 
 /* Mobile menu button */
 .mobile-menu-button {
-  position: fixed;
-  top: var(--spacing-md);
-  left: var(--spacing-md);
-  z-index: calc(var(--z-sidebar) + 1);
-  width: 44px;
-  height: 44px;
+  position: relative;
+  width: 40px;
+  height: 40px;
   border: var(--border-medium);
   background: var(--color-bg);
   color: var(--color-ink);
@@ -171,6 +214,24 @@
 @media (max-width: 768px) {
   .mobile-menu-button {
     display: flex;
+  }
+
+  .app-header-content {
+    grid-template-columns: auto 1fr auto;
+    gap: var(--spacing-sm);
+  }
+
+  .app-header-title-wrap {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .app-header-title {
+    font-size: 16px;
+  }
+
+  .app-header-context {
+    font-size: 12px;
   }
 }
 
