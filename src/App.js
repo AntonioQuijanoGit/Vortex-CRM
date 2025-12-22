@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Sidebar } from "./components/Sidebar";
 import { PageContent } from "./components/Page";
 import { Onboarding, HelpButton, QuickSearch, ToastContainer, ShortcutsModal, ThemeToggle } from "./components/shared";
 import { usePages } from "./hooks/usePages";
 import { useToast } from "./hooks/useToast";
 import { SHORTCUTS, matchesShortcut } from "./utils/keyboardShortcuts";
+import { STORAGE_KEYS, INTERVALS } from "./constants";
 import "./App.css";
 
 function App() {
@@ -30,15 +31,56 @@ function App() {
   const [showQuickSearch, setShowQuickSearch] = useState(false);
   const [showShortcuts, setShowShortcuts] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [sidebarMobileOpen, setSidebarMobileOpen] = useState(false);
   const { toasts, removeToast, showInfo } = useToast();
 
   useEffect(() => {
-    const hasSeenTutorial = localStorage.getItem("has-seen-tutorial");
+    const hasSeenTutorial = localStorage.getItem(STORAGE_KEYS.HAS_SEEN_TUTORIAL);
     if (!hasSeenTutorial) {
       // Small delay to let the page render
-      setTimeout(() => setShowOnboarding(true), 500);
+      const timer = setTimeout(() => setShowOnboarding(true), INTERVALS.ONBOARDING_DELAY);
+      return () => clearTimeout(timer);
     }
   }, []);
+
+  // Memoize handlers to avoid recreating on every render
+  const handleToggleSidebar = useCallback(() => {
+    setSidebarCollapsed(prev => !prev);
+  }, []);
+
+  const handleToggleMobileSidebar = useCallback(() => {
+    setSidebarMobileOpen(prev => !prev);
+  }, []);
+
+  const handleCloseMobileSidebar = useCallback(() => {
+    setSidebarMobileOpen(false);
+  }, []);
+
+  const handleShowQuickSearch = useCallback(() => {
+    setShowQuickSearch(true);
+  }, []);
+
+  const handleCloseQuickSearch = useCallback(() => {
+    setShowQuickSearch(false);
+  }, []);
+
+  const handleShowShortcuts = useCallback(() => {
+    setShowShortcuts(true);
+  }, []);
+
+  const handleCloseShortcuts = useCallback(() => {
+    setShowShortcuts(false);
+  }, []);
+
+  const handleCreatePage = useCallback(() => {
+    try {
+      addPage("", null, "page");
+      showInfo("New page created");
+    } catch (error) {
+      // Error handling - could show error toast here
+      console.error("Failed to create page:", error);
+    }
+  }, [addPage, showInfo]);
 
   // Keyboard shortcuts
   useEffect(() => {
@@ -47,8 +89,8 @@ function App() {
       if (e.target.matches("input, textarea, [contenteditable]")) {
         // Allow Escape to close modals even when in inputs
         if (e.key === "Escape") {
-          if (showQuickSearch) setShowQuickSearch(false);
-          if (showShortcuts) setShowShortcuts(false);
+          if (showQuickSearch) handleCloseQuickSearch();
+          if (showShortcuts) handleCloseShortcuts();
         }
         return;
       }
@@ -56,53 +98,79 @@ function App() {
       // Quick Search (Cmd/Ctrl + K)
       if (matchesShortcut(e, SHORTCUTS.QUICK_SEARCH)) {
         e.preventDefault();
-        setShowQuickSearch(true);
+        handleShowQuickSearch();
         return;
       }
 
       // New Page (Cmd/Ctrl + N)
       if (matchesShortcut(e, SHORTCUTS.NEW_PAGE)) {
         e.preventDefault();
-        try {
-          addPage("", null, "page");
-          showInfo("New page created");
-        } catch (error) {
-          // Error handling
-        }
+        handleCreatePage();
         return;
       }
 
       // Toggle Sidebar (Cmd/Ctrl + B)
       if (matchesShortcut(e, SHORTCUTS.TOGGLE_SIDEBAR)) {
         e.preventDefault();
-        setSidebarCollapsed(!sidebarCollapsed);
+        handleToggleSidebar();
         return;
       }
 
       // Show Shortcuts (Cmd/Ctrl + /)
       if (matchesShortcut(e, SHORTCUTS.SHOW_SHORTCUTS)) {
         e.preventDefault();
-        setShowShortcuts(true);
+        handleShowShortcuts();
         return;
       }
 
       // Escape to close modals
       if (e.key === "Escape") {
-        if (showQuickSearch) setShowQuickSearch(false);
-        if (showShortcuts) setShowShortcuts(false);
+        if (showQuickSearch) handleCloseQuickSearch();
+        if (showShortcuts) handleCloseShortcuts();
       }
     };
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [showQuickSearch, showShortcuts, sidebarCollapsed, addPage, showInfo]);
+  }, [
+    showQuickSearch,
+    showShortcuts,
+    handleShowQuickSearch,
+    handleCloseQuickSearch,
+    handleShowShortcuts,
+    handleCloseShortcuts,
+    handleToggleSidebar,
+    handleCreatePage,
+  ]);
 
   return (
     <div className="app-layout">
+      {/* Mobile hamburger button */}
+      <button
+        className="mobile-menu-button"
+        onClick={handleToggleMobileSidebar}
+        aria-label="Toggle sidebar"
+        aria-expanded={sidebarMobileOpen}
+      >
+        <span className="mobile-menu-icon">☰</span>
+      </button>
+
+      {/* Mobile overlay */}
+      {sidebarMobileOpen && (
+        <div
+          className="sidebar-mobile-overlay"
+          onClick={handleCloseMobileSidebar}
+          aria-hidden="true"
+        />
+      )}
+
       <Sidebar
         pages={getRootPages()}
         activePage={activePage}
-        onPageSelect={setActivePage}
+        onPageSelect={(pageId) => {
+          setActivePage(pageId);
+          setSidebarMobileOpen(false); // Close mobile sidebar on page select
+        }}
         onAddPage={addPage}
         onUpdatePage={updatePage}
         onDeletePage={deletePage}
@@ -111,6 +179,8 @@ function App() {
         getChildren={getChildren}
         isCollapsed={sidebarCollapsed}
         onToggleCollapse={setSidebarCollapsed}
+        isMobileOpen={sidebarMobileOpen}
+        onCloseMobile={handleCloseMobileSidebar}
       />
       <main className="app-main">
         <PageContent 
@@ -126,13 +196,13 @@ function App() {
       {showQuickSearch && (
         <QuickSearch
           onPageSelect={setActivePage}
-          onClose={() => setShowQuickSearch(false)}
+          onClose={handleCloseQuickSearch}
         />
       )}
       <ThemeToggle />
       <HelpButton onNavigate={setActivePage} />
       {showShortcuts && (
-        <ShortcutsModal onClose={() => setShowShortcuts(false)} />
+        <ShortcutsModal onClose={handleCloseShortcuts} />
       )}
       <ToastContainer toasts={toasts} onRemove={removeToast} />
     </div>

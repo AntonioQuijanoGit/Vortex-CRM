@@ -118,5 +118,42 @@
 @media (max-width: 768px) {
   .board-view {
     grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+  }
+
+  .board-column {
+    padding: var(--spacing-md);
+  }
+
+  .board-column-header {
+    padding: var(--spacing-sm);
+    margin-bottom: var(--spacing-sm);
+  }
+
+  .board-column-title {
+    font-size: var(--font-size-base);
+  }
+
+  .board-card {
+    padding: var(--spacing-sm);
+    margin-bottom: var(--spacing-xs);
+  }
+
+  .board-card-title {
+    font-size: var(--font-size-sm);
+  }
+}
+
+@media (max-width: 480px) {
+  .board-view {
+    gap: var(--spacing-sm);
+  }
+
+  .board-column {
+    padding: var(--spacing-sm);
+  }
+
+  .board-card {
+    padding: var(--spacing-xs) var(--spacing-sm);
   }
 }

@@ -297,15 +297,50 @@
   .table-view-wrapper {
     border: none;
     box-shadow: none;
+    overflow-x: auto;
+  }
+
+  .data-table {
+    min-width: 600px;
   }
 
   .data-table th,
   .data-table td {
     padding: var(--spacing-xs) var(--spacing-sm);
-    font-size: 12px;
+    font-size: var(--font-size-xs);
   }
 
   .col-title {
-    min-width: 200px;
+    min-width: 150px;
+  }
+
+  .table-checkbox {
+    width: 20px;
+    height: 20px;
+  }
+
+  .type-badge {
+    font-size: var(--font-size-tiny);
+    padding: 2px 6px;
+  }
+}
+
+@media (max-width: 480px) {
+  .table-view-wrapper {
+    padding: var(--spacing-xs);
+  }
+
+  .data-table {
+    min-width: 500px;
+  }
+
+  .data-table th,
+  .data-table td {
+    padding: var(--spacing-xxs) var(--spacing-xs);
+    font-size: 10px;
+  }
+
+  .col-title {
+    min-width: 120px;
   }
 }

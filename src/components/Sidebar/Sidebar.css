@@ -217,7 +217,7 @@
     inset: 0;
     width: 100%;
     max-width: 300px;
-    z-index: 1000;
+    z-index: var(--z-sidebar);
     transform: translateX(-100%);
     transition: transform var(--transition-base);
     box-shadow: var(--shadow-lg);
@@ -225,5 +225,29 @@
 
   .notion-sidebar:not(.collapsed) {
     transform: translateX(0);
+  }
+
+  .sidebar-header {
+    padding: var(--spacing-sm);
+    min-height: 48px;
+  }
+
+  .sidebar-content {
+    padding: var(--spacing-xs) var(--spacing-sm);
+  }
+
+  .page-item-content {
+    padding: var(--spacing-xxs) var(--spacing-xs);
+    min-height: 28px;
+  }
+}
+
+@media (max-width: 480px) {
+  .notion-sidebar {
+    max-width: 100%;
+  }
+
+  .workspace-name {
+    font-size: var(--font-size-xs);
   }
 }

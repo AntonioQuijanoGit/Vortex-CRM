@@ -1673,12 +1673,43 @@
 }
 
 @media (max-width: 480px) {
+  .todoContainer {
+    padding: var(--spacing-sm);
+  }
+
+  .todoCreateForm {
+    padding: var(--spacing-md);
+  }
+
   .todoHeader h1 {
-    font-size: 28px;
+    font-size: 24px;
   }
 
   .todoTitle {
-    font-size: 18px;
+    font-size: var(--font-size-base);
+  }
+
+  .viewSelector {
+    flex-wrap: wrap;
+    gap: var(--spacing-xs);
+  }
+
+  .viewButton {
+    font-size: var(--font-size-xs);
+    padding: var(--spacing-xs) var(--spacing-sm);
+  }
+
+  .todo {
+    padding: var(--spacing-sm);
+  }
+
+  .todoInput {
+    font-size: var(--font-size-sm);
+  }
+
+  .buttonCreate {
+    padding: var(--spacing-xs) var(--spacing-md);
+    font-size: var(--font-size-sm);
   }
 
   .calendar {

@@ -18,17 +18,20 @@ export function safeGetItem(key, defaultValue = null) {
 export function safeSetItem(key, value) {
   try {
     localStorage.setItem(key, JSON.stringify(value));
-    return true;
+    return { success: true, error: null };
   } catch (error) {
-    // Silently fail in production, log in development
+    // Log error in development
     if (process.env.NODE_ENV === 'development') {
       console.error(`Error writing to localStorage (${key}):`, error);
     }
+    
     // Check if it's a quota exceeded error
     if (error.name === "QuotaExceededError" || error.code === 22) {
-      throw new Error("Storage quota exceeded. Please free up some space.");
+      const quotaError = new Error("Storage quota exceeded. Please free up some space.");
+      return { success: false, error: quotaError };
     }
-    return false;
+    
+    return { success: false, error };
   }
 }
 

@@ -14,7 +14,9 @@ export default function Sidebar({
   isExpanded,
   getChildren,
   isCollapsed: externalCollapsed,
-  onToggleCollapse
+  onToggleCollapse,
+  isMobileOpen = false,
+  onCloseMobile
 }) {
   const [internalCollapsed, setInternalCollapsed] = useState(false);
   const isCollapsed = externalCollapsed !== undefined ? externalCollapsed : internalCollapsed;
@@ -40,9 +42,19 @@ export default function Sidebar({
 
   return (
     <nav
-      className={`notion-sidebar ${isCollapsed ? "collapsed" : ""}`}
+      className={`notion-sidebar ${isCollapsed ? "collapsed" : ""} ${isMobileOpen ? "mobile-open" : ""}`}
       aria-label="Workspace navigation"
     >
+      {/* Mobile close button */}
+      {isMobileOpen && (
+        <button
+          className="sidebar-mobile-close"
+          onClick={onCloseMobile}
+          aria-label="Close sidebar"
+        >
+          ×
+        </button>
+      )}
       <div className="sidebar-scroll">
         <div className="sidebar-header">
           <button

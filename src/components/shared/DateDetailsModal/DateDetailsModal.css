@@ -4,6 +4,48 @@
   overflow-y: auto;
 }
 
+@media (max-width: 768px) {
+  .date-details-modal {
+    max-width: 100%;
+    max-height: 85vh;
+    margin: var(--spacing-sm);
+  }
+
+  .date-details-content {
+    padding: var(--spacing-sm) 0;
+  }
+
+  .date-details-section {
+    margin-bottom: var(--spacing-md);
+  }
+
+  .date-details-section-title {
+    font-size: var(--font-size-base);
+    margin-bottom: var(--spacing-xs);
+  }
+
+  .date-details-item {
+    padding: var(--spacing-xs) var(--spacing-sm);
+  }
+
+  .date-details-text strong {
+    font-size: var(--font-size-sm);
+  }
+
+  .date-details-meta {
+    font-size: 10px;
+  }
+
+  .event-form-actions {
+    flex-direction: column;
+    gap: var(--spacing-xs);
+  }
+
+  .event-form-actions button {
+    width: 100%;
+  }
+}
+
 .date-details-content {
   padding: var(--spacing-md) 0;
 }

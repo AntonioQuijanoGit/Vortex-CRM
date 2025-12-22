@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import Todo from "./todo";
 import TodoForm from "./TodoForm";
 import TodoControls from "./TodoControls";
@@ -46,7 +46,12 @@ export default function TodoApp({ pageId, viewType: initialViewType, initialType
     }
   }, [initialTypeFilter]);
 
-  function handleAddTodo() {
+  const handleAddTodo = useCallback(() => {
+    if (!title.trim()) {
+      showError("Please enter a title for your task or habit.");
+      return;
+    }
+
     try {
       // Create as the selected type
       addTodo(title, selectedType);
@@ -56,19 +61,50 @@ export default function TodoApp({ pageId, viewType: initialViewType, initialType
         : "Task created successfully";
       showSuccess(successMessage);
     } catch (error) {
-      showError(error.message || "Failed to create item. Please try again.");
+      // Show user-friendly error message
+      const errorMessage = error.message || "Failed to create item. Please try again.";
+      showError(errorMessage);
+      console.error("Error creating todo:", error);
     }
-  }
+  }, [title, selectedType, addTodo, showSuccess, showError]);
 
-  const filteredTodos = applyFilters(todos, {
-    typeFilter,
-    dateFilter: filter,
-    searchQuery,
-  });
-  const completedCount = todos.filter((t) => t.completed).length;
-  const habits = todos.filter((t) => t.type === "habit");
-  const habitsCount = habits.length;
-  const activeStreaks = habits.filter((h) => (h.streak || 0) > 0).length;
+  // Memoize filtered todos to avoid recalculating on every render
+  const filteredTodos = useMemo(() => {
+    return applyFilters(todos, {
+      typeFilter,
+      dateFilter: filter,
+      searchQuery,
+    });
+  }, [todos, typeFilter, filter, searchQuery]);
+
+  // Memoize statistics calculations
+  const { completedCount, habits, habitsCount, activeStreaks } = useMemo(() => {
+    const completed = todos.filter((t) => t.completed).length;
+    const habitList = todos.filter((t) => t.type === "habit");
+    return {
+      completedCount: completed,
+      habits: habitList,
+      habitsCount: habitList.length,
+      activeStreaks: habitList.filter((h) => (h.streak || 0) > 0).length,
+    };
+  }, [todos]);
+
+  // Memoize handlers to avoid recreating on every render
+  const handleUpdateTodo = useCallback((id, value) => {
+    updateTodo(id, value);
+    showSuccess("Task updated");
+  }, [updateTodo, showSuccess]);
+
+  const handleDeleteTodo = useCallback((id) => {
+    deleteTodo(id);
+    showSuccess("Task deleted");
+  }, [deleteTodo, showSuccess]);
+
+  const handleUpdateProperties = useCallback((id, props) => {
+    updateTodoProperties(id, props);
+    const newType = props.type === "habit" ? "habit" : "task";
+    showSuccess(`Converted to ${newType}`);
+  }, [updateTodoProperties, showSuccess]);
 
   return (
     <div
@@ -185,20 +221,10 @@ export default function TodoApp({ pageId, viewType: initialViewType, initialType
                   key={item.id}
                   item={item}
                   index={index}
-                  onUpdate={(id, value) => {
-                    updateTodo(id, value);
-                    showSuccess("Task updated");
-                  }}
-                  onDelete={(id) => {
-                    deleteTodo(id);
-                    showSuccess("Task deleted");
-                  }}
+                  onUpdate={handleUpdateTodo}
+                  onDelete={handleDeleteTodo}
                   onToggleComplete={toggleComplete}
-                  onUpdateProperties={(id, props) => {
-                    updateTodoProperties(id, props);
-                    const newType = props.type === "habit" ? "habit" : "task";
-                    showSuccess(`Converted to ${newType}`);
-                  }}
+                  onUpdateProperties={handleUpdateProperties}
                 />
               ))}
             </div>

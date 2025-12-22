@@ -37,6 +37,38 @@
   overflow: hidden;
 }
 
+@media (max-width: 768px) {
+  .quick-search-overlay {
+    padding-top: 10vh;
+    padding: var(--spacing-md);
+  }
+
+  .quick-search-modal {
+    max-width: 100%;
+    max-height: 85vh;
+  }
+
+  .quick-search-header {
+    padding: var(--spacing-sm);
+  }
+
+  .quick-search-input {
+    font-size: var(--font-size-base);
+  }
+
+  .quick-search-results {
+    padding: var(--spacing-xs);
+  }
+
+  .quick-search-result {
+    padding: var(--spacing-sm);
+  }
+
+  .result-title {
+    font-size: var(--font-size-sm);
+  }
+}
+
 @keyframes slideDown {
   from {
     opacity: 0;

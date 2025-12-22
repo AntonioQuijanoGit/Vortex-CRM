@@ -3,13 +3,14 @@ import { resetDailyHabits, calculateStreak, checkCompletedYesterday } from "../u
 import { safeGetItem, safeSetItem } from "../utils/storage";
 import { validateTitle } from "../utils/validation";
 import { logger } from "../utils/logger";
+import { STORAGE_KEYS, INTERVALS } from "../constants";
 
 /**
  * Custom hook for managing todos with localStorage persistence
  * @param {string} pageId - Optional page ID to store todos per page
  */
 export function useTodos(pageId = null) {
-  const storageKey = pageId ? `todos-${pageId}` : "todos";
+  const storageKey = STORAGE_KEYS.TODOS(pageId);
   
   const [todos, setTodos] = useState(() => {
     const savedTodos = safeGetItem(storageKey, []);
@@ -33,13 +34,13 @@ export function useTodos(pageId = null) {
   useEffect(() => {
     const checkDayChange = setInterval(() => {
       const today = new Date().toDateString();
-      const lastReset = safeGetItem("lastReset", null);
+      const lastReset = safeGetItem(STORAGE_KEYS.LAST_RESET, null);
 
       if (lastReset !== today) {
-        safeSetItem("lastReset", today);
+        safeSetItem(STORAGE_KEYS.LAST_RESET, today);
         setTodos((prev) => resetDailyHabits(prev));
       }
-    }, 60000); // Check every minute
+    }, INTERVALS.DAY_CHECK);
 
     return () => clearInterval(checkDayChange);
   }, []);

@@ -3,14 +3,52 @@ import { Icons, normalizeIcon } from "../utils/icons";
 import { safeGetItem, safeSetItem } from "../utils/storage";
 import { validateTitle } from "../utils/validation";
 import { logger } from "../utils/logger";
+import { STORAGE_KEYS, DEFAULTS } from "../constants";
+
+/**
+ * Validates page structure to prevent crashes from corrupt data
+ */
+function validatePageStructure(page) {
+  return (
+    page &&
+    typeof page === 'object' &&
+    typeof page.id === 'string' &&
+    page.id.length > 0 &&
+    typeof page.title === 'string' &&
+    Array.isArray(page.content)
+  );
+}
+
+/**
+ * Validates array of pages
+ */
+function validatePagesArray(pages) {
+  if (!Array.isArray(pages)) return false;
+  return pages.every(validatePageStructure);
+}
 
 /**
  * Custom hook for managing hierarchical pages (Notion-style)
  */
 export function usePages() {
   const [pages, setPages] = useState(() => {
-    const savedPages = safeGetItem("notion-pages", null);
+    const savedPages = safeGetItem(STORAGE_KEYS.PAGES, null);
     if (savedPages && savedPages.length > 0) {
+      // Validate data structure
+      if (!validatePagesArray(savedPages)) {
+        logger.warn("Invalid pages data structure, using default");
+        return [
+          {
+            id: "home",
+            title: "Home",
+            icon: Icons.page,
+            parentId: null,
+            type: "page",
+            createdAt: new Date().toISOString(),
+            content: [],
+          },
+        ];
+      }
       // Normalize icons in saved pages
       return savedPages.map(page => ({
         ...page,
@@ -32,17 +70,28 @@ export function usePages() {
   });
 
   const [activePage, setActivePage] = useState(() => {
-    return safeGetItem("notion-active-page", "home");
+    const saved = safeGetItem(STORAGE_KEYS.ACTIVE_PAGE, DEFAULTS.ACTIVE_PAGE);
+    // Validate that the saved page exists
+    const savedPages = safeGetItem(STORAGE_KEYS.PAGES, []);
+    if (saved && Array.isArray(savedPages)) {
+      const pageExists = savedPages.some(p => p.id === saved);
+      if (!pageExists) {
+        return DEFAULTS.ACTIVE_PAGE;
+      }
+    }
+    return saved;
   });
 
   const [expandedPages, setExpandedPages] = useState(() => {
-    return safeGetItem("notion-expanded-pages", []);
+    const saved = safeGetItem(STORAGE_KEYS.EXPANDED_PAGES, []);
+    // Validate it's an array
+    return Array.isArray(saved) ? saved : [];
   });
 
   // Save to localStorage
   useEffect(() => {
     try {
-      safeSetItem("notion-pages", pages);
+      safeSetItem(STORAGE_KEYS.PAGES, pages);
     } catch (error) {
       logger.error("Failed to save pages:", error);
     }
@@ -50,7 +99,7 @@ export function usePages() {
 
   useEffect(() => {
     try {
-      safeSetItem("notion-active-page", activePage);
+      safeSetItem(STORAGE_KEYS.ACTIVE_PAGE, activePage);
     } catch (error) {
       logger.error("Failed to save active page:", error);
     }
@@ -58,7 +107,7 @@ export function usePages() {
 
   useEffect(() => {
     try {
-      safeSetItem("notion-expanded-pages", expandedPages);
+      safeSetItem(STORAGE_KEYS.EXPANDED_PAGES, expandedPages);
     } catch (error) {
       logger.error("Failed to save expanded pages:", error);
     }
@@ -81,7 +130,7 @@ export function usePages() {
 
   // Add new page
   const addPage = (title, parentId = null, type = "page", icon = Icons.page) => {
-    const pageTitle = title.trim() || "Untitled";
+    const pageTitle = title.trim() || DEFAULTS.PAGE_TITLE;
     const validation = validateTitle(pageTitle);
     if (!validation.valid) {
       throw new Error(validation.error);
@@ -112,7 +161,7 @@ export function usePages() {
   const updatePage = (pageId, updates) => {
     // Validate title if it's being updated
     if (updates.title !== undefined) {
-      const pageTitle = updates.title.trim() || "Untitled";
+      const pageTitle = updates.title.trim() || DEFAULTS.PAGE_TITLE;
       const validation = validateTitle(pageTitle);
       if (!validation.valid) {
         throw new Error(validation.error);
@@ -135,8 +184,8 @@ export function usePages() {
 
     // Check for todos in this page
     try {
-      const todos = safeGetItem(`todos-${pageId}`, []);
-      if (todos.length > 0) return true;
+      const todos = safeGetItem(STORAGE_KEYS.TODOS(pageId), []);
+      if (Array.isArray(todos) && todos.length > 0) return true;
     } catch (error) {
       logger.error("Error checking todos for page:", error);
     }
@@ -165,9 +214,10 @@ export function usePages() {
 
     deleteRecursive(pageId);
 
-    // If we deleted the active page, go to first page
+    // If we deleted the active page, go to home or first available page
     if (activePage === pageId) {
-      setActivePage(pages[0]?.id || null);
+      const remainingPages = pages.filter(p => p.id !== pageId);
+      setActivePage(remainingPages[0]?.id || DEFAULTS.ACTIVE_PAGE);
     }
   };
 

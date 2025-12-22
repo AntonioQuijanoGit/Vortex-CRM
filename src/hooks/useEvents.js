@@ -1,28 +1,49 @@
-import { useState, useEffect } from "react";
-import { safeGetItem, safeSetItem } from "../utils/storage";
+import { useCallback } from "react";
+import { useLocalStorage } from "./useLocalStorage";
 import { validateTitle } from "../utils/validation";
-import { logger } from "../utils/logger";
+import { STORAGE_KEYS } from "../constants";
+
+/**
+ * Validates event structure
+ */
+function validateEventStructure(event) {
+  return (
+    event &&
+    typeof event === 'object' &&
+    typeof event.id === 'string' &&
+    typeof event.title === 'string' &&
+    typeof event.date === 'string'
+  );
+}
+
+/**
+ * Validates events array
+ */
+function validateEventsArray(events) {
+  if (!Array.isArray(events)) return false;
+  return events.every(validateEventStructure);
+}
 
 /**
  * Custom hook for managing calendar events
  * @param {string} pageId - Optional page ID to store events per page
  */
 export function useEvents(pageId = null) {
-  const storageKey = pageId ? `events-${pageId}` : "events";
+  const storageKey = STORAGE_KEYS.EVENTS(pageId);
   
-  const [events, setEvents] = useState(() => {
-    return safeGetItem(storageKey, []);
-  });
+  // Use the generic useLocalStorage hook with validation
+  const [events, setEvents] = useLocalStorage(storageKey, [], validateEventsArray);
 
-  useEffect(() => {
-    try {
-      safeSetItem(storageKey, events);
-    } catch (error) {
-      logger.error("Failed to save events:", error);
-    }
-  }, [events, storageKey]);
+  // Helper function to sort events by date/time
+  const sortEvents = useCallback((eventsList) => {
+    return [...eventsList].sort((a, b) => {
+      const dateA = new Date(`${a.date} ${a.time || "00:00"}`);
+      const dateB = new Date(`${b.date} ${b.time || "00:00"}`);
+      return dateA - dateB;
+    });
+  }, []);
 
-  const addEvent = (event) => {
+  const addEvent = useCallback((event) => {
     const validation = validateTitle(event.title);
     if (!validation.valid) {
       throw new Error(validation.error);
@@ -37,15 +58,12 @@ export function useEvents(pageId = null) {
       color: event.color || "var(--color-accent)",
       createdAt: new Date().toISOString(),
     };
-    setEvents((prev) => [...prev, newEvent].sort((a, b) => {
-      const dateA = new Date(`${a.date} ${a.time || "00:00"}`);
-      const dateB = new Date(`${b.date} ${b.time || "00:00"}`);
-      return dateA - dateB;
-    }));
+    
+    setEvents((prev) => sortEvents([...prev, newEvent]));
     return newEvent.id;
-  };
+  }, [setEvents, sortEvents]);
 
-  const updateEvent = (id, updates) => {
+  const updateEvent = useCallback((id, updates) => {
     // Validate title if it's being updated
     if (updates.title !== undefined) {
       const validation = validateTitle(updates.title);
@@ -55,24 +73,21 @@ export function useEvents(pageId = null) {
       updates.title = updates.title.trim();
     }
 
-    setEvents((prev) =>
-      prev.map((event) =>
+    setEvents((prev) => {
+      const updated = prev.map((event) =>
         event.id === id ? { ...event, ...updates } : event
-      ).sort((a, b) => {
-        const dateA = new Date(`${a.date} ${a.time || "00:00"}`);
-        const dateB = new Date(`${b.date} ${b.time || "00:00"}`);
-        return dateA - dateB;
-      })
-    );
-  };
+      );
+      return sortEvents(updated);
+    });
+  }, [setEvents, sortEvents]);
 
-  const deleteEvent = (id) => {
+  const deleteEvent = useCallback((id) => {
     setEvents((prev) => prev.filter((event) => event.id !== id));
-  };
+  }, [setEvents]);
 
-  const getEventsForDate = (dateString) => {
+  const getEventsForDate = useCallback((dateString) => {
     return events.filter((event) => event.date === dateString);
-  };
+  }, [events]);
 
   return {
     events,

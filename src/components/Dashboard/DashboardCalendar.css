@@ -594,3 +594,73 @@
   color: var(--color-muted);
   font-size: 14px;
 }
+
+@media (max-width: 768px) {
+  .dashboard-calendar {
+    padding: var(--spacing-md);
+    max-width: 100%;
+  }
+
+  .dashboard-calendar-header {
+    padding-bottom: var(--spacing-sm);
+    margin-bottom: var(--spacing-sm);
+  }
+
+  .dashboard-calendar-title {
+    font-size: var(--font-size-lg);
+  }
+
+  .calendar-nav {
+    gap: var(--spacing-xs);
+  }
+
+  .calendar-nav-btn {
+    width: 32px;
+    height: 32px;
+    font-size: var(--font-size-sm);
+  }
+
+  .calendar-month-year {
+    font-size: var(--font-size-base);
+  }
+
+  .dashboard-cal-grid {
+    gap: var(--spacing-xs);
+    padding: var(--spacing-sm) 0;
+  }
+
+  .dashboard-cal-day {
+    min-height: 40px;
+    font-size: var(--font-size-sm);
+  }
+
+  .dashboard-cal-day-number {
+    font-size: var(--font-size-xs);
+  }
+
+  .dashboard-cal-indicator {
+    width: 6px;
+    height: 6px;
+    font-size: 7px;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-calendar {
+    padding: var(--spacing-sm);
+  }
+
+  .dashboard-cal-day {
+    min-height: 35px;
+    padding: var(--spacing-xxs);
+  }
+
+  .dashboard-cal-day-number {
+    font-size: 10px;
+  }
+
+  .calendar-nav-btn {
+    width: 28px;
+    height: 28px;
+  }
+}

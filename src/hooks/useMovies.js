@@ -1,12 +1,20 @@
 import { useState, useEffect } from "react";
 import { safeGetItem, safeSetItem } from "../utils/storage";
+import { validateTitle } from "../utils/validation";
 import { logger } from "../utils/logger";
+import { STORAGE_KEYS } from "../constants";
 
 export function useMovies(pageId) {
-  const storageKey = pageId ? `movies-${pageId}` : "movies";
+  const storageKey = STORAGE_KEYS.MOVIES(pageId);
   
   const [movies, setMovies] = useState(() => {
-    return safeGetItem(storageKey, []);
+    const saved = safeGetItem(storageKey, []);
+    // Validate data structure
+    if (!Array.isArray(saved)) {
+      logger.warn("Invalid movies data structure, using empty array");
+      return [];
+    }
+    return saved;
   });
 
   useEffect(() => {
@@ -18,6 +26,12 @@ export function useMovies(pageId) {
   }, [movies, storageKey]);
 
   const addMovie = (title) => {
+    // Validate title consistently with other hooks
+    const validation = validateTitle(title);
+    if (!validation.valid) {
+      throw new Error(validation.error);
+    }
+
     const newMovie = {
       id: crypto.randomUUID(),
       title: title.trim(),

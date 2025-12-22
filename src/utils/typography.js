@@ -26,3 +26,8 @@ export const FontSizes = {
   displayLarge: "clamp(32px, 6vw, 48px)",
 };
 
+
+
+
+
+
