@@ -1,3 +1,5 @@
+import React from 'react';
+
 /**
  * Accessible and clear icon system
  * Icons designed to be intuitive and clearly communicate meaning
@@ -164,5 +166,20 @@ export const commonIcons = [
 export function normalizeIcon(icon) {
   if (!icon) return Icons.page;
   return iconMap[icon] || icon;
+}
+
+/**
+ * Renders an icon with optional size
+ * @param {string} icon - Icon string to render
+ * @param {number} size - Optional size in pixels
+ * @returns {string|JSX.Element} - Rendered icon
+ */
+export function renderIcon(icon, size = null) {
+  if (!icon) return null;
+  const normalized = normalizeIcon(icon);
+  if (size) {
+    return <span style={{ fontSize: `${size}px`, display: 'inline-block' }}>{normalized}</span>;
+  }
+  return normalized;
 }
 
