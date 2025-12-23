@@ -27,7 +27,8 @@
 
 .app-header-content {
   width: 100%;
-  max-width: 100%;
+  max-width: 1600px;
+  margin: 0 auto;
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
@@ -60,6 +61,7 @@
 .app-header-right {
   display: flex;
   align-items: center;
+  justify-content: flex-end;
   gap: var(--spacing-sm);
 }
 
@@ -101,7 +103,7 @@
 
 @media (max-width: 768px) {
   .app-header {
-    padding: 0 var(--spacing-md);
+    padding: 0 var(--spacing-lg);
     height: 48px;
   }
 

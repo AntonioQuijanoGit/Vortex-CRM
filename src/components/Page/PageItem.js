@@ -96,17 +96,29 @@ export default function PageItem({
     
     // Don't hide if moving to options buttons or preview
     const relatedTarget = e.relatedTarget;
-    const pageOptions = e.currentTarget.querySelector('.page-options');
-    const preview = document.querySelector('.page-preview');
     
-    if (relatedTarget && relatedTarget instanceof Node) {
-      if (pageOptions && pageOptions.contains(relatedTarget)) {
+    // Verify relatedTarget is a valid Node before using contains
+    if (relatedTarget && relatedTarget instanceof Node && e.currentTarget) {
+      const pageOptions = e.currentTarget.querySelector('.page-options');
+      const preview = document.querySelector('.page-preview');
+      
+      // Check if moving to page options
+      if (pageOptions && pageOptions instanceof Node && pageOptions.contains(relatedTarget)) {
         return;
       }
-      if (preview && preview.contains(relatedTarget)) {
+      
+      // Check if moving to preview
+      if (preview && preview instanceof Node && preview.contains(relatedTarget)) {
+        return;
+      }
+      
+      // Check if moving to preview container
+      const previewContainer = document.querySelector('.page-preview-container');
+      if (previewContainer && previewContainer instanceof Node && previewContainer.contains(relatedTarget)) {
         return;
       }
     }
+    
     setShowOptions(false);
   };
 
@@ -192,16 +204,7 @@ export default function PageItem({
             ) : (
               <>
                 <span className="page-icon">
-                  {(() => {
-                    // Debug: log what icon we're rendering
-                    const iconToRender = page.icon || Icons.page;
-                    const iconKey = typeof iconToRender === 'string' ? iconToRender : 
-                                   (iconToRender === Icons.habit ? 'habit' :
-                                    iconToRender === Icons.page ? 'page' :
-                                    iconToRender === Icons.database ? 'database' : 'unknown');
-                    console.log(`[PageItem] Rendering icon for "${page.title}":`, iconKey, iconToRender);
-                    return renderIcon(iconToRender, 16);
-                  })()}
+                  {renderIcon(page.icon || Icons.page, 16)}
                 </span>
                 <span className="page-title">{page.title}</span>
                 {todosCount > 0 && (

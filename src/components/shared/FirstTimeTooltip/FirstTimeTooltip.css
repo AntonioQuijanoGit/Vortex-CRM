@@ -1,0 +1,136 @@
+.first-time-tooltip {
+  position: absolute;
+  z-index: 10000;
+  animation: tooltipFadeIn 0.3s ease-out;
+  pointer-events: none;
+}
+
+.tooltip-content-wrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  background: var(--color-accent);
+  color: white;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.4;
+  max-width: 280px;
+  pointer-events: all;
+  white-space: normal;
+}
+
+.tooltip-icon {
+  flex-shrink: 0;
+  opacity: 0.9;
+}
+
+.tooltip-message {
+  margin: 0;
+  flex: 1;
+}
+
+.tooltip-close-btn {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  border: none;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background var(--transition-base);
+  padding: 0;
+}
+
+.tooltip-close-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.tooltip-arrow {
+  width: 0;
+  height: 0;
+  position: absolute;
+  border-style: solid;
+}
+
+.arrow-top {
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 6px 6px 0 6px;
+  border-color: var(--color-accent) transparent transparent transparent;
+}
+
+.arrow-bottom {
+  top: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 0 6px 6px 6px;
+  border-color: transparent transparent var(--color-accent) transparent;
+}
+
+.arrow-left {
+  right: -6px;
+  top: 50%;
+  transform: translateY(-50%);
+  border-width: 6px 0 6px 6px;
+  border-color: transparent transparent transparent var(--color-accent);
+}
+
+.arrow-right {
+  left: -6px;
+  top: 50%;
+  transform: translateY(-50%);
+  border-width: 6px 6px 6px 0;
+  border-color: transparent var(--color-accent) transparent transparent;
+}
+
+/* Position classes */
+.tooltip-top {
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.tooltip-bottom {
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.tooltip-left {
+  right: calc(100% + 8px);
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.tooltip-right {
+  left: calc(100% + 8px);
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+@keyframes tooltipFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (max-width: 768px) {
+  .tooltip-content-wrapper {
+    max-width: calc(100vw - 32px);
+    font-size: 12px;
+  }
+}
+

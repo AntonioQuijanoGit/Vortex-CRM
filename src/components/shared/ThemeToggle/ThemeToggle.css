@@ -2,6 +2,8 @@
   position: relative;
   width: 36px;
   height: 36px;
+  min-width: 36px;
+  min-height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -12,7 +14,9 @@
   cursor: pointer;
   transition: all var(--transition-base);
   padding: 0;
+  margin: 0;
   flex-shrink: 0;
+  box-sizing: border-box;
 }
 
 .theme-toggle:hover {
@@ -44,6 +48,8 @@
   .theme-toggle {
     width: 32px;
     height: 32px;
+    min-width: 32px;
+    min-height: 32px;
   }
   
   .theme-icon {

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { PageItem } from "../Page";
 import { Icons, renderIcon } from "../../utils/icons";
 import { Tooltip } from "../shared";
+import { useIsMobile } from "../../hooks/useIsMobile";
 import "./Sidebar.css";
 
 export default function Sidebar({
@@ -22,10 +23,10 @@ export default function Sidebar({
 }) {
   const [internalCollapsed, setInternalCollapsed] = useState(false);
   const isCollapsed = externalCollapsed !== undefined ? externalCollapsed : internalCollapsed;
-  const isMobileWidth = typeof window !== "undefined" && window.innerWidth <= 768;
+  const isMobile = useIsMobile();
   const handleToggleCollapse = () => {
     // Allow collapsing only on mobile
-    if (isMobileWidth) {
+    if (isMobile) {
       if (onToggleCollapse) {
         onToggleCollapse(!isCollapsed);
       } else {
@@ -44,7 +45,11 @@ export default function Sidebar({
 
   const handleAddPage = () => {
     if (newPageTitle.trim()) {
-      onAddPage(newPageTitle, null, "page");
+      onAddPage(newPageTitle.trim(), null, "page");
+      setNewPageTitle("");
+      setShowNewPageInput(false);
+    } else {
+      // Cancel if no title entered
       setNewPageTitle("");
       setShowNewPageInput(false);
     }
@@ -129,7 +134,7 @@ export default function Sidebar({
                     className="nav-item"
                     onClick={() => {
                       onShowFocusTimer();
-                      if (onToggleCollapse && isMobileWidth) onToggleCollapse(true);
+                      if (onToggleCollapse && isMobile) onToggleCollapse(true);
                     }}
                   >
                     <span className="nav-icon">{renderIcon(Icons.timer, 18)}</span>
@@ -141,7 +146,7 @@ export default function Sidebar({
                     className="nav-item"
                     onClick={() => {
                       onShowGoals();
-                      if (onToggleCollapse && isMobileWidth) onToggleCollapse(true);
+                      if (onToggleCollapse && isMobile) onToggleCollapse(true);
                     }}
                   >
                     <span className="nav-icon">{renderIcon(Icons.target, 18)}</span>
@@ -153,7 +158,7 @@ export default function Sidebar({
                     className="nav-item"
                     onClick={() => {
                       onShowAchievements();
-                      if (onToggleCollapse && isMobileWidth) onToggleCollapse(true);
+                      if (onToggleCollapse && isMobile) onToggleCollapse(true);
                     }}
                   >
                     <span className="nav-icon">{renderIcon(Icons.trophy, 18)}</span>
@@ -196,7 +201,19 @@ export default function Sidebar({
                             setNewPageTitle("");
                           }
                         }}
-                        onBlur={handleAddPage}
+                        onBlur={(e) => {
+                          // Use setTimeout to check if focus moved to cancel button
+                          setTimeout(() => {
+                            // Only create if there's actual content
+                            if (newPageTitle.trim() && document.activeElement !== e.target) {
+                              handleAddPage();
+                            } else if (!newPageTitle.trim()) {
+                              // Cancel if empty
+                              setShowNewPageInput(false);
+                              setNewPageTitle("");
+                            }
+                          }, 150);
+                        }}
                         autoFocus
                         aria-label="New page title"
                       />

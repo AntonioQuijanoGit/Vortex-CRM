@@ -68,21 +68,15 @@ export function usePages() {
         // Convert string key to component
         if (typeof page.icon === 'string') {
           iconComponent = Icons[page.icon];
-          const availableKeys = Object.keys(Icons).slice(0, 5).join(', ');
-          console.log(`[usePages] Converting icon for "${page.title}": "${page.icon}" ->`, iconComponent ? 'found' : 'NOT FOUND', `(available keys include: ${availableKeys}...)`);
           if (!iconComponent) {
-            console.warn(`[usePages] Icon key "${page.icon}" not found in Icons, using page fallback`);
+            if (process.env.NODE_ENV === 'development') {
+              console.warn(`[usePages] Icon key "${page.icon}" not found in Icons, using page fallback`);
+            }
             iconComponent = Icons.page;
-          } else {
-            const componentDisplayName = iconComponent.displayName || (typeof iconComponent === 'function' ? iconComponent.name : 'unknown');
-            console.log(`[usePages] Icon component for "${page.title}":`, componentDisplayName);
           }
           // If all icons are same, force recovery for variety
           if (allSame) {
-            const recovered = recoverIconFromPage(page);
-            const recoveredDisplayName = recovered.displayName || (typeof recovered === 'function' ? recovered.name : 'unknown');
-            console.log(`[usePages] Recovering icon for "${page.title}" (allSame=true):`, recoveredDisplayName);
-            iconComponent = recovered;
+            iconComponent = recoverIconFromPage(page);
           }
         } 
         // If it's already a component (function or forwardRef), use it
@@ -99,11 +93,7 @@ export function usePages() {
           iconComponent = Icons.page;
         }
         
-        // Debug: verify the icon component
-        const finalKey = iconComponent === Icons.habit ? 'habit' :
-                        iconComponent === Icons.page ? 'page' :
-                        iconComponent === Icons.database ? 'database' : 'other';
-        console.log(`[usePages] Final icon for "${page.title}":`, finalKey);
+        // Icon is now properly normalized - no debug log needed in production
         
         return {
           ...page,
@@ -213,12 +203,12 @@ export function usePages() {
 
   // Add new page
   const addPage = (title, parentId = null, type = "page", icon = Icons.page) => {
-    let pageTitle = title.trim();
-    
-    // If no title provided, generate unique "Untitled" name
-    if (!pageTitle) {
-      pageTitle = generateUniqueTitle("Untitled", parentId);
+    // If title is null, undefined, or empty string, throw error instead of creating Untitled
+    if (!title || typeof title !== 'string' || !title.trim()) {
+      throw new Error("Page title is required");
     }
+    
+    let pageTitle = title.trim();
     
     const validation = validateTitle(pageTitle);
     if (!validation.valid) {
@@ -250,12 +240,15 @@ export function usePages() {
   const updatePage = (pageId, updates) => {
     // Validate title if it's being updated
     if (updates.title !== undefined) {
-      const pageTitle = updates.title.trim() || "Untitled";
-      const validation = validateTitle(pageTitle);
+      const trimmedTitle = updates.title.trim();
+      if (!trimmedTitle) {
+        throw new Error("Page title cannot be empty");
+      }
+      const validation = validateTitle(trimmedTitle);
       if (!validation.valid) {
         throw new Error(validation.error);
       }
-      updates.title = pageTitle;
+      updates.title = trimmedTitle;
     }
 
     setPages((prev) =>

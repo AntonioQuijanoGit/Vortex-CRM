@@ -52,6 +52,8 @@ import {
   TrendingUp,
   HelpCircle,
   Menu,
+  Briefcase,
+  Heart,
 } from 'lucide-react';
 
 // Export individual icons for direct use
@@ -92,6 +94,8 @@ export {
   Trophy,
   Timer,
   BookOpen,
+  Briefcase,
+  Heart,
   List,
   Grid3x3,
   Table,
@@ -173,6 +177,8 @@ export const Icons = {
   trophy: Trophy,
   timer: Timer,
   book: BookOpen,
+  briefcase: Briefcase,
+  heart: Heart,
   list: List,
   grid: Grid3x3,
   table: Table,

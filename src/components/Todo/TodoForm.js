@@ -1,14 +1,21 @@
 import { useState, useRef, useEffect } from "react";
 import { Icons, renderIcon } from "../../utils/icons";
+import { FirstTimeTooltip } from "../shared";
+import { useFirstTime } from "../../hooks/useFirstTime";
 
 export default function TodoForm({ title, onTitleChange, onSubmit, typeFilter = "all", onTypeChange }) {
   const inputRef = useRef(null);
+  const formRef = useRef(null);
+  
   // Determine initial type based on filter, default to "task"
   // If filter is set to a specific type, lock to that type
   const isTypeLocked = typeFilter === "habit" || typeFilter === "task";
   const [selectedType, setSelectedType] = useState(() => {
     return typeFilter === "habit" ? "habit" : "task";
   });
+
+  // Show tooltip on first time
+  const [showCreateHint, markCreateHintAsSeen] = useFirstTime('create-todo');
 
   useEffect(() => {
     // Focus on mount
@@ -34,11 +41,22 @@ export default function TodoForm({ title, onTitleChange, onSubmit, typeFilter = 
 
   return (
     <form
+      ref={formRef}
       className="todoCreateForm"
       onSubmit={handleSubmit}
       aria-labelledby="app-title"
       noValidate
+      style={{ position: 'relative' }}
     >
+      {showCreateHint && (
+        <FirstTimeTooltip
+          message={selectedType === "habit" 
+            ? "Escribe aquí tu hábito diario y presiona Enter para crearlo. Los hábitos se pueden marcar como completados cada día."
+            : "Escribe aquí tu tarea y presiona Enter para crearla. Puedes establecer fechas de vencimiento después."}
+          position="bottom"
+          onDismiss={markCreateHintAsSeen}
+        />
+      )}
       {/* Type selector - only show if type is not locked by filter */}
       {!isTypeLocked && (
         <div className="type-selector">

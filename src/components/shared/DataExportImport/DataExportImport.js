@@ -183,10 +183,12 @@ export default function DataExportImport({ onClose }) {
         
         // Movies functionality has been removed, skip importing movies data
         
-        showSuccess("Data imported successfully! Please refresh the page.");
+        showSuccess("Data imported successfully! Refreshing page...");
+        // Reload is necessary here to load imported data into React state
+        // TODO: Consider implementing state refresh mechanism instead
         setTimeout(() => {
           window.location.reload();
-        }, 2000);
+        }, 1500);
       } catch (error) {
         logger.error("Failed to import data:", error);
         showError("Failed to import data. Please check the file format.");

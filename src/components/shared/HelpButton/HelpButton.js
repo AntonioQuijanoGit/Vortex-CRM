@@ -95,7 +95,9 @@ export default function HelpButton({ onNavigate }) {
             aria-label={`Show ${orphanedCount} orphaned item${orphanedCount !== 1 ? 's' : ''}`}
             title={`${orphanedCount} item${orphanedCount !== 1 ? 's' : ''} in deleted pages`}
           >
-            {renderIcon(Icons.warning, 20)}
+            <span className="help-button-icon" aria-hidden="true">
+              {renderIcon(Icons.warning, 18)}
+            </span>
             {orphanedCount > 0 && (
               <span className="orphaned-count-badge">{orphanedCount}</span>
             )}
@@ -107,7 +109,9 @@ export default function HelpButton({ onNavigate }) {
           aria-label="Show tutorial"
           title="Show tutorial (Press ? for help)"
         >
-          {renderIcon(Icons.help, 22)}
+          <span className="help-button-icon" aria-hidden="true">
+            {renderIcon(Icons.help, 18)}
+          </span>
         </button>
       </div>
       {showTutorial && (

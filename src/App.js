@@ -4,6 +4,7 @@ import { PageContent } from "./components/Page";
 import { Onboarding, HelpButton, QuickSearch, ToastContainer, ShortcutsModal, ThemeToggle, QuickNotes, Achievements, FocusTimer, Goals } from "./components/shared";
 import { usePages } from "./hooks/usePages";
 import { useToast } from "./hooks/useToast";
+import { useIsMobile } from "./hooks/useIsMobile";
 import { SHORTCUTS, matchesShortcut } from "./utils/keyboardShortcuts";
 import { safeGetItem } from "./utils/storage";
 import { getAllTodosWithPages } from "./utils/todos";
@@ -35,10 +36,7 @@ function App() {
   const [showAchievements, setShowAchievements] = useState(false);
   const [showFocusTimer, setShowFocusTimer] = useState(false);
   const [showGoals, setShowGoals] = useState(false);
-  const [isMobile, setIsMobile] = useState(() => {
-    if (typeof window === 'undefined') return false;
-    return window.innerWidth <= 768;
-  });
+  const isMobile = useIsMobile();
   // Sidebar collapsed by default on mobile, open on desktop
   const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
     if (typeof window === 'undefined') return false;
@@ -65,12 +63,18 @@ function App() {
   // Keyboard shortcuts
   useEffect(() => {
     const handleKeyDown = (e) => {
-      // Don't trigger shortcuts when typing in inputs
-      if (e.target.matches("input, textarea, [contenteditable]")) {
+      // Don't trigger shortcuts when typing in inputs or when modals are open
+      const isInputFocused = e.target.matches("input, textarea, [contenteditable]");
+      const isModalOpen = showQuickSearch || showShortcuts || showAchievements || showFocusTimer || showGoals;
+      
+      if (isInputFocused) {
         // Allow Escape to close modals even when in inputs
-        if (e.key === "Escape") {
+        if (e.key === "Escape" && isModalOpen) {
           if (showQuickSearch) setShowQuickSearch(false);
           if (showShortcuts) setShowShortcuts(false);
+          if (showAchievements) setShowAchievements(false);
+          if (showFocusTimer) setShowFocusTimer(false);
+          if (showGoals) setShowGoals(false);
         }
         return;
       }
@@ -97,7 +101,7 @@ function App() {
       // Toggle Sidebar (Cmd/Ctrl + B)
       if (matchesShortcut(e, SHORTCUTS.TOGGLE_SIDEBAR)) {
         e.preventDefault();
-        if (typeof window !== "undefined" && window.innerWidth <= 768) {
+        if (isMobile) {
           setSidebarCollapsed(!sidebarCollapsed);
         } else {
           // Keep sidebar fixed on desktop
@@ -122,24 +126,16 @@ function App() {
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [showQuickSearch, showShortcuts, sidebarCollapsed, addPage, showInfo]);
+  }, [showQuickSearch, showShortcuts, showAchievements, showFocusTimer, showGoals, sidebarCollapsed, isMobile, addPage, showInfo]);
 
-  // Update collapsed state when window is resized
+  // Update collapsed state when switching from mobile to desktop
   useEffect(() => {
-    if (typeof window === 'undefined') return;
-    
-    const handleResize = () => {
-      // On desktop (>768px), always show sidebar
-      // On mobile (<=768px), keep current state (user controls it)
-      if (window.innerWidth > 768 && sidebarCollapsed) {
-        setSidebarCollapsed(false);
-      }
-      setIsMobile(window.innerWidth <= 768);
-    };
-    
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, [sidebarCollapsed]);
+    // On desktop, always show sidebar
+    // On mobile, keep current state (user controls it)
+    if (!isMobile && sidebarCollapsed) {
+      setSidebarCollapsed(false);
+    }
+  }, [isMobile, sidebarCollapsed]);
 
   // Current context label for header (helps mobile users keep orientation when breadcrumbs are hidden)
   const activeContextLabel = useMemo(() => {
@@ -166,7 +162,7 @@ function App() {
         <div className="app-header-content">
           <div className="app-header-left">
             {/* Hamburger menu button - only show on mobile */}
-            {typeof window !== 'undefined' && window.innerWidth <= 768 && (
+            {isMobile && (
               <button
                 className="mobile-menu-button"
                 onClick={() => setSidebarCollapsed(false)}
@@ -187,6 +183,7 @@ function App() {
           </div>
 
           <div className="app-header-right">
+            <HelpButton onNavigate={setActivePage} />
             <ThemeToggle />
           </div>
         </div>
@@ -197,7 +194,7 @@ function App() {
         onPageSelect={(pageId) => {
           setActivePage(pageId);
           // Close sidebar on mobile when page is selected
-          if (typeof window !== 'undefined' && window.innerWidth <= 768) {
+          if (isMobile) {
             setSidebarCollapsed(true);
           }
         }}
@@ -214,7 +211,7 @@ function App() {
         onShowGoals={() => setShowGoals(true)}
       />
       {/* Mobile overlay */}
-      {!sidebarCollapsed && typeof window !== 'undefined' && window.innerWidth <= 768 && (
+      {!sidebarCollapsed && isMobile && (
         <div
           className="sidebar-overlay active"
           onClick={() => setSidebarCollapsed(true)}
@@ -238,7 +235,6 @@ function App() {
           onClose={() => setShowQuickSearch(false)}
         />
       )}
-      <HelpButton onNavigate={setActivePage} />
       <QuickNotes />
       {showShortcuts && (
         <ShortcutsModal onClose={() => setShowShortcuts(false)} />

@@ -1,34 +1,45 @@
 .help-buttons-container {
-  position: fixed;
-  bottom: calc(var(--footer-height, 50px) + var(--spacing-lg));
-  right: var(--spacing-lg);
+  position: relative;
   display: flex;
   flex-direction: row;
   gap: var(--spacing-sm);
-  align-items: flex-end;
-  z-index: 5000; /* Above footer (3000) and other elements */
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  height: 36px; /* Match button height */
+  line-height: 36px;
+}
+
+@media (max-width: 768px) {
+  .help-buttons-container {
+    height: 32px; /* Match button height on mobile */
+    line-height: 32px;
+  }
 }
 
 .help-button {
-  width: 44px;
-  height: 44px;
+  position: relative;
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  min-height: 36px;
   border: var(--border-thin);
-  background: var(--color-panel);
-  color: var(--color-ink);
-  border-radius: var(--radius-md);
+  background: var(--color-bg);
+  color: var(--color-text);
+  border-radius: var(--radius-sm);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: all var(--transition-base);
-  box-shadow: var(--shadow-sm);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  padding: 0;
+  margin: 0;
+  flex-shrink: 0;
+  box-sizing: border-box;
 }
 
 .orphaned-items-button {
   animation: none;
-  font-size: 20px;
   background: var(--color-warning);
   color: var(--color-bg);
   border-color: var(--color-warning);
@@ -38,8 +49,7 @@
 .orphaned-items-button:hover {
   background: var(--color-error);
   border-color: var(--color-error);
-  transform: scale(1.08) translateY(-2px);
-  box-shadow: var(--shadow-lg);
+  transform: scale(1.05);
 }
 
 .orphaned-count-badge {
@@ -62,29 +72,37 @@
 .help-button:hover {
   background: var(--color-surface);
   border-color: var(--color-stroke-strong);
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-md);
 }
 
 .help-button:active {
-  transform: translateY(0);
-  box-shadow: var(--shadow-sm);
+  transform: scale(0.95);
 }
 
 .help-button:focus-visible {
   outline: 2px solid var(--color-accent);
-  outline-offset: 3px;
+  outline-offset: 2px;
+}
+
+.help-button-icon {
+  font-size: 18px;
+  line-height: 1;
+  font-weight: 400;
+  transition: transform var(--transition-base);
+}
+
+.help-button:hover .help-button-icon {
+  transform: scale(1.1);
 }
 
 @media (max-width: 768px) {
-  .help-buttons-container {
-    bottom: calc(var(--footer-height-mobile, 45px) + var(--spacing-sm));
-    right: var(--spacing-md);
-    gap: var(--spacing-xs);
+  .help-button {
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    min-height: 32px;
   }
   
-  .help-button {
-    width: 40px;
-    height: 40px;
+  .help-button-icon {
+    font-size: 16px;
   }
 }

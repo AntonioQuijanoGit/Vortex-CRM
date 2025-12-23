@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { TodoApp } from "../Todo";
 import { Dashboard } from "../Dashboard";
 import { BlockManager } from "../BlockManager";
 import { getAllTodosWithPages } from "../../utils/todos";
 import { usePages } from "../../hooks/usePages";
+import { useIsMobile } from "../../hooks/useIsMobile";
 import { ActivityHeatmap, ProgressCircle, MiniLineChart, EmptyState, ConfirmDialog } from "../shared";
 import { Icons, renderIcon } from "../../utils/icons";
 import { safeGetItem, safeSetItem } from "../../utils/storage";
@@ -16,22 +17,8 @@ export default function PageContent({
   onUpdatePage,
   activePageId,
 }) {
-  // Check if we're on mobile
-  const [isMobile, setIsMobile] = useState(() => {
-    if (typeof window === 'undefined') return false;
-    return window.innerWidth <= 768;
-  });
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    
-    const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
-    
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  // Use centralized mobile detection hook
+  const isMobile = useIsMobile();
   
   // Show dashboard when no page or when on home page, but always show breadcrumbs
   // Check both page?.id and activePageId for special views
@@ -426,30 +413,24 @@ function HabitsView({ onNavigate }) {
   const confirmDeleteHabit = () => {
     if (!habitToDelete) return;
     
-    const { habitId, pageId, habitTitle } = habitToDelete;
-    console.log("Attempting to delete habit:", { habitId, pageId, habitTitle });
+    const { habitId, pageId } = habitToDelete;
     
     try {
       let deleted = false;
-      let deletedFrom = null;
       
       // If pageId exists, try to delete from that page first
       if (pageId) {
         const todosKey = `todos-${pageId}`;
         const pageTodos = safeGetItem(todosKey, []);
-        console.log(`Checking page ${pageId}, found ${pageTodos.length} todos`);
         if (pageTodos.some(t => t.id === habitId)) {
           const updatedTodos = pageTodos.filter(t => t.id !== habitId);
           safeSetItem(todosKey, updatedTodos);
           deleted = true;
-          deletedFrom = todosKey;
-          console.log(`Deleted from ${todosKey}`);
         }
       }
       
       // If not found in page or pageId is null, search in all localStorage keys
       if (!deleted && typeof window !== 'undefined' && localStorage) {
-        console.log("Searching in all localStorage keys...");
         for (let i = 0; i < localStorage.length; i++) {
           const key = localStorage.key(i);
           if (key && key.startsWith("todos-")) {
@@ -458,8 +439,6 @@ function HabitsView({ onNavigate }) {
               const updatedTodos = todos.filter(t => t.id !== habitId);
               safeSetItem(key, updatedTodos);
               deleted = true;
-              deletedFrom = key;
-              console.log(`Deleted from ${key}`);
               break;
             }
           }
@@ -469,27 +448,24 @@ function HabitsView({ onNavigate }) {
       // Also check old format (todos without page)
       if (!deleted) {
         const oldTodos = safeGetItem("todos", []);
-        console.log(`Checking old format, found ${oldTodos.length} todos`);
         if (oldTodos.some(t => t.id === habitId)) {
           const updatedTodos = oldTodos.filter(t => t.id !== habitId);
           safeSetItem("todos", updatedTodos);
           deleted = true;
-          deletedFrom = "todos";
-          console.log("Deleted from old format");
         }
       }
       
       if (deleted) {
-        console.log(`Successfully deleted habit from ${deletedFrom}`);
-        // Force re-render by reloading the component
+        // Trigger page reload to refresh the view
+        // TODO: Replace with state update mechanism instead of reload
         setTimeout(() => {
           window.location.reload();
         }, 100);
-      } else {
-        console.error("Habit not found in any location");
       }
     } catch (error) {
-      console.error("Error deleting habit:", error);
+      if (process.env.NODE_ENV === 'development') {
+        console.error("Error deleting habit:", error);
+      }
     } finally {
       setHabitToDelete(null);
     }

@@ -21,45 +21,45 @@ export default function Onboarding({ onComplete, forceShow = false }) {
 
   const steps = [
     {
-      title: "Welcome",
-      description: "Your personal productivity hub. Everything saves automatically.\n\n• Create tasks and habits\n• Organize with pages\n• Track your progress",
+      title: "¡Bienvenido a Taskline! 🎉",
+      description: "Tu centro de productividad personal.\n\n✨ Todo se guarda automáticamente\n📝 Crea tareas y hábitos\n📄 Organiza con páginas\n📊 Rastrea tu progreso",
       position: "center",
-      action: "Next",
+      action: "Siguiente",
       highlight: null
     },
     {
-      title: "Navigation",
-      description: "Use the sidebar to navigate:\n\n• Home: Your main workspace\n• Tasks: View all tasks\n• Habits: Track daily routines\n• Pages: Organize content\n• Analytics: See your progress",
+      title: "Navegación",
+      description: "Usa la barra lateral para navegar:\n\n🏠 Home: Tu espacio de trabajo principal\n✅ Tasks: Ver todas las tareas\n🔄 Habits: Rastrear rutinas diarias\n📄 Pages: Organizar contenido\n📊 Analytics: Ver tu progreso",
       position: "left",
-      action: "Next",
+      action: "Siguiente",
       highlight: "sidebar"
     },
     {
-      title: "Creating Content",
-      description: "Add tasks and habits to any page:\n\n• Type in the input field at the top\n• Press Enter to create\n• Set due dates for tasks\n• Mark habits complete daily",
+      title: "Crear Contenido",
+      description: "Añade tareas y hábitos a cualquier página:\n\n1️⃣ Escribe en el campo de arriba\n2️⃣ Presiona Enter para crear\n3️⃣ Establece fechas de vencimiento para tareas\n4️⃣ Marca hábitos como completados diariamente",
       position: "center",
-      action: "Next",
+      action: "Siguiente",
       highlight: "content"
     },
     {
-      title: "Pages",
-      description: "Organize everything with pages:\n\n• Click the + button to create pages\n• Add subpages for hierarchy\n• Each page can have tasks, habits, and notes",
+      title: "Páginas",
+      description: "Organiza todo con páginas:\n\n➕ Haz clic en el botón + para crear páginas\n📁 Añade subpáginas para jerarquía\n📝 Cada página puede tener tareas, hábitos y notas\n🎯 Todo se organiza automáticamente",
       position: "left",
-      action: "Next",
+      action: "Siguiente",
       highlight: "pages"
     },
     {
-      title: "Quick Actions",
-      description: "Use keyboard shortcuts for speed:\n\n• Cmd/Ctrl + K: Quick search\n• Cmd/Ctrl + N: New page\n• Cmd/Ctrl + /: View shortcuts\n• ?: Help anytime",
+      title: "Atajos de Teclado",
+      description: "Usa atajos para ser más rápido:\n\n⌨️ Cmd/Ctrl + K: Búsqueda rápida\n⌨️ Cmd/Ctrl + N: Nueva página\n⌨️ Cmd/Ctrl + /: Ver todos los atajos\n⌨️ ?: Ayuda en cualquier momento",
       position: "center",
-      action: "Next",
+      action: "Siguiente",
       highlight: null
     },
     {
-      title: "You're All Set!",
-      description: "Start by creating your first task or habit.\n\n💡 Tip: Hover over buttons to see what they do.\n\nClick the '?' button anytime for help.",
+      title: "¡Todo Listo! 🚀",
+      description: "Empieza creando tu primera tarea o hábito.\n\n💡 Tip: Pasa el mouse sobre los botones para ver qué hacen.\n\n💡 Tip: Usa los ejemplos rápidos en la página principal para empezar.\n\n❓ Haz clic en el botón '?' cuando necesites ayuda.",
       position: "center",
-      action: "Get Started",
+      action: "Empezar",
       highlight: null
     }
   ];

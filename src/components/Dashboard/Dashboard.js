@@ -7,9 +7,10 @@ import { getAllTodosWithPages } from "../../utils/todos";
 import { useToast } from "../../hooks/useToast";
 import { logger } from "../../utils/logger";
 import OrphanedItems from "../shared/OrphanedItems/OrphanedItems";
-import { DataExportImport, ProgressCircle, MiniLineChart, ActivityHeatmap, TemplateSelector, Achievements, QuickActions, FocusTimer } from "../shared";
+import { DataExportImport, ProgressCircle, MiniLineChart, ActivityHeatmap, TemplateSelector, Achievements, QuickActions, FocusTimer, EmptyStateEnhanced } from "../shared";
 import { TodayTasksWidget, UpcomingDeadlinesWidget } from "../shared/DashboardWidgets";
 import { applyTemplates } from "../../utils/templates";
+import { applyExampleTemplate } from "../../utils/exampleTemplates";
 import "./Dashboard.css";
 
 export default function Dashboard({ onNavigate }) {
@@ -55,7 +56,9 @@ export default function Dashboard({ onNavigate }) {
       await applyTemplates(addPage, updatePage);
       showToast("Templates applied! Explore the example pages.", "success");
       setShowTemplateSelector(false);
-      // Refresh the page to show new content
+      // Force re-render by updating a key or triggering state update
+      // Note: Templates system may require a reload due to complex state dependencies
+      // TODO: Refactor to avoid reload in future
       setTimeout(() => {
         window.location.reload();
       }, 500);
@@ -289,38 +292,66 @@ export default function Dashboard({ onNavigate }) {
         </div>
       </div>
 
-      {/* Getting started inline when empty, but keep full dashboard visible */}
+      {/* Enhanced empty state with examples */}
       {isEmptyWorkspace && (
         <section className="dashboard-section-modern welcome-empty-state">
-          <div className="welcome-empty-content">
-            <div className="welcome-empty-icon">{renderIcon(Icons.page, 48)}</div>
-            <h2 className="welcome-empty-title">Welcome to Taskline!</h2>
-            <p className="welcome-empty-description">
-              Your personal productivity hub. Organize tasks, track habits, and manage your content all in one place. Everything saves automatically.
-            </p>
-            <div className="welcome-empty-actions">
-              <button
-                className="welcome-action-button primary"
-                onClick={() => {
-                  try {
-                    const newPage = addPage("My First Page", null, "page");
-                    if (newPage && newPage.id) {
-                      onNavigate(newPage.id);
-                    }
-                  } catch (error) {
-                    logger.error("Error creating first page:", error);
-                    showToast("Error creating page. Please try again.", "error");
-                  }
-                }}
-              >
-                <span className="action-icon">{renderIcon(Icons.add, 18)}</span>
-                <span>Create my first page</span>
-              </button>
-              <p className="welcome-hint">
-                Or use the <strong>+</strong> button in the sidebar to create a page
-              </p>
-            </div>
-          </div>
+          <EmptyStateEnhanced
+            onAction={() => {
+              try {
+                const newPage = addPage("My First Page", null, "page");
+                if (newPage && newPage.id) {
+                  onNavigate(newPage.id);
+                }
+              } catch (error) {
+                logger.error("Error creating first page:", error);
+                showToast("Error creating page. Please try again.", "error");
+              }
+            }}
+            examples={[
+              {
+                id: 'work',
+                title: 'Tareas del Trabajo',
+                icon: Icons.briefcase,
+                items: [
+                  { type: 'task', title: 'Revisar emails pendientes', dueDate: null },
+                  { type: 'task', title: 'Preparar presentación para el cliente', dueDate: null },
+                  { type: 'habit', title: 'Revisar productividad diaria', dueDate: null }
+                ],
+                description: 'Organiza tus tareas profesionales'
+              },
+              {
+                id: 'personal',
+                title: 'Vida Personal',
+                icon: Icons.heart,
+                items: [
+                  { type: 'habit', title: 'Beber 2L de agua', dueDate: null },
+                  { type: 'habit', title: 'Hacer ejercicio 30 min', dueDate: null },
+                  { type: 'task', title: 'Hacer compras del supermercado', dueDate: null }
+                ],
+                description: 'Mantén hábitos saludables y tareas personales'
+              },
+              {
+                id: 'study',
+                title: 'Estudio',
+                icon: Icons.book,
+                items: [
+                  { type: 'habit', title: 'Leer 30 minutos', dueDate: null },
+                  { type: 'task', title: 'Completar tarea de matemáticas', dueDate: null },
+                  { type: 'task', title: 'Estudiar para examen final', dueDate: null }
+                ],
+                description: 'Organiza tu aprendizaje y hábitos de estudio'
+              }
+            ]}
+            onUseExample={(example) => {
+              try {
+                applyExampleTemplate(example, addPage, onNavigate);
+                showToast(`${example.title} creado exitosamente!`, "success");
+              } catch (error) {
+                logger.error("Error applying example:", error);
+                showToast("Error al crear ejemplo. Por favor intenta de nuevo.", "error");
+              }
+            }}
+          />
         </section>
       )}
 
