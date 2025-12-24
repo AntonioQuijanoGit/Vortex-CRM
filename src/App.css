@@ -63,6 +63,22 @@
   align-items: center;
   justify-content: flex-end;
   gap: var(--spacing-sm);
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
+
+/* Ensure consistent order of header buttons */
+.app-header-right > * {
+  order: 0;
+  flex-shrink: 0;
+}
+
+.app-header-right .help-buttons-container {
+  order: 1;
+}
+
+.app-header-right .theme-toggle {
+  order: 2;
 }
 
 .back-dashboard-floating {

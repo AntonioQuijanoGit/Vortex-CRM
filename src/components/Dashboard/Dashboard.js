@@ -279,7 +279,7 @@ export default function Dashboard({ onNavigate }) {
       <div className="dashboard-hero">
         <div className="dashboard-hero-content">
           <div className="dashboard-hero-header">
-            <h1 className="dashboard-title">Overview</h1>
+            <h1 className="dashboard-title">Dashboard</h1>
             <div className="dashboard-hero-stats">
               {stats.slice(0, 3).map((stat) => (
                 <div key={stat.label} className="hero-stat">
@@ -310,45 +310,45 @@ export default function Dashboard({ onNavigate }) {
             examples={[
               {
                 id: 'work',
-                title: 'Tareas del Trabajo',
+                title: 'Work Tasks',
                 icon: Icons.briefcase,
                 items: [
-                  { type: 'task', title: 'Revisar emails pendientes', dueDate: null },
-                  { type: 'task', title: 'Preparar presentación para el cliente', dueDate: null },
-                  { type: 'habit', title: 'Revisar productividad diaria', dueDate: null }
+                  { type: 'task', title: 'Review pending emails', dueDate: null },
+                  { type: 'task', title: 'Prepare client presentation', dueDate: null },
+                  { type: 'habit', title: 'Daily productivity review', dueDate: null }
                 ],
-                description: 'Organiza tus tareas profesionales'
+                description: 'Organize your work tasks'
               },
               {
                 id: 'personal',
-                title: 'Vida Personal',
+                title: 'Personal',
                 icon: Icons.heart,
                 items: [
-                  { type: 'habit', title: 'Beber 2L de agua', dueDate: null },
-                  { type: 'habit', title: 'Hacer ejercicio 30 min', dueDate: null },
-                  { type: 'task', title: 'Hacer compras del supermercado', dueDate: null }
+                  { type: 'habit', title: 'Drink 2L water', dueDate: null },
+                  { type: 'habit', title: 'Exercise 30 min', dueDate: null },
+                  { type: 'task', title: 'Grocery shopping', dueDate: null }
                 ],
-                description: 'Mantén hábitos saludables y tareas personales'
+                description: 'Keep healthy habits and personal tasks'
               },
               {
                 id: 'study',
-                title: 'Estudio',
+                title: 'Study',
                 icon: Icons.book,
                 items: [
-                  { type: 'habit', title: 'Leer 30 minutos', dueDate: null },
-                  { type: 'task', title: 'Completar tarea de matemáticas', dueDate: null },
-                  { type: 'task', title: 'Estudiar para examen final', dueDate: null }
+                  { type: 'habit', title: 'Read 30 minutes', dueDate: null },
+                  { type: 'task', title: 'Complete math homework', dueDate: null },
+                  { type: 'task', title: 'Study for final exam', dueDate: null }
                 ],
-                description: 'Organiza tu aprendizaje y hábitos de estudio'
+                description: 'Organize your learning and study habits'
               }
             ]}
             onUseExample={(example) => {
               try {
                 applyExampleTemplate(example, addPage, onNavigate);
-                showToast(`${example.title} creado exitosamente!`, "success");
+                showToast(`${example.title} created successfully!`, "success");
               } catch (error) {
                 logger.error("Error applying example:", error);
-                showToast("Error al crear ejemplo. Por favor intenta de nuevo.", "error");
+                showToast("Error creating example. Please try again.", "error");
               }
             }}
           />

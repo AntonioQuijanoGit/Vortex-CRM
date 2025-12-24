@@ -51,8 +51,8 @@ export default function TodoForm({ title, onTitleChange, onSubmit, typeFilter = 
       {showCreateHint && (
         <FirstTimeTooltip
           message={selectedType === "habit" 
-            ? "Escribe aquí tu hábito diario y presiona Enter para crearlo. Los hábitos se pueden marcar como completados cada día."
-            : "Escribe aquí tu tarea y presiona Enter para crearla. Puedes establecer fechas de vencimiento después."}
+            ? "Type your daily habit and press Enter. Habits can be marked complete each day."
+            : "Type your task and press Enter. You can set due dates later."}
           position="bottom"
           onDismiss={markCreateHintAsSeen}
         />

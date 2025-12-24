@@ -120,16 +120,16 @@ svg {
   --font-size-tiny: 10px;
   --font-size-xs: 11px;
   --font-size-sm: 12px;
-  --font-size-base: 15px;
-  --font-size-md: 16px;
-  --font-size-lg: 17px;
+  --font-size-base: 14px;
+  --font-size-md: 15px;
+  --font-size-lg: 16px;
   --font-size-xl: 18px;
   --font-size-2xl: 20px;
-  --font-size-3xl: 24px;
-  --font-size-4xl: 28px;
-  --font-size-5xl: 32px;
-  --font-size-display: clamp(28px, 4vw, 40px);
-  --font-size-display-large: clamp(32px, 6vw, 48px);
+  --font-size-3xl: 22px;
+  --font-size-4xl: 24px;
+  --font-size-5xl: 28px;
+  --font-size-display: clamp(24px, 3vw, 32px);
+  --font-size-display-large: clamp(28px, 4vw, 36px);
 
   /* Z-index System */
   --z-base: 1;

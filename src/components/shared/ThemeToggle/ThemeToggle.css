@@ -17,6 +17,7 @@
   margin: 0;
   flex-shrink: 0;
   box-sizing: border-box;
+  order: 2;
 }
 
 .theme-toggle:hover {

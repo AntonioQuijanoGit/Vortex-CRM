@@ -8,6 +8,8 @@
   padding: 0;
   height: 36px; /* Match button height */
   line-height: 36px;
+  flex-shrink: 0;
+  order: 1;
 }
 
 @media (max-width: 768px) {

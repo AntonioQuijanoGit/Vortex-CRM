@@ -16,36 +16,36 @@ export default function EmptyStateEnhanced({
   const defaultExamples = examples.length > 0 ? examples : [
     {
       id: 'work',
-      title: 'Tareas del Trabajo',
-                icon: Icons.briefcase,
+      title: 'Work Tasks',
+      icon: Icons.briefcase,
       items: [
-        { type: 'task', title: 'Revisar emails pendientes', dueDate: null },
-        { type: 'task', title: 'Preparar presentación para el cliente', dueDate: null },
-        { type: 'habit', title: 'Revisar productividad diaria', dueDate: null }
+        { type: 'task', title: 'Review pending emails', dueDate: null },
+        { type: 'task', title: 'Prepare client presentation', dueDate: null },
+        { type: 'habit', title: 'Daily productivity review', dueDate: null }
       ],
-      description: 'Organiza tus tareas profesionales'
+      description: 'Organize your work tasks'
     },
     {
       id: 'personal',
-      title: 'Vida Personal',
+      title: 'Personal',
       icon: Icons.heart,
       items: [
-        { type: 'habit', title: 'Beber 2L de agua', dueDate: null },
-        { type: 'habit', title: 'Hacer ejercicio 30 min', dueDate: null },
-        { type: 'task', title: 'Hacer compras del supermercado', dueDate: null }
+        { type: 'habit', title: 'Drink 2L water', dueDate: null },
+        { type: 'habit', title: 'Exercise 30 min', dueDate: null },
+        { type: 'task', title: 'Grocery shopping', dueDate: null }
       ],
-      description: 'Mantén hábitos saludables y tareas personales'
+      description: 'Keep healthy habits and personal tasks'
     },
     {
       id: 'study',
-      title: 'Estudio',
+      title: 'Study',
       icon: Icons.book,
       items: [
-        { type: 'habit', title: 'Leer 30 minutos', dueDate: null },
-        { type: 'task', title: 'Completar tarea de matemáticas', dueDate: null },
-        { type: 'task', title: 'Estudiar para examen final', dueDate: null }
+        { type: 'habit', title: 'Read 30 minutes', dueDate: null },
+        { type: 'task', title: 'Complete math homework', dueDate: null },
+        { type: 'task', title: 'Study for final exam', dueDate: null }
       ],
-      description: 'Organiza tu aprendizaje y hábitos de estudio'
+      description: 'Organize your learning and study habits'
     }
   ];
 
@@ -62,16 +62,16 @@ export default function EmptyStateEnhanced({
         <div className="emptyStateIcon" aria-hidden="true">
           {renderIcon(Icons.page, 64)}
         </div>
-        <h2 className="emptyStateText">¡Bienvenido a Taskline!</h2>
+        <h2 className="emptyStateText">Welcome to Taskline</h2>
         <p className="emptyStateHint">
-          Tu centro de productividad personal. Todo se guarda automáticamente.
+          Your productivity hub. Everything auto-saves.
         </p>
       </div>
 
       {/* Sección de ejemplos interactivos */}
       <div className="emptyState-examples-section">
         <h3 className="examples-section-title">
-          🚀 Empieza rápido con ejemplos:
+          Quick start with examples:
         </h3>
         <div className="examples-grid">
           {defaultExamples.map((example) => (
@@ -98,7 +98,7 @@ export default function EmptyStateEnhanced({
                   ))}
                   {example.items.length > 3 && (
                     <div className="example-item-preview muted">
-                      +{example.items.length - 3} más...
+                      +{example.items.length - 3} more...
                     </div>
                   )}
                 </div>
@@ -122,27 +122,27 @@ export default function EmptyStateEnhanced({
 
       {/* Guía de primeros pasos */}
       <div className="emptyState-steps-guide">
-        <h3 className="steps-guide-title">📋 Primeros pasos:</h3>
+        <h3 className="steps-guide-title">Getting started:</h3>
         <ol className="steps-list">
           <li className="step-item">
             <span className="step-number">1</span>
             <div className="step-content">
-              <strong>Crea una página</strong>
-              <span>Organiza tu contenido en páginas personalizadas</span>
+              <strong>Create a page</strong>
+              <span>Organize content in custom pages</span>
             </div>
           </li>
           <li className="step-item">
             <span className="step-number">2</span>
             <div className="step-content">
-              <strong>Añade tareas y hábitos</strong>
-              <span>Escribe en el campo de arriba y presiona Enter</span>
+              <strong>Add tasks & habits</strong>
+              <span>Type in the field above and press Enter</span>
             </div>
           </li>
           <li className="step-item">
             <span className="step-number">3</span>
             <div className="step-content">
-              <strong>Explora las vistas</strong>
-              <span>Cambia entre Lista, Tablero, Tabla y Calendario</span>
+              <strong>Explore views</strong>
+              <span>Switch between List, Board, Table & Calendar</span>
             </div>
           </li>
         </ol>
@@ -157,11 +157,11 @@ export default function EmptyStateEnhanced({
             aria-label="Create your first page"
           >
             <span className="actionIcon">{renderIcon(Icons.add, 18)}</span>
-            <span>Crear mi primera página</span>
+            <span>Create my first page</span>
           </button>
         )}
         <p className="welcome-hint">
-          O usa el botón <strong>+</strong> en el sidebar para crear una página
+          Or use the <strong>+</strong> button in the sidebar to create a page
         </p>
       </div>
 
@@ -170,13 +170,13 @@ export default function EmptyStateEnhanced({
         <div className="tip-box">
           <span className="tip-icon">💡</span>
           <div className="tip-content">
-            <strong>Tip:</strong> Puedes crear páginas dentro de páginas para organizar mejor tu contenido
+            <strong>Tip:</strong> Create pages inside pages to organize better
           </div>
         </div>
         <div className="tip-box">
           <span className="tip-icon">⌨️</span>
           <div className="tip-content">
-            <strong>Atajos:</strong> Presiona <kbd>Cmd/Ctrl + K</kbd> para búsqueda rápida o <kbd>?</kbd> para ayuda
+            <strong>Shortcuts:</strong> Press <kbd>Cmd/Ctrl + K</kbd> for quick search or <kbd>?</kbd> for help
           </div>
         </div>
       </div>

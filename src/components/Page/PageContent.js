@@ -23,7 +23,7 @@ export default function PageContent({
   // Show dashboard when no page or when on home page, but always show breadcrumbs
   // Check both page?.id and activePageId for special views
   const pageId = page?.id || activePageId;
-  const isDashboard = !pageId || pageId === "home" || pageId === "overview";
+  const isDashboard = !pageId || pageId === "home";
   const isTasks = pageId === "tasks";
   const isHabits = pageId === "habits";
   const isAnalytics = pageId === "analytics";
@@ -386,7 +386,7 @@ function TasksView({ onNavigate }) {
 
           <div className="section-card">
             <h2 className="card-title">All Tasks</h2>
-            <p className="card-hint">Usa el gestor superior para ver todas las tareas por vista o aplicar filtros.</p>
+            <p className="card-hint">Use the top manager to view all tasks by view or apply filters.</p>
           </div>
         </div>
       )}
@@ -497,10 +497,10 @@ function HabitsView({ onNavigate }) {
         </div>
       </div>
 
-      {/* Inline habit manager to add and view habits without cambiar de vista */}
+      {/* Inline habit manager to add and view habits without changing views */}
       <div className="section-card">
         <h2 className="card-title">Manage your habits</h2>
-        <p className="card-hint">Crea hábitos y cambia de lista a tablero/tabla/calendario desde aquí.</p>
+        <p className="card-hint">Create habits and switch between list/board/table/calendar views.</p>
         <TodoApp pageId="habits" initialTypeFilter="habit" />
       </div>
 

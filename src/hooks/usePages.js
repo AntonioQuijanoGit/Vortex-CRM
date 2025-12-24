@@ -129,7 +129,13 @@ export function usePages() {
   });
 
   const [activePage, setActivePage] = useState(() => {
-    return safeGetItem("notion-active-page", "home");
+    const savedPage = safeGetItem("notion-active-page", "home");
+    // Migrate "overview" to "home" for consistency
+    if (savedPage === "overview") {
+      safeSetItem("notion-active-page", "home");
+      return "home";
+    }
+    return savedPage;
   });
 
   const [expandedPages, setExpandedPages] = useState(() => {
