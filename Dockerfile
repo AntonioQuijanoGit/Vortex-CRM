@@ -21,6 +21,8 @@ COPY . .
 # Learn more here: https://nextjs.org/telemetry
 # Uncomment the following line in case you want to disable telemetry during the build.
 ENV NEXT_TELEMETRY_DISABLED 1
+# Enable standalone output for Docker
+ENV DOCKER_BUILD=true
 
 RUN npm run build
 
