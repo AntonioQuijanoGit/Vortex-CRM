@@ -82,7 +82,7 @@ export const DealCard = memo(function DealCard({ deal, onClick, isSelected, onSe
         <span className="font-bold text-sm sm:text-base">{formatCurrency(deal.value)}</span>
         <div className="flex items-center gap-2 flex-shrink-0">
           {deal.reminderDate && (
-            <Bell className="h-3 w-3 sm:h-4 sm:w-4 text-yellow-500 flex-shrink-0" title="Has reminder" />
+            <Bell className="h-3 w-3 sm:h-4 sm:w-4 text-yellow-500 flex-shrink-0" aria-label="Has reminder" />
           )}
           <div className="text-xs text-muted-foreground whitespace-nowrap">
             {format(new Date(deal.closeDate), "MMM dd")}

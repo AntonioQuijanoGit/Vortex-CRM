@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState, Suspense } from "react";
-import type { DealFilters } from "@/lib/types";
 import { useSearchParams } from "next/navigation";
 import { AppSidebar } from "@/components/layout/app-sidebar";
 import { Header } from "@/components/layout/header";

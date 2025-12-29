@@ -81,7 +81,6 @@ export const DealsTable = memo(function DealsTable({
             <TableHead className="w-12">
               <Checkbox
                 checked={allSelected}
-                indeterminate={someSelected}
                 onCheckedChange={(checked) => {
                   if (checked) {
                     onSelectAll();
@@ -132,7 +131,7 @@ export const DealsTable = memo(function DealsTable({
                   <TableCell>
                     <div className="flex items-center gap-2 min-w-0">
                       {deal.reminderDate && (
-                        <Bell className="h-4 w-4 text-yellow-500 flex-shrink-0" title="Has reminder" />
+                        <Bell className="h-4 w-4 text-yellow-500 flex-shrink-0" aria-label="Has reminder" />
                       )}
                       <span
                         className="font-medium truncate cursor-pointer hover:text-primary hover:underline"

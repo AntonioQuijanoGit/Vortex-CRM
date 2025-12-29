@@ -108,7 +108,7 @@ export function OnboardingTour() {
               onCheckedChange={(checked) => setDontShowAgain(checked as boolean)}
             />
             <Label htmlFor="dont-show" className="text-sm">
-              Don't show this again
+              Don&apos;t show this again
             </Label>
           </div>
           <div className="flex justify-between">

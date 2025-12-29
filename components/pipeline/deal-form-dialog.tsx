@@ -232,7 +232,7 @@ export function DealFormDialog({
                 placeholder="Set a reminder for follow-up"
               />
               <p className="text-xs text-muted-foreground">
-                Get notified when it's time to follow up
+                Get notified when it&apos;s time to follow up
               </p>
             </div>
           </div>

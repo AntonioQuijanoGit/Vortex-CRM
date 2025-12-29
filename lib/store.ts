@@ -8,6 +8,7 @@ import type {
   ContactFilters,
   DealFilters,
   DashboardStats,
+  DealStatus,
 } from "./types";
 import { STORAGE_KEYS } from "./constants";
 import { seedDataIfNeeded } from "./data-generator";
@@ -170,7 +171,6 @@ export const useCRMStore = create<CRMStore>((set, get) => ({
         activities, 
         notes, 
         settings,
-        __statsCache: undefined, // Clear cache on load
       });
       console.log(`✅ Loaded from storage: ${contacts.length} contacts, ${deals.length} deals`);
     } catch (error) {
@@ -206,7 +206,6 @@ export const useCRMStore = create<CRMStore>((set, get) => ({
 
     set((state) => ({
       contacts: [...state.contacts, contact],
-      __statsCache: undefined, // Invalidate cache
     }));
 
     // Add activity
@@ -225,7 +224,6 @@ export const useCRMStore = create<CRMStore>((set, get) => ({
       contacts: state.contacts.map((c) =>
         c.id === id ? { ...c, ...updates, updatedAt: new Date().toISOString() } : c
       ),
-      __statsCache: undefined, // Invalidate cache
     }));
 
     get().addActivity({
@@ -282,7 +280,6 @@ export const useCRMStore = create<CRMStore>((set, get) => ({
 
     set((state) => ({
       deals: [...state.deals, deal],
-      __statsCache: undefined, // Invalidate cache
     }));
 
     get().addActivity({
@@ -303,7 +300,6 @@ export const useCRMStore = create<CRMStore>((set, get) => ({
       deals: state.deals.map((d) =>
         d.id === id ? { ...d, ...updates, updatedAt: new Date().toISOString() } : d
       ),
-      __statsCache: undefined, // Invalidate cache
     }));
 
     if (updates.status && oldDeal && updates.status !== oldDeal.status) {
@@ -386,7 +382,6 @@ export const useCRMStore = create<CRMStore>((set, get) => ({
 
     set((state) => ({
       deals: [...state.deals, duplicatedDeal],
-      __statsCache: undefined,
     }));
 
     get().addActivity({

@@ -32,7 +32,7 @@ const tutorialSteps = [
         <div className="mt-6 p-4 bg-muted/50 rounded-lg border border-border">
           <h3 className="font-semibold text-base mb-2">📦 About Your Data</h3>
           <p className="text-sm text-muted-foreground leading-relaxed">
-            <strong>All data is stored locally</strong> in your browser's localStorage. When you first open the app, 
+            <strong>All data is stored locally</strong> in your browser&apos;s localStorage. When you first open the app, 
             sample data (100 contacts, 60 deals) is automatically generated using realistic fake data. 
             Everything you create, edit, or delete is saved instantly to your browser. 
             <strong className="block mt-2">⚠️ Important:</strong> If you clear your browser data, all your CRM data will be lost. 
@@ -195,7 +195,7 @@ const tutorialSteps = [
             <p className="text-sm text-amber-800 dark:text-amber-200 leading-relaxed">
               Since data is stored locally, make sure to <strong>export your data regularly</strong> from Settings. 
               You can export as JSON (for backup) or CSV (for Excel). If you clear your browser cache or use a different browser, 
-              you'll need to import your exported data.
+              you&apos;ll need to import your exported data.
             </p>
           </div>
 

@@ -14,6 +14,9 @@ const nextConfig = {
     ignoreDuringBuilds: false,
     dirs: ['app', 'components', 'lib', 'hooks'],
   },
+  typescript: {
+    ignoreBuildErrors: false,
+  },
 };
 
 export default nextConfig;

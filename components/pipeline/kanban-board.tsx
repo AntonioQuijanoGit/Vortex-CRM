@@ -14,7 +14,7 @@ import {
 import { useCRMStore } from "@/lib/store";
 import { KanbanColumn } from "@/components/pipeline/kanban-column";
 import { DEAL_STATUSES } from "@/lib/constants";
-import type { DealStatus } from "@/lib/types";
+import type { DealStatus, DealFilters } from "@/lib/types";
 
 interface KanbanBoardProps {
   onDealClick: (dealId: string) => void;
