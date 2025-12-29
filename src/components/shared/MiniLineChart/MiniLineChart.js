@@ -71,3 +71,4 @@ export default function MiniLineChart({ data, width = 120, height = 40, color = 
 
 
 
+
