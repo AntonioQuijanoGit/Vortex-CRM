@@ -1,0 +1,188 @@
+.row-editor {
+  background: var(--color-bg);
+  border: var(--border-thin);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  max-width: 600px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.row-editor-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-md);
+  border-bottom: var(--border-thin);
+}
+
+.row-editor-header h3 {
+  margin: 0;
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+.row-editor-close {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-base);
+  color: var(--color-muted);
+}
+
+.row-editor-close:hover {
+  background: var(--color-panel);
+  color: var(--color-ink);
+}
+
+.row-editor-form {
+  padding: var(--spacing-md);
+}
+
+.row-editor-field {
+  margin-bottom: var(--spacing-md);
+}
+
+.row-editor-field label {
+  display: block;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-ink);
+  margin-bottom: var(--spacing-xs);
+}
+
+.row-editor-field .required {
+  color: var(--color-error);
+  margin-left: var(--spacing-xxs);
+}
+
+.row-editor-field input[type="text"],
+.row-editor-field input[type="number"],
+.row-editor-field input[type="date"],
+.row-editor-field select {
+  width: 100%;
+  padding: var(--spacing-md) var(--spacing-lg);
+  border: 2px solid var(--color-stroke);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-base);
+  font-family: var(--font-sans);
+  color: var(--color-ink);
+  background: var(--color-bg);
+  transition: all var(--transition-base);
+  min-height: 44px;
+  box-sizing: border-box;
+}
+
+.row-editor-field input:focus,
+.row-editor-field select:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.05);
+}
+
+.row-editor-field input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.multi-select-editor {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-sm);
+  background: var(--color-panel);
+  border-radius: var(--radius-md);
+  border: 2px solid var(--color-stroke);
+}
+
+.multi-select-option {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  cursor: pointer;
+  padding: var(--spacing-xs);
+  border-radius: var(--radius-sm);
+  transition: background var(--transition-base);
+}
+
+.multi-select-option:hover {
+  background: var(--color-surface);
+}
+
+.multi-select-option input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+}
+
+.row-editor-actions {
+  display: flex;
+  gap: var(--spacing-sm);
+  justify-content: flex-end;
+  margin-top: var(--spacing-lg);
+  padding-top: var(--spacing-md);
+  border-top: var(--border-thin);
+}
+
+.row-editor-actions .btn-primary,
+.row-editor-actions .btn-secondary {
+  padding: var(--spacing-md) var(--spacing-lg);
+  border: 2px solid;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  min-height: 44px;
+}
+
+.row-editor-actions .btn-primary {
+  background: var(--color-ink);
+  color: var(--color-bg);
+  border-color: var(--color-ink);
+}
+
+.row-editor-actions .btn-primary:hover {
+  background: var(--color-accent-hover);
+  border-color: var(--color-accent-hover);
+}
+
+.row-editor-actions .btn-secondary {
+  background: var(--color-bg);
+  color: var(--color-ink);
+  border-color: var(--color-stroke);
+}
+
+.row-editor-actions .btn-secondary:hover {
+  background: var(--color-panel);
+  border-color: var(--color-stroke-strong);
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: var(--spacing-md);
+}
+
+.modal-content {
+  background: var(--color-bg);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xl);
+  max-width: 90vw;
+  max-height: 90vh;
+  overflow: auto;
+}
+

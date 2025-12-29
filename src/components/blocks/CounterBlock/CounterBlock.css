@@ -1,0 +1,118 @@
+.counter-block {
+  margin: var(--spacing-md) 0;
+  border: var(--border-thin);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+  background: var(--color-panel);
+  text-align: center;
+}
+
+.counter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+  flex-wrap: wrap;
+}
+
+.counter-label {
+  flex: 1;
+  min-width: 150px;
+  border: var(--border-thin);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-sm) var(--spacing-md);
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  color: var(--color-ink);
+  background: var(--color-bg);
+  outline: none;
+  text-align: center;
+}
+
+.counter-label:focus {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
+}
+
+.counter-step-control {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  font-size: var(--font-size-sm);
+  color: var(--color-muted);
+}
+
+.counter-step-input {
+  width: 60px;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border: var(--border-thin);
+  border-radius: var(--radius-sm);
+  text-align: center;
+  font-size: var(--font-size-sm);
+}
+
+.counter-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.counter-value {
+  font-size: clamp(48px, 8vw, 72px);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-ink);
+  line-height: 1;
+  font-family: var(--font-display);
+}
+
+.counter-controls {
+  display: flex;
+  gap: var(--spacing-sm);
+  align-items: center;
+}
+
+.counter-btn {
+  width: 48px;
+  height: 48px;
+  border: var(--border-thin);
+  border-radius: var(--radius-md);
+  background: var(--color-bg);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-base);
+  color: var(--color-ink);
+}
+
+.counter-btn:hover {
+  background: var(--color-panel);
+  border-color: var(--color-stroke-strong);
+  transform: scale(1.1);
+}
+
+.counter-btn.reset {
+  width: 40px;
+  height: 40px;
+  opacity: 0.7;
+}
+
+.counter-btn.reset:hover {
+  opacity: 1;
+  background: var(--color-warning-light, rgba(245, 158, 11, 0.1));
+}
+
+@media (max-width: 480px) {
+  .counter-value {
+    font-size: 48px;
+  }
+
+  .counter-btn {
+    width: 44px;
+    height: 44px;
+  }
+}
+

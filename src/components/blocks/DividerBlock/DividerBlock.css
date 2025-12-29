@@ -1,0 +1,18 @@
+.divider-block {
+  margin: var(--spacing-lg) 0;
+  cursor: pointer;
+  position: relative;
+}
+
+.divider-block:hover .divider-line {
+  border-color: var(--color-stroke-strong);
+}
+
+.divider-line {
+  border: none;
+  border-top: var(--border-medium);
+  margin: 0;
+  width: 100%;
+  transition: border-color var(--transition-base);
+}
+

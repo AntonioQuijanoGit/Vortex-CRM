@@ -1,0 +1,38 @@
+.page-actions {
+  display: flex;
+  gap: var(--spacing-xs);
+  align-items: center;
+  opacity: 0;
+  transition: opacity var(--transition-base);
+}
+
+.page-actions:hover,
+.page-actions:focus-within {
+  opacity: 1;
+}
+
+.page-action-btn {
+  width: 32px;
+  height: 32px;
+  border: var(--border-thin);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-sm);
+  transition: all var(--transition-fast);
+}
+
+.page-action-btn:hover {
+  background: var(--color-panel);
+  border-color: var(--color-stroke-strong);
+}
+
+.page-action-btn.delete:hover {
+  background: var(--color-error);
+  color: var(--color-bg);
+  border-color: var(--color-error);
+}
+

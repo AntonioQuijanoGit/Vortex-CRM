@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Icons } from "../../utils/icons";
+import { Icons, renderIcon } from "../../utils/icons";
 import { ConfirmDialog } from "../shared";
 import TodoPropertiesEditor from "./TodoPropertiesEditor";
 import "./TodoPropertiesEditor.css";
@@ -184,7 +184,7 @@ export default function Todo({ item, onUpdate, onDelete, onToggleComplete, onUpd
               role="checkbox"
               title={item.completed ? "Click to unmark" : "Click to complete"}
             >
-              {item.completed && <span className="checkmark" aria-hidden="true">{Icons.check}</span>}
+              {item.completed && <span className="checkmark" aria-hidden="true">{renderIcon(Icons.check, 16)}</span>}
             </button>
             <div className="todoTitleWrapper">
               <span 
@@ -235,7 +235,7 @@ export default function Todo({ item, onUpdate, onDelete, onToggleComplete, onUpd
                 aria-label={`Due: ${formatDueDate(item.dueDate)}`}
                 title={`Due: ${formatDueDate(item.dueDate)}`}
               >
-                <span className="dueDateIcon" aria-hidden="true">{Icons.date}</span>
+                <span className="dueDateIcon" aria-hidden="true">{renderIcon(Icons.date, 14)}</span>
                 {formatDueDate(item.dueDate)}
               </span>
             )}

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Icons } from "../../../utils/icons";
+import { Icons, renderIcon } from "../../../utils/icons";
 
 export default function Calendar({ todos }) {
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -124,7 +124,7 @@ export default function Calendar({ todos }) {
           onClick={goToPreviousMonth}
           aria-label="Previous month"
         >
-          <span className="buttonText">{Icons.arrowLeft}</span>
+          <span className="buttonText">{renderIcon(Icons.arrowLeft, 16)}</span>
         </button>
         <div className="calendarTitle">
           <div>
@@ -148,7 +148,7 @@ export default function Calendar({ todos }) {
           onClick={goToNextMonth}
           aria-label="Next month"
         >
-          <span className="buttonText">{Icons.arrowRight}</span>
+          <span className="buttonText">{renderIcon(Icons.arrowRight, 16)}</span>
         </button>
       </div>
       

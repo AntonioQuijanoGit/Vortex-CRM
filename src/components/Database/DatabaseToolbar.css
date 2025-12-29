@@ -1,0 +1,131 @@
+.database-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-md);
+  border-bottom: var(--border-thin);
+  background: var(--color-panel);
+  gap: var(--spacing-md);
+  flex-wrap: wrap;
+}
+
+.database-toolbar-left {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.database-toolbar-views {
+  display: flex;
+  gap: var(--spacing-xs);
+  background: var(--color-bg);
+  padding: var(--spacing-xs);
+  border-radius: var(--radius-md);
+}
+
+.database-toolbar-view-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border: 2px solid transparent;
+  background: transparent;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  font-size: var(--font-size-sm);
+  color: var(--color-muted);
+  min-height: 32px;
+}
+
+.database-toolbar-view-btn:hover {
+  background: var(--color-surface);
+  color: var(--color-ink);
+}
+
+.database-toolbar-view-btn.active {
+  background: var(--color-ink);
+  color: var(--color-bg);
+  border-color: var(--color-ink);
+}
+
+.view-icon {
+  font-size: 16px;
+  line-height: 1;
+}
+
+.view-label {
+  font-weight: 500;
+}
+
+.database-toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.database-toolbar-stats {
+  display: flex;
+  gap: var(--spacing-md);
+  font-size: var(--font-size-sm);
+  color: var(--color-muted);
+}
+
+.database-row-count,
+.database-property-count {
+  font-weight: 500;
+}
+
+.database-toolbar-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: 2px solid var(--color-stroke);
+  background: var(--color-bg);
+  color: var(--color-ink);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  min-height: 36px;
+}
+
+.database-toolbar-btn:hover {
+  background: var(--color-panel);
+  border-color: var(--color-stroke-strong);
+}
+
+.database-toolbar-btn-primary {
+  background: var(--color-ink);
+  color: var(--color-bg);
+  border-color: var(--color-ink);
+}
+
+.database-toolbar-btn-primary:hover {
+  background: var(--color-accent-hover);
+  border-color: var(--color-accent-hover);
+}
+
+@media (max-width: 768px) {
+  .database-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .database-toolbar-left,
+  .database-toolbar-right {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .database-toolbar-views {
+    flex-wrap: wrap;
+  }
+
+  .view-label {
+    display: none;
+  }
+}
+

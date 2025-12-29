@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect } from "react";
 import Todo from "./todo";
 import TodoForm from "./TodoForm";
 import TodoControls from "./TodoControls";
@@ -7,9 +7,6 @@ import { Calendar, EmptyState } from "../shared";
 import { ProductivityDashboard } from "../ProductivityDashboard";
 import { BoardView } from "../Views/BoardView";
 import { TableView } from "../Views/TableView";
-import GalleryView from "../Views/GalleryView/GalleryView";
-import DatabaseFilters from "../Database/DatabaseFilters";
-import DatabaseSorting from "../Database/DatabaseSorting";
 import { useTodos } from "../../hooks/useTodos";
 import { useToast } from "../../hooks/useToast";
 import { applyFilters } from "../../utils/filters";
@@ -26,10 +23,6 @@ export default function TodoApp({ pageId, viewType: initialViewType, initialType
   const [filter, setFilter] = useState("all");
   const [typeFilter, setTypeFilter] = useState(initialTypeFilter); // all, task, habit
   const [searchQuery, setSearchQuery] = useState("");
-  const [filters, setFilters] = useState([]);
-  const [sorts, setSorts] = useState([]);
-  // Determine if type is locked by filter
-  const isTypeLocked = typeFilter === "habit" || typeFilter === "task";
   const [selectedType, setSelectedType] = useState(() => {
     // Initialize based on filter if set, otherwise default to "task"
     return initialTypeFilter === "habit" ? "habit" : "task";
@@ -49,14 +42,9 @@ export default function TodoApp({ pageId, viewType: initialViewType, initialType
     if (initialTypeFilter !== typeFilter) {
       setTypeFilter(initialTypeFilter);
     }
-  }, [initialTypeFilter]);
+  }, [initialTypeFilter, typeFilter]);
 
-  const handleAddTodo = useCallback(() => {
-    if (!title.trim()) {
-      showError("Please enter a title for your task or habit.");
-      return;
-    }
-
+  function handleAddTodo() {
     try {
       // Create as the selected type
       addTodo(title, selectedType);
@@ -66,50 +54,19 @@ export default function TodoApp({ pageId, viewType: initialViewType, initialType
         : "Task created successfully";
       showSuccess(successMessage);
     } catch (error) {
-      // Show user-friendly error message
-      const errorMessage = error.message || "Failed to create item. Please try again.";
-      showError(errorMessage);
-      console.error("Error creating todo:", error);
+      showError(error.message || "Failed to create item. Please try again.");
     }
-  }, [title, selectedType, addTodo, showSuccess, showError]);
+  }
 
-  // Memoize filtered todos to avoid recalculating on every render
-  const filteredTodos = useMemo(() => {
-    return applyFilters(todos, {
-      typeFilter,
-      dateFilter: filter,
-      searchQuery,
-    });
-  }, [todos, typeFilter, filter, searchQuery]);
-
-  // Memoize statistics calculations
-  const { completedCount, habits, habitsCount, activeStreaks } = useMemo(() => {
-    const completed = todos.filter((t) => t.completed).length;
-    const habitList = todos.filter((t) => t.type === "habit");
-    return {
-      completedCount: completed,
-      habits: habitList,
-      habitsCount: habitList.length,
-      activeStreaks: habitList.filter((h) => (h.streak || 0) > 0).length,
-    };
-  }, [todos]);
-
-  // Memoize handlers to avoid recreating on every render
-  const handleUpdateTodo = useCallback((id, value) => {
-    updateTodo(id, value);
-    showSuccess("Task updated");
-  }, [updateTodo, showSuccess]);
-
-  const handleDeleteTodo = useCallback((id) => {
-    deleteTodo(id);
-    showSuccess("Task deleted");
-  }, [deleteTodo, showSuccess]);
-
-  const handleUpdateProperties = useCallback((id, props) => {
-    updateTodoProperties(id, props);
-    const newType = props.type === "habit" ? "habit" : "task";
-    showSuccess(`Converted to ${newType}`);
-  }, [updateTodoProperties, showSuccess]);
+  const filteredTodos = applyFilters(todos, {
+    typeFilter,
+    dateFilter: filter,
+    searchQuery,
+  });
+  const completedCount = todos.filter((t) => t.completed).length;
+  const habits = todos.filter((t) => t.type === "habit");
+  const habitsCount = habits.length;
+  const activeStreaks = habits.filter((h) => (h.streak || 0) > 0).length;
 
   return (
     <div
@@ -151,12 +108,6 @@ export default function TodoApp({ pageId, viewType: initialViewType, initialType
               <span className="buttonText">Table</span>
             </button>
             <button
-              className={`viewButton ${currentView === "gallery" ? "active" : ""}`}
-              onClick={() => setCurrentView("gallery")}
-            >
-              <span className="buttonText">Gallery</span>
-            </button>
-            <button
               className={`viewButton ${currentView === "calendar" ? "active" : ""}`}
               onClick={() => setCurrentView("calendar")}
             >
@@ -182,38 +133,16 @@ export default function TodoApp({ pageId, viewType: initialViewType, initialType
             </div>
           )}
 
-          {/* Filters for List/Board/Table/Gallery views */}
-          {(currentView === "list" || currentView === "board" || currentView === "table" || currentView === "gallery") && (
-            <>
-              <TodoControls
-                searchQuery={searchQuery}
-                onSearchChange={setSearchQuery}
-                filter={filter}
-                onFilterChange={setFilter}
-                typeFilter={typeFilter}
-                onTypeFilterChange={setTypeFilter}
-              />
-              <div className="database-advanced-filters">
-                <DatabaseFilters
-                  properties={[
-                    { id: "status", name: "Status", type: "select" },
-                    { id: "priority", name: "Priority", type: "select" },
-                    { id: "dueDate", name: "Due Date", type: "date" },
-                  ]}
-                  filters={filters}
-                  onFiltersChange={setFilters}
-                />
-                <DatabaseSorting
-                  properties={[
-                    { id: "title", name: "Title", type: "text" },
-                    { id: "createdAt", name: "Created", type: "date" },
-                    { id: "dueDate", name: "Due Date", type: "date" },
-                  ]}
-                  sorts={sorts}
-                  onSortsChange={setSorts}
-                />
-              </div>
-            </>
+          {/* Filters for List/Board/Table views */}
+          {(currentView === "list" || currentView === "board" || currentView === "table") && (
+            <TodoControls
+              searchQuery={searchQuery}
+              onSearchChange={setSearchQuery}
+              filter={filter}
+              onFilterChange={setFilter}
+              typeFilter={typeFilter}
+              onTypeFilterChange={setTypeFilter}
+            />
           )}
         </>
       )}
@@ -222,7 +151,7 @@ export default function TodoApp({ pageId, viewType: initialViewType, initialType
       {todos.length === 0 && (currentView === "list" || currentView === "board" || currentView === "table") && (
         <EmptyState
           message="Get Started"
-          hint="Create your first task or habit using the form above. Tasks are one-time items, while habits track daily activities with streaks."
+          hint="Create your first task or habit using the form above"
           showExamples={true}
           icon={Icons.task}
         />
@@ -254,10 +183,20 @@ export default function TodoApp({ pageId, viewType: initialViewType, initialType
                   key={item.id}
                   item={item}
                   index={index}
-                  onUpdate={handleUpdateTodo}
-                  onDelete={handleDeleteTodo}
+                  onUpdate={(id, value) => {
+                    updateTodo(id, value);
+                    showSuccess("Task updated");
+                  }}
+                  onDelete={(id) => {
+                    deleteTodo(id);
+                    showSuccess("Task deleted");
+                  }}
                   onToggleComplete={toggleComplete}
-                  onUpdateProperties={handleUpdateProperties}
+                  onUpdateProperties={(id, props) => {
+                    updateTodoProperties(id, props);
+                    const newType = props.type === "habit" ? "habit" : "task";
+                    showSuccess(`Converted to ${newType}`);
+                  }}
                 />
               ))}
             </div>
@@ -279,36 +218,6 @@ export default function TodoApp({ pageId, viewType: initialViewType, initialType
             <TableView
               todos={filteredTodos}
               onUpdate={updateTodo}
-              onDelete={deleteTodo}
-              onToggleComplete={toggleComplete}
-              onUpdateProperties={updateTodoProperties}
-            />
-          )}
-
-          {/* Gallery View */}
-          {currentView === "gallery" && (
-            <GalleryView
-              items={filteredTodos.map(todo => ({
-                id: todo.id,
-                completed: todo.completed,
-                properties: {
-                  title: todo.title,
-                  status: todo.status || "todo",
-                  priority: todo.priority || null,
-                  type: todo.type,
-                  dueDate: todo.dueDate || null,
-                  createdAt: todo.createdAt,
-                }
-              }))}
-              properties={[
-                { id: "title", name: "Title", type: "title" },
-                { id: "status", name: "Status", type: "select" },
-                { id: "priority", name: "Priority", type: "select" },
-                { id: "type", name: "Type", type: "select" },
-                { id: "dueDate", name: "Due Date", type: "date" },
-                { id: "createdAt", name: "Created", type: "date" },
-              ]}
-              onUpdate={(id, value) => updateTodo(id, value)}
               onDelete={deleteTodo}
               onToggleComplete={toggleComplete}
               onUpdateProperties={updateTodoProperties}

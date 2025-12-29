@@ -1,0 +1,123 @@
+.reminders-widget {
+  background: var(--color-surface);
+  border: var(--border-thin);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+  margin-bottom: var(--spacing-md);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-smooth);
+  position: relative;
+  overflow: hidden;
+}
+
+.reminders-widget::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--gradient-warm);
+  opacity: 0.6;
+}
+
+.reminders-widget:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.reminders-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-sm);
+}
+
+.reminders-title {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+.reminders-icon {
+  font-size: 18px;
+  color: var(--color-accent);
+}
+
+.reminders-toggle {
+  width: 32px;
+  height: 32px;
+  border: var(--border-thin);
+  border-radius: 50%;
+  background: var(--color-panel);
+  color: var(--color-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  font-size: 18px;
+}
+
+.reminders-toggle:hover {
+  background: var(--color-surface);
+  border-color: var(--color-accent);
+}
+
+.reminders-toggle.enabled {
+  background: var(--color-accent);
+  color: white;
+  border-color: var(--color-accent);
+}
+
+.reminders-content {
+  margin-top: var(--spacing-sm);
+}
+
+.reminders-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.reminder-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-xs);
+  background: var(--color-panel);
+  border-radius: var(--radius-sm);
+}
+
+.reminder-icon {
+  font-size: 16px;
+  color: var(--color-accent);
+  flex-shrink: 0;
+}
+
+.reminder-info {
+  flex: 1;
+}
+
+.reminder-title {
+  font-size: 13px;
+  color: var(--color-ink);
+  font-weight: 500;
+}
+
+.reminder-date {
+  font-size: 11px;
+  color: var(--color-muted);
+  margin-top: 2px;
+}
+
+.reminders-empty {
+  text-align: center;
+  padding: var(--spacing-sm);
+  color: var(--color-muted);
+  font-size: 12px;
+}
+

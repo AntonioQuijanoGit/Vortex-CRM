@@ -1,15 +1,21 @@
 import { useState, useRef, useEffect } from "react";
-import { Icons } from "../../utils/icons";
-import "./TodoForm.css";
+import { Icons, renderIcon } from "../../utils/icons";
+import { FirstTimeTooltip } from "../shared";
+import { useFirstTime } from "../../hooks/useFirstTime";
 
 export default function TodoForm({ title, onTitleChange, onSubmit, typeFilter = "all", onTypeChange }) {
   const inputRef = useRef(null);
+  const formRef = useRef(null);
+  
   // Determine initial type based on filter, default to "task"
   // If filter is set to a specific type, lock to that type
   const isTypeLocked = typeFilter === "habit" || typeFilter === "task";
   const [selectedType, setSelectedType] = useState(() => {
     return typeFilter === "habit" ? "habit" : "task";
   });
+
+  // Show tooltip on first time
+  const [showCreateHint, markCreateHintAsSeen] = useFirstTime('create-todo');
 
   useEffect(() => {
     // Focus on mount
@@ -35,11 +41,22 @@ export default function TodoForm({ title, onTitleChange, onSubmit, typeFilter = 
 
   return (
     <form
+      ref={formRef}
       className="todoCreateForm"
       onSubmit={handleSubmit}
       aria-labelledby="app-title"
       noValidate
+      style={{ position: 'relative' }}
     >
+      {showCreateHint && (
+        <FirstTimeTooltip
+          message={selectedType === "habit" 
+            ? "Type your daily habit and press Enter. Habits can be marked complete each day."
+            : "Type your task and press Enter. You can set due dates later."}
+          position="bottom"
+          onDismiss={markCreateHintAsSeen}
+        />
+      )}
       {/* Type selector - only show if type is not locked by filter */}
       {!isTypeLocked && (
         <div className="type-selector">
@@ -53,7 +70,7 @@ export default function TodoForm({ title, onTitleChange, onSubmit, typeFilter = 
             aria-label="Create a task"
             title="One-time task"
           >
-            <span className="type-icon">{Icons.task}</span>
+            <span className="type-icon">{renderIcon(Icons.task, 16)}</span>
             <span className="type-label">Task</span>
           </button>
           <button
@@ -66,7 +83,7 @@ export default function TodoForm({ title, onTitleChange, onSubmit, typeFilter = 
             aria-label="Create a habit"
             title="Daily habit with streak tracking"
           >
-            <span className="type-icon">{Icons.habit}</span>
+            <span className="type-icon">{renderIcon(Icons.habit, 16)}</span>
             <span className="type-label">Habit</span>
           </button>
         </div>

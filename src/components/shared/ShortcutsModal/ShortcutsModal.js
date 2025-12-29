@@ -1,38 +1,9 @@
-import React, { useEffect, useRef } from "react";
-import { Icons } from "../../../utils/icons";
+import React from "react";
+import { Icons, renderIcon } from "../../../utils/icons";
 import { SHORTCUTS, getShortcutDisplay } from "../../../utils/keyboardShortcuts";
 import "./ShortcutsModal.css";
 
 export default function ShortcutsModal({ onClose }) {
-  const modalRef = useRef(null);
-  const previousActiveElement = useRef(null);
-
-  // Focus management
-  useEffect(() => {
-    previousActiveElement.current = document.activeElement;
-    
-    const timer = setTimeout(() => {
-      const firstFocusable = modalRef.current?.querySelector(
-        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-      );
-      firstFocusable?.focus();
-    }, 0);
-
-    // Handle Escape key
-    const handleEscape = (e) => {
-      if (e.key === 'Escape') {
-        onClose();
-      }
-    };
-
-    document.addEventListener('keydown', handleEscape);
-
-    return () => {
-      clearTimeout(timer);
-      document.removeEventListener('keydown', handleEscape);
-      previousActiveElement.current?.focus();
-    };
-  }, [onClose]);
   const shortcutGroups = [
     {
       title: "Navigation",
@@ -54,11 +25,11 @@ export default function ShortcutsModal({ onClose }) {
 
   return (
     <div className="shortcuts-modal-overlay" onClick={onClose}>
-      <div ref={modalRef} className="shortcuts-modal" onClick={(e) => e.stopPropagation()}>
+      <div className="shortcuts-modal" onClick={(e) => e.stopPropagation()}>
         <div className="shortcuts-modal-header">
           <h2>Keyboard Shortcuts</h2>
           <button className="shortcuts-modal-close" onClick={onClose} aria-label="Close">
-            {Icons.close}
+            {renderIcon(Icons.close, 18)}
           </button>
         </div>
         <div className="shortcuts-modal-content">
@@ -85,9 +56,4 @@ export default function ShortcutsModal({ onClose }) {
     </div>
   );
 }
-
-
-
-
-
 

@@ -1,16 +1,150 @@
 .app-layout {
+  --header-height: 56px;
+  --header-height-mobile: 48px;
+  --footer-height: 50px; /* Footer height with padding */
+  --footer-height-mobile: 45px;
   display: grid;
   grid-template-columns: 260px 1fr;
+  grid-template-rows: auto 1fr;
   min-height: 100vh;
   background: var(--color-bg);
   position: relative;
+  transition: grid-template-columns var(--transition-base);
+}
+
+.app-header {
+  grid-column: 1 / -1;
+  height: 56px;
+  border-bottom: 1px solid var(--color-stroke);
+  background: var(--color-bg);
+  display: flex;
+  align-items: center;
+  padding: 0 var(--spacing-lg);
+  position: sticky;
+  top: 0;
+  z-index: var(--z-sticky);
+}
+
+.app-header-content {
+  width: 100%;
+  max-width: 1600px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.app-header-left {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.app-header-title {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--color-ink);
+  margin: 0;
+  font-family: var(--font-sans);
+  letter-spacing: -0.01em;
+}
+
+.app-header-title-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--spacing-xs);
+  width: 100%;
+}
+
+.app-header-right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--spacing-sm);
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
+
+/* Ensure consistent order of header buttons */
+.app-header-right > * {
+  order: 0;
+  flex-shrink: 0;
+}
+
+.app-header-right .help-buttons-container {
+  order: 1;
+}
+
+.app-header-right .theme-toggle {
+  order: 2;
+}
+
+.back-dashboard-floating {
+  position: fixed;
+  top: var(--spacing-sm);
+  right: var(--spacing-sm);
+  z-index: calc(var(--z-modal) + 10);
+  border: 1px solid var(--color-stroke);
+  background: var(--color-panel);
+  color: var(--color-ink);
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+  font-size: 13px;
+  font-weight: 700;
+  box-shadow: var(--shadow-md);
+  transition: all var(--transition-base);
+}
+
+.back-dashboard-floating:hover {
+  background: var(--color-surface);
+  border-color: var(--color-stroke-strong);
+  transform: translateY(-1px);
+}
+
+.back-dashboard-floating:active {
+  transform: translateY(0);
+}
+
+.app-header-context {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-muted);
+  padding: 4px 8px;
+  border: 1px solid var(--color-stroke);
+  border-radius: var(--radius-sm);
+  background: var(--color-panel);
+}
+
+@media (max-width: 768px) {
+  .app-header {
+    padding: 0 var(--spacing-lg);
+    height: 48px;
+  }
+
+  .app-header-title {
+    font-size: 15px;
+  }
+
+  .notion-sidebar {
+    top: 48px;
+    height: calc(100vh - 48px);
+  }
 }
 
 .app-main {
+  grid-column: 2;
+  grid-row: 2;
   position: relative;
   overflow-y: auto;
   overflow-x: hidden;
   background: var(--color-bg);
+}
+
+/* When sidebar is collapsed, main takes full width */
+.app-layout .notion-sidebar.collapsed ~ .app-main {
+  grid-column: 1 / -1;
 }
 
 .app-main::-webkit-scrollbar {
@@ -68,6 +202,119 @@
 @media (max-width: 768px) {
   .app-layout {
     grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+  }
+
+  .app-main {
+    grid-column: 1;
+    grid-row: 2;
+    padding: 0;
+    width: 100%;
+    overflow-x: hidden;
+    /* Ensure content doesn't show behind sidebar when closed */
+    margin-left: 0;
+  }
+}
+
+/* Mobile menu button */
+.mobile-menu-button {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  border: var(--border-medium);
+  background: var(--color-bg);
+  color: var(--color-ink);
+  border-radius: var(--radius-md);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  cursor: pointer;
+  box-shadow: var(--shadow-md);
+  transition: all var(--transition-base);
+}
+
+.mobile-menu-button:hover {
+  background: var(--color-panel);
+  transform: scale(1.05);
+}
+
+.mobile-menu-button:active {
+  transform: scale(0.95);
+}
+
+/* Mobile overlay for sidebar */
+.sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: calc(var(--z-sidebar) - 1);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition-base);
+  backdrop-filter: blur(2px);
+}
+
+.sidebar-overlay.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* Show hamburger menu button only on mobile */
+@media (max-width: 768px) {
+  .mobile-menu-button {
+    display: flex;
+  }
+
+  .app-header-content {
+    grid-template-columns: auto 1fr auto;
+    gap: var(--spacing-sm);
+  }
+
+  .app-header-title-wrap {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .app-header-title {
+    font-size: 16px;
+  }
+
+  .app-header-context {
+    font-size: 12px;
+  }
+}
+
+/* Footer */
+.app-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: var(--spacing-sm) var(--spacing-lg);
+  background: var(--color-bg);
+  border-top: 1px solid var(--color-stroke);
+  text-align: center;
+  z-index: 100; /* Below help button and other floating elements */
+  font-size: 11px;
+  color: var(--color-muted);
+  font-family: var(--font-sans);
+}
+
+.app-footer p {
+  margin: 0;
+  opacity: 0.7;
+}
+
+@media (max-width: 768px) {
+  .app-footer {
+    padding: var(--spacing-xs) var(--spacing-md);
+    font-size: 10px;
+    left: 0;
+  }
+
+  .app-layout {
+    padding-bottom: 40px;
   }
 
   .app-main {

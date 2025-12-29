@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useEvents } from "../../hooks/useEvents";
 import { usePages } from "../../hooks/usePages";
-import { Icons } from "../../utils/icons";
+import { Icons, renderIcon } from "../../utils/icons";
 import { DateDetailsModal, EventForm } from "../shared";
 import "./DashboardCalendar.css";
 
@@ -22,11 +22,19 @@ export default function DashboardCalendar({ todos, onNavigate }) {
   // Get all events from all pages for display
   const getAllEvents = () => {
     let allEvents = [...events]; // Include dashboard events
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-      if (key && key.startsWith("events-") && key !== "events-dashboard") {
-        const pageEvents = JSON.parse(localStorage.getItem(key) || "[]");
-        allEvents = [...allEvents, ...pageEvents];
+    
+    // Only access localStorage in browser environment
+    if (typeof window !== 'undefined' && localStorage) {
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith("events-") && key !== "events-dashboard") {
+          try {
+            const pageEvents = JSON.parse(localStorage.getItem(key) || "[]");
+            allEvents = [...allEvents, ...pageEvents];
+          } catch (error) {
+            // Skip invalid JSON
+          }
+        }
       }
     }
     return allEvents;
@@ -190,19 +198,26 @@ export default function DashboardCalendar({ todos, onNavigate }) {
       return;
     }
     
+    // Only access localStorage in browser environment
+    if (typeof window === 'undefined' || !localStorage) return;
+    
     // If not found in dashboard, search in other pages
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
       if (key && key.startsWith("events-") && key !== "events-dashboard") {
-        const pageEvents = JSON.parse(localStorage.getItem(key) || "[]");
-        const eventIndex = pageEvents.findIndex(e => e.id === eventId);
-        if (eventIndex !== -1) {
-          // Remove the event from this page's events
-          const updatedEvents = pageEvents.filter(e => e.id !== eventId);
-          localStorage.setItem(key, JSON.stringify(updatedEvents));
-          // Force re-render by updating state
-          setSelectedDate(selectedDate);
-          return;
+        try {
+          const pageEvents = JSON.parse(localStorage.getItem(key) || "[]");
+          const eventIndex = pageEvents.findIndex(e => e.id === eventId);
+          if (eventIndex !== -1) {
+            // Remove the event from this page's events
+            const updatedEvents = pageEvents.filter(e => e.id !== eventId);
+            localStorage.setItem(key, JSON.stringify(updatedEvents));
+            // Force re-render by updating state
+            setSelectedDate(selectedDate);
+            return;
+          }
+        } catch (error) {
+          // Skip invalid JSON
         }
       }
     }
@@ -221,7 +236,7 @@ export default function DashboardCalendar({ todos, onNavigate }) {
               className="calendar-nav-btn"
               aria-label="Previous month"
             >
-              {Icons.arrowLeft}
+              {renderIcon(Icons.arrowLeft, 18)}
             </button>
             <span className="calendar-month-year">
               {monthNames[month]} {year}
@@ -231,7 +246,7 @@ export default function DashboardCalendar({ todos, onNavigate }) {
               className="calendar-nav-btn"
               aria-label="Next month"
             >
-              {Icons.arrowRight}
+              {renderIcon(Icons.arrowRight, 18)}
             </button>
             <button
               onClick={() => setCurrentDate(new Date())}
@@ -322,7 +337,7 @@ export default function DashboardCalendar({ todos, onNavigate }) {
                     className="dashboard-cal-indicator habits"
                     title={`${dayInfo.habitsCompleted} habits completed`}
                   >
-                    {Icons.check}
+                    {renderIcon(Icons.check, 12)}
                   </span>
                 )}
                 {allDayEvents.length > 0 && (
@@ -368,7 +383,7 @@ export default function DashboardCalendar({ todos, onNavigate }) {
                     .slice(0, 5)
                     .map((todo) => (
                       <div key={todo.id} className="pending-task-item">
-                        <span className="pending-task-icon">{Icons.task}</span>
+                        <span className="pending-task-icon">{renderIcon(Icons.task, 14)}</span>
                         <span className="pending-task-title">{todo.title}</span>
                       </div>
                     ))}
@@ -393,7 +408,7 @@ export default function DashboardCalendar({ todos, onNavigate }) {
                         className="pending-task-icon"
                         style={{ color: event.color }}
                       >
-                        {Icons.calendar}
+                        {renderIcon(Icons.calendar, 14)}
                       </span>
                       <span className="pending-task-title">
                         {event.title}

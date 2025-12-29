@@ -1,38 +1,32 @@
 .theme-toggle {
-  position: fixed;
-  top: var(--spacing-lg);
-  right: var(--spacing-lg);
-  width: 44px;
-  height: 44px;
+  position: relative;
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  min-height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
   border: var(--border-thin);
-  border-radius: var(--radius-md);
-  background: linear-gradient(135deg, var(--color-bg) 0%, var(--color-panel) 100%);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg);
   color: var(--color-text);
   cursor: pointer;
-  transition: all var(--transition-smooth);
-  box-shadow: var(--shadow-md);
-  z-index: 1000;
+  transition: all var(--transition-base);
   padding: 0;
-  backdrop-filter: blur(10px);
+  margin: 0;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  order: 2;
 }
 
 .theme-toggle:hover {
-  background: linear-gradient(135deg, var(--color-panel) 0%, var(--color-surface) 100%);
+  background: var(--color-surface);
   border-color: var(--color-stroke-strong);
-  transform: translateY(-2px) scale(1.05);
-  box-shadow: var(--shadow-lg);
 }
 
 .theme-toggle:active {
-  transform: translateY(0) scale(0.95);
-}
-
-.theme-toggle:active {
-  transform: translateY(0);
-  box-shadow: var(--shadow-sm);
+  transform: scale(0.95);
 }
 
 .theme-toggle:focus-visible {
@@ -41,23 +35,22 @@
 }
 
 .theme-icon {
-  font-size: 20px;
+  font-size: 18px;
   line-height: 1;
   font-weight: 400;
-  transition: transform var(--transition-smooth);
+  transition: transform var(--transition-base);
 }
 
 .theme-toggle:hover .theme-icon {
-  transform: scale(1.15) rotate(15deg);
-  animation: bounceIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: scale(1.1);
 }
 
 @media (max-width: 768px) {
   .theme-toggle {
-    top: var(--spacing-sm);
-    right: var(--spacing-sm);
-    width: 36px;
-    height: 36px;
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    min-height: 32px;
   }
   
   .theme-icon {

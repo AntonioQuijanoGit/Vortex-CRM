@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Onboarding from "../Onboarding/Onboarding";
 import OrphanedItems from "../OrphanedItems/OrphanedItems";
-import { Icons } from "../../../utils/icons";
+import { Icons, renderIcon } from "../../../utils/icons";
 import { safeGetItem } from "../../../utils/storage";
 import "./HelpButton.css";
 
@@ -11,6 +11,8 @@ export default function HelpButton({ onNavigate }) {
   
   // Check if there are orphaned items
   const hasOrphanedItems = () => {
+    if (typeof window === 'undefined' || !localStorage) return false;
+    
     const allPages = safeGetItem("notion-pages", []);
     const pageIds = new Set(allPages.map(p => p.id));
 
@@ -33,6 +35,8 @@ export default function HelpButton({ onNavigate }) {
 
   // Check for orphaned items periodically
   useEffect(() => {
+    if (typeof window === 'undefined' || !localStorage) return;
+    
     const checkOrphaned = () => {
       const allPages = safeGetItem("notion-pages", []);
       const pageIds = new Set(allPages.map(p => p.id));
@@ -67,6 +71,8 @@ export default function HelpButton({ onNavigate }) {
 
   // Keyboard shortcut: ? key to show tutorial
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
     const handleKeyDown = (e) => {
       // Only trigger if not typing in an input
       if (e.key === "?" && !e.target.matches("input, textarea")) {
@@ -89,7 +95,9 @@ export default function HelpButton({ onNavigate }) {
             aria-label={`Show ${orphanedCount} orphaned item${orphanedCount !== 1 ? 's' : ''}`}
             title={`${orphanedCount} item${orphanedCount !== 1 ? 's' : ''} in deleted pages`}
           >
-            {Icons.warning}
+            <span className="help-button-icon" aria-hidden="true">
+              {renderIcon(Icons.warning, 18)}
+            </span>
             {orphanedCount > 0 && (
               <span className="orphaned-count-badge">{orphanedCount}</span>
             )}
@@ -101,7 +109,9 @@ export default function HelpButton({ onNavigate }) {
           aria-label="Show tutorial"
           title="Show tutorial (Press ? for help)"
         >
-          ?
+          <span className="help-button-icon" aria-hidden="true">
+            {renderIcon(Icons.help, 18)}
+          </span>
         </button>
       </div>
       {showTutorial && (

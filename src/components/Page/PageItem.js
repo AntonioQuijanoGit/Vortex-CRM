@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { Icons } from "../../utils/icons";
-import { ConfirmDialog } from "../shared";
+import React, { useState, useRef, useEffect } from "react";
+import { Icons, renderIcon } from "../../utils/icons";
+import { ConfirmDialog, PagePreview, Tooltip } from "../shared";
 import { useTodos } from "../../hooks/useTodos";
 import "./PageItem.css";
 
@@ -23,6 +23,9 @@ export default function PageItem({
   const [editTitle, setEditTitle] = useState(page.title);
   const [showOptions, setShowOptions] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
+  const previewTimeoutRef = useRef(null);
+  const itemRef = useRef(null);
 
   const children = getChildren(page.id);
   const indent = level * 20;
@@ -57,7 +60,7 @@ export default function PageItem({
   };
 
   const handleAddSubpage = () => {
-    onAddChild("Untitled", page.id, "page");
+    onAddChild("", page.id, "page"); // Empty string - will be "Untitled" by default
     setShowOptions(false);
   };
 
@@ -76,23 +79,79 @@ export default function PageItem({
     }
   };
 
+  const handleMouseEnter = () => {
+    setShowOptions(true);
+    // Show preview after a short delay
+    previewTimeoutRef.current = setTimeout(() => {
+      setShowPreview(true);
+    }, 500);
+  };
+
+  const handleMouseLeave = (e) => {
+    // Clear preview timeout
+    if (previewTimeoutRef.current) {
+      clearTimeout(previewTimeoutRef.current);
+      previewTimeoutRef.current = null;
+    }
+    setShowPreview(false);
+    
+    // Don't hide if moving to options buttons or preview
+    const relatedTarget = e.relatedTarget;
+    
+    // Verify relatedTarget is a valid Node before using contains
+    if (relatedTarget && relatedTarget instanceof Node && e.currentTarget) {
+      const pageOptions = e.currentTarget.querySelector('.page-options');
+      const preview = document.querySelector('.page-preview');
+      
+      // Check if moving to page options
+      if (pageOptions && pageOptions instanceof Node && pageOptions.contains(relatedTarget)) {
+        return;
+      }
+      
+      // Check if moving to preview
+      if (preview && preview instanceof Node && preview.contains(relatedTarget)) {
+        return;
+      }
+      
+      // Check if moving to preview container
+      const previewContainer = document.querySelector('.page-preview-container');
+      if (previewContainer && previewContainer instanceof Node && previewContainer.contains(relatedTarget)) {
+        return;
+      }
+    }
+    
+    setShowOptions(false);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (previewTimeoutRef.current) {
+        clearTimeout(previewTimeoutRef.current);
+      }
+    };
+  }, []);
+
   return (
     <>
       <div
+        ref={itemRef}
         className={`page-item ${isActive ? "active" : ""}`}
         style={{ paddingLeft: `${12 + indent}px` }}
-        onMouseEnter={() => setShowOptions(true)}
-        onMouseLeave={(e) => {
-          // Don't hide if moving to options buttons
-          if (!e.currentTarget.querySelector('.page-options')?.contains(e.relatedTarget)) {
-            setShowOptions(false);
-          }
-        }}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
         onFocus={() => setShowOptions(true)}
         onBlur={(e) => {
           // Don't hide if clicking on options buttons
-          if (!e.currentTarget.contains(e.relatedTarget)) {
+          // Check if relatedTarget is a valid Node before using contains
+          const relatedTarget = e.relatedTarget;
+          if (relatedTarget && relatedTarget instanceof Node) {
+            if (!e.currentTarget.contains(relatedTarget)) {
+              setShowOptions(false);
+              setShowPreview(false);
+            }
+          } else {
             setShowOptions(false);
+            setShowPreview(false);
           }
         }}
         role="treeitem"
@@ -112,7 +171,7 @@ export default function PageItem({
               aria-label={isExpanded ? "Collapse subpages" : "Expand subpages"}
               aria-expanded={isExpanded}
             >
-              {isExpanded ? Icons.expand : Icons.collapse}
+              {renderIcon(isExpanded ? Icons.expand : Icons.collapse, 12)}
             </button>
           )}
 
@@ -145,6 +204,9 @@ export default function PageItem({
               />
             ) : (
               <>
+                <span className="page-icon">
+                  {renderIcon(page.icon || Icons.page, 16)}
+                </span>
                 <span className="page-title">{page.title}</span>
                 {todosCount > 0 && (
                   <span className="page-todos-badge" aria-label={`${todosCount} ${todosCount === 1 ? "item" : "items"}`}>
@@ -157,42 +219,45 @@ export default function PageItem({
 
           {showOptions && !isEditing && (
             <div className="page-options">
-              <button
-                className="option-button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleAddSubpage();
-                }}
-                onMouseDown={(e) => e.stopPropagation()}
-                title="Add subpage"
-                aria-label="Add subpage"
-              >
-                {Icons.add}
-              </button>
-              <button
-                className="option-button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setIsEditing(true);
-                }}
-                onMouseDown={(e) => e.stopPropagation()}
-                title="Rename"
-                aria-label="Rename page"
-              >
-                {Icons.edit}
-              </button>
-              <button
-                className="option-button delete"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleDelete();
-                }}
-                onMouseDown={(e) => e.stopPropagation()}
-                title="Delete"
-                aria-label="Delete page"
-              >
-                {Icons.delete}
-              </button>
+              <Tooltip content="Add a subpage to organize content hierarchically" position="bottom">
+                <button
+                  className="option-button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleAddSubpage();
+                  }}
+                  onMouseDown={(e) => e.stopPropagation()}
+                  aria-label="Add subpage"
+                >
+                  {renderIcon(Icons.add, 14)}
+                </button>
+              </Tooltip>
+              <Tooltip content="Rename this page" position="bottom">
+                <button
+                  className="option-button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setIsEditing(true);
+                  }}
+                  onMouseDown={(e) => e.stopPropagation()}
+                  aria-label="Rename page"
+                >
+                  {renderIcon(Icons.edit, 14)}
+                </button>
+              </Tooltip>
+              <Tooltip content="Delete this page and all its content (cannot be undone)" position="bottom">
+                <button
+                  className="option-button delete"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDelete();
+                  }}
+                  onMouseDown={(e) => e.stopPropagation()}
+                  aria-label="Delete page"
+                >
+                  {renderIcon(Icons.delete, 14)}
+                </button>
+              </Tooltip>
             </div>
           )}
         </div>
@@ -208,6 +273,27 @@ export default function PageItem({
         onConfirm={confirmDelete}
         onCancel={() => setShowDeleteConfirm(false)}
       />
+
+      {showPreview && itemRef.current && (
+        <div
+          className="page-preview-container"
+          style={{
+            position: 'fixed',
+            top: itemRef.current.getBoundingClientRect().top + 'px',
+            left: (itemRef.current.getBoundingClientRect().right + 12) + 'px',
+            zIndex: 10000,
+          }}
+          onMouseEnter={() => setShowPreview(true)}
+          onMouseLeave={() => {
+            setShowPreview(false);
+            if (previewTimeoutRef.current) {
+              clearTimeout(previewTimeoutRef.current);
+            }
+          }}
+        >
+          <PagePreview page={page} getChildren={getChildren} />
+        </div>
+      )}
 
       {isExpanded && children.length > 0 && (
         <div className="page-children" role="group">

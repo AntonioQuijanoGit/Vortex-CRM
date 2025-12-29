@@ -1,0 +1,186 @@
+/* Modern Todo Form - Senior UX/UI */
+.todoCreateForm {
+  background: var(--color-bg);
+  border: 2px solid var(--color-stroke);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+  margin-bottom: var(--spacing-xl);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-base);
+}
+
+.todoCreateForm:focus-within {
+  border-color: var(--color-accent);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.type-selector {
+  display: flex;
+  gap: var(--spacing-xs);
+  margin-bottom: var(--spacing-md);
+  background: var(--color-panel);
+  padding: var(--spacing-xs);
+  border-radius: var(--radius-md);
+}
+
+.type-option {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: 2px solid transparent;
+  border-radius: var(--radius-md);
+  background: transparent;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: var(--color-muted);
+  min-height: 44px; /* Touch-friendly */
+}
+
+.type-option:hover {
+  background: var(--color-surface);
+  color: var(--color-ink);
+}
+
+.type-option.active {
+  background: var(--color-ink);
+  color: var(--color-bg);
+  border-color: var(--color-ink);
+  font-weight: 600;
+}
+
+.type-icon {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.type-label {
+  font-size: var(--font-size-sm);
+  font-weight: inherit;
+}
+
+.formRow {
+  margin-bottom: var(--spacing-md);
+  position: relative;
+}
+
+.todoInput {
+  width: 100%;
+  padding: var(--spacing-md) var(--spacing-lg);
+  border: 2px solid var(--color-stroke);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-base);
+  font-family: var(--font-sans);
+  color: var(--color-ink);
+  background: var(--color-bg);
+  outline: none;
+  transition: all var(--transition-base);
+  min-height: 52px; /* Touch-friendly, professional */
+  box-sizing: border-box;
+}
+
+.todoInput::placeholder {
+  color: var(--color-muted);
+  opacity: 0.7;
+}
+
+.todoInput:focus {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.05);
+  background: var(--color-panel);
+}
+
+.todoInput:hover:not(:focus) {
+  border-color: var(--color-stroke-strong);
+}
+
+.buttonCreate {
+  width: 100%;
+  padding: var(--spacing-md) var(--spacing-lg);
+  background: var(--color-ink);
+  color: var(--color-bg);
+  border: 2px solid var(--color-ink);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  min-height: 52px; /* Touch-friendly */
+  box-shadow: var(--shadow-sm);
+}
+
+.buttonCreate:hover:not(:disabled) {
+  background: var(--color-accent-hover);
+  border-color: var(--color-accent-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.buttonCreate:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: var(--shadow-sm);
+}
+
+.buttonCreate:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  background: var(--color-stroke);
+  border-color: var(--color-stroke);
+  color: var(--color-muted);
+}
+
+.buttonText {
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.buttonIcon {
+  font-size: 20px;
+  font-weight: 300;
+  line-height: 1;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .todoCreateForm {
+    padding: var(--spacing-md);
+  }
+
+  .todoInput,
+  .buttonCreate {
+    min-height: 48px;
+    font-size: var(--font-size-base);
+  }
+}
+
+@media (max-width: 480px) {
+  .type-selector {
+    flex-direction: column;
+  }
+
+  .type-option {
+    width: 100%;
+  }
+}
+

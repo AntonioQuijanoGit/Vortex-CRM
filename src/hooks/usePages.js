@@ -1,59 +1,118 @@
 import { useState, useEffect } from "react";
-import { Icons, normalizeIcon } from "../utils/icons";
+import { Icons, normalizeIcon, iconToKey } from "../utils/icons";
 import { safeGetItem, safeSetItem } from "../utils/storage";
 import { validateTitle } from "../utils/validation";
 import { logger } from "../utils/logger";
-import { STORAGE_KEYS, DEFAULTS } from "../constants";
-
-/**
- * Validates page structure to prevent crashes from corrupt data
- */
-function validatePageStructure(page) {
-  return (
-    page &&
-    typeof page === 'object' &&
-    typeof page.id === 'string' &&
-    page.id.length > 0 &&
-    typeof page.title === 'string' &&
-    Array.isArray(page.content)
-  );
-}
-
-/**
- * Validates array of pages
- */
-function validatePagesArray(pages) {
-  if (!Array.isArray(pages)) return false;
-  return pages.every(validatePageStructure);
-}
 
 /**
  * Custom hook for managing hierarchical pages (Notion-style)
  */
 export function usePages() {
-  const [pages, setPages] = useState(() => {
-    const savedPages = safeGetItem(STORAGE_KEYS.PAGES, null);
-    if (savedPages && savedPages.length > 0) {
-      // Validate data structure
-      if (!validatePagesArray(savedPages)) {
-        logger.warn("Invalid pages data structure, using default");
-        return [
-          {
-            id: "home",
-            title: "Home",
-            icon: Icons.page,
-            parentId: null,
-            type: "page",
-            createdAt: new Date().toISOString(),
-            content: [],
-          },
-        ];
+  // Helper function to recover icon from page metadata when icon is lost
+  const recoverIconFromPage = (page) => {
+    if (!page) return Icons.page;
+    
+    const titleLower = (page.title || "").toLowerCase().trim();
+    
+    // Try to recover icon based on page type first
+    if (page.type === "database") {
+      if (titleLower.includes("task") || titleLower.includes("todo")) {
+        return Icons.task;
       }
-      // Normalize icons in saved pages
-      return savedPages.map(page => ({
-        ...page,
-        icon: normalizeIcon(page.icon)
-      }));
+      if (titleLower.includes("habit") || titleLower.includes("habits")) {
+        return Icons.habit;
+      }
+      return Icons.database;
+    }
+    
+    if (page.type === "page") {
+      if (titleLower === "home") {
+        return Icons.home;
+      }
+      if (titleLower.includes("task") || titleLower.includes("todo")) {
+        return Icons.task;
+      }
+      if (titleLower.includes("habit") || titleLower.includes("habits")) {
+        return Icons.habit;
+      }
+      if (titleLower.includes("note") || titleLower.includes("notes")) {
+        return Icons.note;
+      }
+      if (titleLower.includes("calendar")) {
+        return Icons.calendar;
+      }
+      if (titleLower.includes("movie") || titleLower.includes("film")) {
+        return Icons.movie;
+      }
+      // Use page ID hash for guaranteed variety (ID is always unique)
+      const idHash = (page.id || "").split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+      const variants = [Icons.page, Icons.note, Icons.folder, Icons.text, Icons.book];
+      return variants[idHash % variants.length];
+    }
+    
+    return Icons.page;
+  };
+
+  const [pages, setPages] = useState(() => {
+    const savedPages = safeGetItem("notion-pages", null);
+    
+    if (savedPages && savedPages.length > 0) {
+      // Check if migration is needed (all icons same or invalid)
+      const iconKeys = savedPages.map(p => typeof p.icon === 'string' ? p.icon : null).filter(Boolean);
+      const allSame = iconKeys.length > 1 && new Set(iconKeys).size === 1;
+      
+      // Convert to components and migrate if needed
+      const normalizedPages = savedPages.map((page) => {
+        let iconComponent = Icons.page; // Default fallback
+        
+        // Convert string key to component
+        if (typeof page.icon === 'string') {
+          iconComponent = Icons[page.icon];
+          if (!iconComponent) {
+            if (process.env.NODE_ENV === 'development') {
+              console.warn(`[usePages] Icon key "${page.icon}" not found in Icons, using page fallback`);
+            }
+            iconComponent = Icons.page;
+          }
+          // If all icons are same, force recovery for variety
+          if (allSame) {
+            iconComponent = recoverIconFromPage(page);
+          }
+        } 
+        // If it's already a component (function or forwardRef), use it
+        else if (typeof page.icon === 'function' || (page.icon && typeof page.icon === 'object' && page.icon.render)) {
+          iconComponent = page.icon;
+        }
+        // If icon is lost/invalid, recover it
+        else {
+          iconComponent = recoverIconFromPage(page);
+        }
+        
+        // Ensure we have a valid component
+        if (!iconComponent) {
+          iconComponent = Icons.page;
+        }
+        
+        // Icon is now properly normalized - no debug log needed in production
+        
+        return {
+          ...page,
+          icon: iconComponent
+        };
+      });
+      
+      // Save migrated icons if needed
+      if (allSame) {
+        setTimeout(() => {
+          const toSave = normalizedPages.map(p => ({
+            ...p,
+            icon: iconToKey(p.icon)
+          }));
+          safeSetItem("notion-pages", toSave);
+        }, 0);
+      }
+      
+      return normalizedPages;
     }
     // Default pages - only essential ones
     return [
@@ -70,28 +129,28 @@ export function usePages() {
   });
 
   const [activePage, setActivePage] = useState(() => {
-    const saved = safeGetItem(STORAGE_KEYS.ACTIVE_PAGE, DEFAULTS.ACTIVE_PAGE);
-    // Validate that the saved page exists
-    const savedPages = safeGetItem(STORAGE_KEYS.PAGES, []);
-    if (saved && Array.isArray(savedPages)) {
-      const pageExists = savedPages.some(p => p.id === saved);
-      if (!pageExists) {
-        return DEFAULTS.ACTIVE_PAGE;
-      }
+    const savedPage = safeGetItem("notion-active-page", "home");
+    // Migrate "overview" to "home" for consistency
+    if (savedPage === "overview") {
+      safeSetItem("notion-active-page", "home");
+      return "home";
     }
-    return saved;
+    return savedPage;
   });
 
   const [expandedPages, setExpandedPages] = useState(() => {
-    const saved = safeGetItem(STORAGE_KEYS.EXPANDED_PAGES, []);
-    // Validate it's an array
-    return Array.isArray(saved) ? saved : [];
+    return safeGetItem("notion-expanded-pages", []);
   });
 
-  // Save to localStorage
+  // Save to localStorage - convert icon functions to string keys for serialization
   useEffect(() => {
     try {
-      safeSetItem(STORAGE_KEYS.PAGES, pages);
+      // Convert icon components to string keys before saving
+      const pagesToSave = pages.map(page => ({
+        ...page,
+        icon: iconToKey(page.icon) // Save as string key instead of function
+      }));
+      safeSetItem("notion-pages", pagesToSave);
     } catch (error) {
       logger.error("Failed to save pages:", error);
     }
@@ -99,7 +158,7 @@ export function usePages() {
 
   useEffect(() => {
     try {
-      safeSetItem(STORAGE_KEYS.ACTIVE_PAGE, activePage);
+      safeSetItem("notion-active-page", activePage);
     } catch (error) {
       logger.error("Failed to save active page:", error);
     }
@@ -107,7 +166,7 @@ export function usePages() {
 
   useEffect(() => {
     try {
-      safeSetItem(STORAGE_KEYS.EXPANDED_PAGES, expandedPages);
+      safeSetItem("notion-expanded-pages", expandedPages);
     } catch (error) {
       logger.error("Failed to save expanded pages:", error);
     }
@@ -128,9 +187,35 @@ export function usePages() {
     return pages.filter((page) => page.parentId === null);
   };
 
+  // Generate unique title for untitled pages
+  const generateUniqueTitle = (baseTitle, parentId = null) => {
+    const existingTitles = pages
+      .filter(p => p.parentId === parentId)
+      .map(p => p.title);
+    
+    if (!existingTitles.includes(baseTitle)) {
+      return baseTitle;
+    }
+    
+    let counter = 2;
+    let newTitle = `${baseTitle} ${counter}`;
+    while (existingTitles.includes(newTitle)) {
+      counter++;
+      newTitle = `${baseTitle} ${counter}`;
+    }
+    
+    return newTitle;
+  };
+
   // Add new page
-  const addPage = (title, parentId = null, type = "page", icon = Icons.page, initialContent = null, template = null) => {
-    const pageTitle = title.trim() || DEFAULTS.PAGE_TITLE;
+  const addPage = (title, parentId = null, type = "page", icon = Icons.page) => {
+    // If title is null, undefined, or empty string, throw error instead of creating Untitled
+    if (!title || typeof title !== 'string' || !title.trim()) {
+      throw new Error("Page title is required");
+    }
+    
+    let pageTitle = title.trim();
+    
     const validation = validateTitle(pageTitle);
     if (!validation.valid) {
       throw new Error(validation.error);
@@ -144,10 +229,7 @@ export function usePages() {
       type,
       viewType: type === "database" ? "list" : undefined,
       createdAt: new Date().toISOString(),
-      content: template?.content ? template.content.map(block => ({
-        ...block,
-        id: crypto.randomUUID(),
-      })) : (initialContent || []),
+      content: [],
     };
 
     setPages((prev) => [...prev, newPage]);
@@ -164,12 +246,15 @@ export function usePages() {
   const updatePage = (pageId, updates) => {
     // Validate title if it's being updated
     if (updates.title !== undefined) {
-      const pageTitle = updates.title.trim() || DEFAULTS.PAGE_TITLE;
-      const validation = validateTitle(pageTitle);
+      const trimmedTitle = updates.title.trim();
+      if (!trimmedTitle) {
+        throw new Error("Page title cannot be empty");
+      }
+      const validation = validateTitle(trimmedTitle);
       if (!validation.valid) {
         throw new Error(validation.error);
       }
-      updates.title = pageTitle;
+      updates.title = trimmedTitle;
     }
 
     setPages((prev) =>
@@ -187,8 +272,8 @@ export function usePages() {
 
     // Check for todos in this page
     try {
-      const todos = safeGetItem(STORAGE_KEYS.TODOS(pageId), []);
-      if (Array.isArray(todos) && todos.length > 0) return true;
+      const todos = safeGetItem(`todos-${pageId}`, []);
+      if (todos.length > 0) return true;
     } catch (error) {
       logger.error("Error checking todos for page:", error);
     }
@@ -202,26 +287,6 @@ export function usePages() {
     return false;
   };
 
-  // Duplicate page
-  const duplicatePage = (pageId) => {
-    const pageToDuplicate = getPage(pageId);
-    if (!pageToDuplicate) return null;
-
-    const duplicatedPage = {
-      ...pageToDuplicate,
-      id: crypto.randomUUID(),
-      title: `${pageToDuplicate.title} (Copy)`,
-      createdAt: new Date().toISOString(),
-      content: pageToDuplicate.content ? pageToDuplicate.content.map(block => ({
-        ...block,
-        id: crypto.randomUUID(),
-      })) : [],
-    };
-
-    setPages((prev) => [...prev, duplicatedPage]);
-    return duplicatedPage.id;
-  };
-
   // Delete page and its children
   const deletePage = (pageId, force = false) => {
     // If not forced and page has content, don't delete (should show confirmation first)
@@ -232,15 +297,38 @@ export function usePages() {
     const deleteRecursive = (id) => {
       const children = getChildren(id);
       children.forEach((child) => deleteRecursive(child.id));
+      
+      // Delete all associated data from localStorage
+      if (typeof window !== 'undefined' && localStorage) {
+        // Delete todos for this page
+        const todosKey = `todos-${id}`;
+        localStorage.removeItem(todosKey);
+        
+        // Delete events for this page
+        const eventsKey = `events-${id}`;
+        localStorage.removeItem(eventsKey);
+        
+        // Delete any other page-specific data
+        // Check all localStorage keys and remove those related to this page
+        const keysToRemove = [];
+        for (let i = 0; i < localStorage.length; i++) {
+          const key = localStorage.key(i);
+          if (key && (key.startsWith(`${id}-`) || key.endsWith(`-${id}`) || key === `page-${id}`)) {
+            keysToRemove.push(key);
+          }
+        }
+        keysToRemove.forEach(key => localStorage.removeItem(key));
+      }
+      
+      // Remove page from state
       setPages((prev) => prev.filter((page) => page.id !== id));
     };
 
     deleteRecursive(pageId);
 
-    // If we deleted the active page, go to home or first available page
+    // If we deleted the active page, go to home
     if (activePage === pageId) {
-      const remainingPages = pages.filter(p => p.id !== pageId);
-      setActivePage(remainingPages[0]?.id || DEFAULTS.ACTIVE_PAGE);
+      setActivePage("home");
     }
   };
 
@@ -271,16 +359,6 @@ export function usePages() {
     return breadcrumbs;
   };
 
-  // Find page by title (case-insensitive, optional type filter)
-  const findPageByTitle = (title, type = null) => {
-    const normalizedTitle = title.trim().toLowerCase();
-    return pages.find(page => {
-      const titleMatch = page.title.trim().toLowerCase() === normalizedTitle;
-      const typeMatch = type ? page.type === type : true;
-      return titleMatch && typeMatch;
-    });
-  };
-
   return {
     pages,
     activePage,
@@ -291,10 +369,8 @@ export function usePages() {
     addPage,
     updatePage,
     deletePage,
-    duplicatePage,
     toggleExpanded,
     isExpanded,
     getBreadcrumbs,
-    findPageByTitle,
   };
 }

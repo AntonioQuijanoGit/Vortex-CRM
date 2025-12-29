@@ -1,0 +1,92 @@
+.code-block {
+  margin: var(--spacing-md) 0;
+}
+
+.code-block-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background: var(--color-panel);
+  border: var(--border-thin);
+  border-bottom: none;
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+}
+
+.code-block-info {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  color: var(--color-muted);
+  font-size: var(--font-size-xs);
+}
+
+.code-language-select {
+  padding: var(--spacing-xxs) var(--spacing-xs);
+  border: var(--border-thin);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg);
+  font-size: var(--font-size-xs);
+  font-family: var(--font-mono);
+  color: var(--color-ink);
+  cursor: pointer;
+}
+
+.code-language-label {
+  font-family: var(--font-mono);
+  text-transform: capitalize;
+}
+
+.code-copy-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: transparent;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  color: var(--color-muted);
+  transition: all var(--transition-fast);
+}
+
+.code-copy-btn:hover {
+  background: var(--color-surface);
+  color: var(--color-ink);
+}
+
+.code-textarea {
+  width: 100%;
+  min-height: 200px;
+  border: var(--border-thin);
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+  padding: var(--spacing-md);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-sm);
+  color: var(--color-ink);
+  background: var(--color-bg);
+  outline: none;
+  resize: vertical;
+  transition: all var(--transition-base);
+  line-height: 1.5;
+  tab-size: 2;
+}
+
+.code-textarea:focus {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+}
+
+.code-block-content {
+  cursor: pointer;
+  border: var(--border-thin);
+  border-top: none;
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+  overflow: hidden;
+}
+
+.code-block-content:hover {
+  opacity: 0.9;
+}
+

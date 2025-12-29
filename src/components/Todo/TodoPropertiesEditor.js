@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Icons } from "../../utils/icons";
+import { Icons, renderIcon } from "../../utils/icons";
 import "./TodoPropertiesEditor.css";
 
 export default function TodoPropertiesEditor({ item, onSave, onCancel }) {
@@ -89,7 +89,7 @@ export default function TodoPropertiesEditor({ item, onSave, onCancel }) {
           onClick={onCancel}
           aria-label="Close properties editor"
         >
-          {Icons.close}
+          {renderIcon(Icons.close, 18)}
         </button>
       </div>
 
@@ -97,7 +97,7 @@ export default function TodoPropertiesEditor({ item, onSave, onCancel }) {
         {/* Due Date */}
         <div className="property-group">
           <label htmlFor={`due-date-${item.id}`} className="property-label">
-            <span className="property-icon">{Icons.date}</span>
+            <span className="property-icon">{renderIcon(Icons.date, 16)}</span>
             Due Date
           </label>
           <div className="property-input-group">
@@ -121,7 +121,7 @@ export default function TodoPropertiesEditor({ item, onSave, onCancel }) {
                 aria-label="Clear due date"
                 title="Clear due date"
               >
-                {Icons.delete}
+                {renderIcon(Icons.delete, 16)}
               </button>
             )}
           </div>

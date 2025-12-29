@@ -5,6 +5,8 @@
   padding: var(--spacing-lg);
   box-shadow: var(--shadow-md);
   animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: visible;
+  position: relative;
 }
 
 .heatmap-header {
@@ -38,7 +40,7 @@
 
 .legend-squares {
   display: flex;
-  gap: 3px;
+  gap: var(--spacing-xxs);
 }
 
 .legend-square {
@@ -75,15 +77,46 @@
 
 .heatmap-grid {
   display: flex;
-  gap: 4px;
+  gap: var(--spacing-xs);
   overflow-x: auto;
-  padding-bottom: var(--spacing-xs);
+  overflow-y: visible;
+  padding: var(--spacing-xs);
+  position: relative;
+  justify-content: center;
+}
+
+.heatmap-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-sm);
+}
+
+.heatmap-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.heatmap-stat-label {
+  font-size: 12px;
+  color: var(--color-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.heatmap-stat-value {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-ink);
 }
 
 .heatmap-week {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: var(--spacing-xs);
+  position: relative;
+  z-index: 1;
 }
 
 .heatmap-day {
@@ -94,12 +127,14 @@
   transition: all var(--transition-base);
   cursor: pointer;
   position: relative;
+  flex-shrink: 0;
 }
 
 .heatmap-day:hover {
-  transform: scale(1.3);
-  z-index: 10;
+  transform: scale(1.5);
+  z-index: 100;
   box-shadow: var(--shadow-md);
+  position: relative;
 }
 
 .heatmap-day.level-0 {

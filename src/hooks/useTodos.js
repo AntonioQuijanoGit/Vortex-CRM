@@ -1,9 +1,22 @@
 import { useState, useEffect } from "react";
-import { resetDailyHabits, calculateStreak, checkCompletedYesterday } from "../utils/habits";
+import { resetDailyHabits, calculateStreak } from "../utils/habits";
 import { safeGetItem, safeSetItem } from "../utils/storage";
 import { validateTitle } from "../utils/validation";
 import { logger } from "../utils/logger";
 import { STORAGE_KEYS, INTERVALS } from "../constants";
+
+// Helper function to generate UUID with fallback
+function generateId() {
+  if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+    return crypto.randomUUID();
+  }
+  // Fallback for environments without crypto.randomUUID
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    const r = (Math.random() * 16) | 0;
+    const v = c === 'x' ? r : ((r & 0x3) | 0x8);
+    return v.toString(16);
+  });
+}
 
 /**
  * Custom hook for managing todos with localStorage persistence
@@ -32,6 +45,8 @@ export function useTodos(pageId = null) {
 
   // Reset habits when day changes
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
     const checkDayChange = setInterval(() => {
       const today = new Date().toDateString();
       const lastReset = safeGetItem(STORAGE_KEYS.LAST_RESET, null);
@@ -52,7 +67,7 @@ export function useTodos(pageId = null) {
     }
 
     const newTodo = {
-      id: crypto.randomUUID(),
+      id: generateId(),
       title: title.trim(),
       type: type,
       completed: false,
@@ -152,4 +167,5 @@ export function useTodos(pageId = null) {
     toggleComplete,
   };
 }
+
 

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Icons } from "../../../utils/icons";
+import { Icons, renderIcon } from "../../../utils/icons";
 import "./TableView.css";
 
 export default function TableView({
@@ -44,7 +44,7 @@ export default function TableView({
         <table className="data-table">
           <thead>
             <tr>
-              <th className="col-checkbox">{Icons.check}</th>
+              <th className="col-checkbox">{renderIcon(Icons.check, 16)}</th>
               <th className="col-title">Title</th>
               <th className="col-status">Status</th>
               <th className="col-priority">Priority</th>
@@ -71,7 +71,7 @@ export default function TableView({
                       className={`table-checkbox ${todo.completed ? "checked" : ""}`}
                       onClick={() => onToggleComplete(todo.id)}
                     >
-                      {todo.completed && Icons.check}
+                      {todo.completed && renderIcon(Icons.check, 16)}
                     </button>
                   </td>
 
@@ -129,8 +129,9 @@ export default function TableView({
 
                   {/* Type */}
                   <td className="col-type">
-                    <span className={`type-badge ${todo.type}`}>
-                      {todo.type === "habit" ? `${Icons.habit} Habit` : `${Icons.task} Task`}
+                    <span className={`type-badge ${todo.type}`} style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                      {renderIcon(todo.type === "habit" ? Icons.habit : Icons.task, 14)}
+                      {todo.type === "habit" ? "Habit" : "Task"}
                     </span>
                   </td>
 
@@ -196,7 +197,7 @@ export default function TableView({
                       onClick={() => onDelete(todo.id)}
                       title="Delete"
                     >
-                      {Icons.delete}
+                      {renderIcon(Icons.delete, 16)}
                     </button>
                   </td>
                 </tr>

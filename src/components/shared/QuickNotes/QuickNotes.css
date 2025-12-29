@@ -1,0 +1,263 @@
+.quick-notes-container {
+  position: fixed;
+  bottom: calc(var(--footer-height, 50px) + 44px + var(--spacing-md) + var(--spacing-sm)); /* Above buttons and footer when expanded */
+  right: var(--spacing-lg);
+  width: 320px;
+  max-height: 500px;
+  background: var(--color-bg);
+  border: var(--border-thin);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  z-index: 5001; /* Above help button (5000) */
+  display: flex;
+  flex-direction: column;
+  animation: slideUp 0.3s ease;
+}
+
+/* When expanded, move it to the left to avoid blocking buttons */
+@media (min-width: 769px) {
+  .quick-notes-container {
+    right: calc(var(--spacing-lg) + 44px + var(--spacing-sm) + 44px + var(--spacing-sm)); /* Account for both buttons */
+  }
+}
+
+.quick-notes-collapsed {
+  position: fixed;
+  bottom: calc(var(--footer-height, 50px) + var(--spacing-lg));
+  right: calc(var(--spacing-lg) + 44px + var(--spacing-sm)); /* To the left of help button */
+  z-index: 5001; /* Above help button (5000) */
+}
+
+.quick-notes-toggle {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  background: var(--color-panel);
+  color: var(--color-ink);
+  border: var(--border-thin);
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: all var(--transition-base);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.quick-notes-toggle:hover {
+  background: var(--color-surface);
+  border-color: var(--color-stroke-strong);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.quick-notes-count {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: var(--color-ink);
+  color: var(--color-bg);
+  font-size: 10px;
+  font-weight: 600;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--color-panel);
+  box-shadow: var(--shadow-sm);
+}
+
+.quick-notes-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-md);
+  border-bottom: var(--border-thin);
+}
+
+.quick-notes-title {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+.quick-notes-icon {
+  font-size: 20px;
+  color: var(--color-accent);
+}
+
+.quick-notes-badge {
+  background: var(--color-accent);
+  color: white;
+  font-size: 12px;
+  font-weight: 700;
+  padding: var(--spacing-xxs) var(--spacing-sm);
+  border-radius: 12px;
+}
+
+.quick-notes-actions {
+  display: flex;
+  gap: var(--spacing-xs);
+}
+
+.quick-notes-action {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: var(--color-surface);
+  color: var(--color-ink);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.quick-notes-action:hover {
+  background: var(--color-panel);
+}
+
+.quick-notes-grid {
+  padding: var(--spacing-md);
+  overflow-y: auto;
+  max-height: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.quick-note {
+  padding: var(--spacing-md);
+  border-radius: var(--radius-md);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+  animation: fadeIn 0.3s ease;
+}
+
+.quick-note-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-sm);
+}
+
+.quick-note-color-picker {
+  display: flex;
+  gap: var(--spacing-xs);
+}
+
+.quick-note-color-option {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.quick-note-color-option.active {
+  border-color: rgba(0, 0, 0, 0.3);
+  transform: scale(1.2);
+}
+
+.quick-note-color-option:hover {
+  transform: scale(1.1);
+}
+
+.quick-note-delete {
+  background: rgba(0, 0, 0, 0.1);
+  border: none;
+  color: rgba(0, 0, 0, 0.6);
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.quick-note-delete:hover {
+  background: rgba(0, 0, 0, 0.2);
+  color: rgba(0, 0, 0, 0.8);
+}
+
+.quick-note-content {
+  flex: 1;
+  background: transparent;
+  border: none;
+  resize: none;
+  font-size: 14px;
+  line-height: 1.5;
+  color: rgba(0, 0, 0, 0.8);
+  font-family: var(--font-base);
+  min-height: 80px;
+}
+
+.quick-note-content:focus {
+  outline: none;
+}
+
+.quick-note-content::placeholder {
+  color: rgba(0, 0, 0, 0.4);
+}
+
+.quick-notes-empty {
+  text-align: center;
+  padding: var(--spacing-2xl);
+  color: var(--color-muted);
+}
+
+.quick-notes-empty-icon {
+  font-size: 48px;
+  margin-bottom: var(--spacing-md);
+  opacity: 0.3;
+}
+
+.quick-notes-empty-button {
+  margin-top: var(--spacing-md);
+  padding: var(--spacing-sm) var(--spacing-lg);
+  background: var(--color-accent);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.quick-notes-empty-button:hover {
+  background: var(--color-accent-hover);
+  transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+  .quick-notes-container {
+    width: calc(100% - var(--spacing-xl));
+    right: var(--spacing-md);
+    left: var(--spacing-md);
+    max-height: 60vh;
+  }
+  
+  .quick-notes-collapsed {
+    bottom: calc(var(--footer-height-mobile, 45px) + var(--spacing-sm));
+    right: calc(var(--spacing-md) + 40px + var(--spacing-xs)); /* To the left of help button on mobile */
+  }
+  
+  .quick-notes-toggle {
+    width: 40px;
+    height: 40px;
+  }
+}
+
