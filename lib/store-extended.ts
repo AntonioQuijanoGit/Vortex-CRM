@@ -15,6 +15,7 @@ import type {
   SavedView,
 } from "./types";
 import { STORAGE_KEYS, TAG_COLORS } from "./constants";
+import { generateUUID } from "./utils";
 
 interface ExtendedStore {
   // Tags
@@ -73,7 +74,7 @@ export const useExtendedStore = create<ExtendedStore>((set, get) => ({
 
   addTag: (name, color) => {
     const tag: Tag = {
-      id: crypto.randomUUID(),
+      id: generateUUID(),
       name,
       color: color || TAG_COLORS[Math.floor(Math.random() * TAG_COLORS.length)],
       createdAt: new Date().toISOString(),
@@ -115,7 +116,7 @@ export const useExtendedStore = create<ExtendedStore>((set, get) => ({
   addFilterPreset: (presetData) => {
     const preset: FilterPreset = {
       ...presetData,
-      id: crypto.randomUUID(),
+      id: generateUUID(),
       createdAt: new Date().toISOString(),
     };
 
@@ -151,7 +152,7 @@ export const useExtendedStore = create<ExtendedStore>((set, get) => ({
   addTask: (taskData) => {
     const task: Task = {
       ...taskData,
-      id: crypto.randomUUID(),
+      id: generateUUID(),
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
@@ -204,7 +205,7 @@ export const useExtendedStore = create<ExtendedStore>((set, get) => ({
   addEvent: (eventData) => {
     const event: Event = {
       ...eventData,
-      id: crypto.randomUUID(),
+      id: generateUUID(),
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
@@ -256,7 +257,7 @@ export const useExtendedStore = create<ExtendedStore>((set, get) => ({
   addCustomReport: (reportData) => {
     const report: CustomReport = {
       ...reportData,
-      id: crypto.randomUUID(),
+      id: generateUUID(),
       createdAt: new Date().toISOString(),
     };
 
@@ -293,7 +294,7 @@ export const useExtendedStore = create<ExtendedStore>((set, get) => ({
     const now = new Date().toISOString();
     const view: SavedView = {
       ...viewData,
-      id: crypto.randomUUID(),
+      id: generateUUID(),
       createdAt: now,
       updatedAt: now,
     };

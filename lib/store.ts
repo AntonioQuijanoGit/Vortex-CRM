@@ -12,6 +12,7 @@ import type {
 } from "./types";
 import { STORAGE_KEYS } from "./constants";
 import { seedDataIfNeeded } from "./data-generator";
+import { generateUUID } from "./utils";
 
 interface CRMStore {
   // Data
@@ -199,7 +200,7 @@ export const useCRMStore = create<CRMStore>((set, get) => ({
     const now = new Date().toISOString();
     const contact: Contact = {
       ...contactData,
-      id: crypto.randomUUID(),
+      id: generateUUID(),
       createdAt: now,
       updatedAt: now,
     };
@@ -273,7 +274,7 @@ export const useCRMStore = create<CRMStore>((set, get) => ({
     const now = new Date().toISOString();
     const deal: Deal = {
       ...dealData,
-      id: crypto.randomUUID(),
+      id: generateUUID(),
       createdAt: now,
       updatedAt: now,
     };
@@ -372,7 +373,7 @@ export const useCRMStore = create<CRMStore>((set, get) => ({
     const now = new Date().toISOString();
     const duplicatedDeal: Deal = {
       ...originalDeal,
-      id: crypto.randomUUID(),
+      id: generateUUID(),
       title: `${originalDeal.title} (Copy)`,
       status: "lead" as DealStatus, // Reset to initial status
       createdAt: now,
@@ -409,7 +410,7 @@ export const useCRMStore = create<CRMStore>((set, get) => ({
   addActivity: (activityData) => {
     const activity: Activity = {
       ...activityData,
-      id: crypto.randomUUID(),
+      id: generateUUID(),
       createdAt: new Date().toISOString(),
     };
 
@@ -444,7 +445,7 @@ export const useCRMStore = create<CRMStore>((set, get) => ({
     const now = new Date().toISOString();
     const note: Note = {
       ...noteData,
-      id: crypto.randomUUID(),
+      id: generateUUID(),
       createdAt: now,
       updatedAt: now,
     };
