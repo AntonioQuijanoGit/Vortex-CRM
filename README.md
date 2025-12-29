@@ -40,6 +40,8 @@ A modern, full-featured workspace application for managing contacts, deals, and 
 
 ## 📦 Installation
 
+### Local Development
+
 1. Install dependencies:
 ```bash
 npm install
@@ -51,6 +53,37 @@ npm run dev
 ```
 
 3. Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+### Docker Deployment
+
+#### Using Docker Compose (Recommended)
+
+1. Build and run the application:
+```bash
+docker-compose up -d
+```
+
+2. The application will be available at [http://localhost:3000](http://localhost:3000)
+
+#### Using Docker directly
+
+1. Build the Docker image:
+```bash
+docker build -t vortex .
+```
+
+2. Run the container:
+```bash
+docker run -p 3000:3000 vortex
+```
+
+3. The application will be available at [http://localhost:3000](http://localhost:3000)
+
+#### Docker Commands
+
+- Stop the container: `docker-compose down`
+- View logs: `docker-compose logs -f`
+- Rebuild after changes: `docker-compose up -d --build`
 
 ## 🏗️ Project Structure
 
@@ -97,7 +130,22 @@ The application is fully responsive and works seamlessly on:
 
 ## 🚀 Deployment
 
+### Vercel (Recommended for Next.js)
+
 The project is configured for Vercel deployment. Simply push to GitHub and import in Vercel.
+
+### Docker
+
+The application is fully containerized and can be deployed to any Docker-compatible platform:
+
+- **Docker Hub**: Push the image and deploy to any container registry
+- **AWS ECS/Fargate**: Deploy using the Dockerfile
+- **Google Cloud Run**: Container-ready deployment
+- **Azure Container Instances**: Direct Docker deployment
+- **DigitalOcean App Platform**: Supports Docker deployments
+- **Railway/Render**: One-click Docker deployment
+
+See the [Docker Deployment](#-docker-deployment) section above for build and run instructions.
 
 ## 📄 License
 
