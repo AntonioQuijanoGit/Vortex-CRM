@@ -26,3 +26,5 @@ yarn-error.log*
 *.md
 check-pages.html
 limpiar-paginas-duplicadas.js
+.next/
+.next
