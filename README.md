@@ -128,6 +128,25 @@ The application is fully responsive and works seamlessly on:
 - 📱 Tablets
 - 💻 Desktop computers
 
+## 🧪 Testing
+
+The project uses Jest and React Testing Library for testing.
+
+Run tests:
+```bash
+npm test
+```
+
+Run tests in watch mode:
+```bash
+npm run test:watch
+```
+
+Run tests with coverage:
+```bash
+npm run test:coverage
+```
+
 ## 🚀 Deployment
 
 ### Vercel (Recommended for Next.js)
