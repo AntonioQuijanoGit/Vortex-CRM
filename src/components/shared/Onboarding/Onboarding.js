@@ -17,40 +17,21 @@ export default function Onboarding({ onComplete, forceShow = false }) {
     }
   }, [forceShow]);
 
+  // Reduced to 3 essential steps for better UX
   const steps = [
     {
-      title: "Welcome to Your Workspace",
-      description: "This is your personal productivity hub. Organize tasks, track habits, and manage your content all in one place.",
+      title: "Welcome! 👋",
+      description: "This is your productivity workspace. Create pages, add tasks, and track habits—all in one place. Everything saves automatically.",
       position: "center"
     },
     {
-      title: "Navigate with the Sidebar",
-      description: "Use the sidebar on the left to switch between pages. Click 'Home' to see your dashboard with stats and quick access to your pages.",
+      title: "Quick Actions",
+      description: "Press Cmd/Ctrl + K to search, Cmd/Ctrl + N to create a page, or use the sidebar to navigate. Click the '?' button anytime for help.",
       position: "center"
     },
     {
-      title: "Quick Search",
-      description: "Press Cmd/Ctrl + K to quickly search across all your pages, tasks, and habits. Navigate directly to any item instantly.",
-      position: "center"
-    },
-    {
-      title: "Create Tasks & Habits",
-      description: "Add tasks to track one-time items. Convert tasks to habits to track daily activities with streak counters. Everything saves automatically.",
-      position: "center"
-    },
-    {
-      title: "Multiple Views",
-      description: "Switch between List, Board, Table, Calendar, and Dashboard views to see your data in different ways. Each view offers unique insights.",
-      position: "center"
-    },
-    {
-      title: "Add Content with Blocks",
-      description: "On any page, click 'Add block' to add tasks, notes, or calendar events. Organize your content with multiple blocks per page.",
-      position: "center"
-    },
-    {
-      title: "You're All Set!",
-      description: "Start by creating a task, adding a block, or exploring your pages. Click the '?' button anytime to see this tutorial again.",
+      title: "Get Started",
+      description: "Create your first page or task to begin. Use the dashboard to see your progress and quick access to everything.",
       position: "center"
     }
   ];

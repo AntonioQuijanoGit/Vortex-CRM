@@ -13,6 +13,7 @@ export default function PageItem({
   onToggleExpanded,
   onUpdate,
   onDelete,
+  onDuplicate,
   onAddChild,
   getChildren,
   activePageId, // Add this prop to check if child is active

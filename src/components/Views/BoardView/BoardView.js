@@ -3,7 +3,7 @@ import BoardCard from "./BoardCard";
 import { Icons } from "../../../utils/icons";
 import "./BoardView.css";
 
-export default function BoardView({ todos, onUpdate, onDelete, onToggleComplete, onUpdateProperties }) {
+export default function BoardView({ todos = [], onUpdate, onDelete, onToggleComplete, onUpdateProperties }) {
   const [draggedItem, setDraggedItem] = useState(null);
 
   // Group todos by status

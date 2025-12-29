@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Icons } from "../../utils/icons";
+import "./TodoForm.css";
 
 export default function TodoForm({ title, onTitleChange, onSubmit, typeFilter = "all", onTypeChange }) {
   const inputRef = useRef(null);

@@ -7,6 +7,9 @@ import { Calendar, EmptyState } from "../shared";
 import { ProductivityDashboard } from "../ProductivityDashboard";
 import { BoardView } from "../Views/BoardView";
 import { TableView } from "../Views/TableView";
+import GalleryView from "../Views/GalleryView/GalleryView";
+import DatabaseFilters from "../Database/DatabaseFilters";
+import DatabaseSorting from "../Database/DatabaseSorting";
 import { useTodos } from "../../hooks/useTodos";
 import { useToast } from "../../hooks/useToast";
 import { applyFilters } from "../../utils/filters";
@@ -23,6 +26,8 @@ export default function TodoApp({ pageId, viewType: initialViewType, initialType
   const [filter, setFilter] = useState("all");
   const [typeFilter, setTypeFilter] = useState(initialTypeFilter); // all, task, habit
   const [searchQuery, setSearchQuery] = useState("");
+  const [filters, setFilters] = useState([]);
+  const [sorts, setSorts] = useState([]);
   // Determine if type is locked by filter
   const isTypeLocked = typeFilter === "habit" || typeFilter === "task";
   const [selectedType, setSelectedType] = useState(() => {
@@ -146,6 +151,12 @@ export default function TodoApp({ pageId, viewType: initialViewType, initialType
               <span className="buttonText">Table</span>
             </button>
             <button
+              className={`viewButton ${currentView === "gallery" ? "active" : ""}`}
+              onClick={() => setCurrentView("gallery")}
+            >
+              <span className="buttonText">Gallery</span>
+            </button>
+            <button
               className={`viewButton ${currentView === "calendar" ? "active" : ""}`}
               onClick={() => setCurrentView("calendar")}
             >
@@ -171,16 +182,38 @@ export default function TodoApp({ pageId, viewType: initialViewType, initialType
             </div>
           )}
 
-          {/* Filters for List/Board/Table views */}
-          {(currentView === "list" || currentView === "board" || currentView === "table") && (
-            <TodoControls
-              searchQuery={searchQuery}
-              onSearchChange={setSearchQuery}
-              filter={filter}
-              onFilterChange={setFilter}
-              typeFilter={typeFilter}
-              onTypeFilterChange={setTypeFilter}
-            />
+          {/* Filters for List/Board/Table/Gallery views */}
+          {(currentView === "list" || currentView === "board" || currentView === "table" || currentView === "gallery") && (
+            <>
+              <TodoControls
+                searchQuery={searchQuery}
+                onSearchChange={setSearchQuery}
+                filter={filter}
+                onFilterChange={setFilter}
+                typeFilter={typeFilter}
+                onTypeFilterChange={setTypeFilter}
+              />
+              <div className="database-advanced-filters">
+                <DatabaseFilters
+                  properties={[
+                    { id: "status", name: "Status", type: "select" },
+                    { id: "priority", name: "Priority", type: "select" },
+                    { id: "dueDate", name: "Due Date", type: "date" },
+                  ]}
+                  filters={filters}
+                  onFiltersChange={setFilters}
+                />
+                <DatabaseSorting
+                  properties={[
+                    { id: "title", name: "Title", type: "text" },
+                    { id: "createdAt", name: "Created", type: "date" },
+                    { id: "dueDate", name: "Due Date", type: "date" },
+                  ]}
+                  sorts={sorts}
+                  onSortsChange={setSorts}
+                />
+              </div>
+            </>
           )}
         </>
       )}
@@ -189,7 +222,7 @@ export default function TodoApp({ pageId, viewType: initialViewType, initialType
       {todos.length === 0 && (currentView === "list" || currentView === "board" || currentView === "table") && (
         <EmptyState
           message="Get Started"
-          hint="Create your first task or habit using the form above"
+          hint="Create your first task or habit using the form above. Tasks are one-time items, while habits track daily activities with streaks."
           showExamples={true}
           icon={Icons.task}
         />
@@ -246,6 +279,36 @@ export default function TodoApp({ pageId, viewType: initialViewType, initialType
             <TableView
               todos={filteredTodos}
               onUpdate={updateTodo}
+              onDelete={deleteTodo}
+              onToggleComplete={toggleComplete}
+              onUpdateProperties={updateTodoProperties}
+            />
+          )}
+
+          {/* Gallery View */}
+          {currentView === "gallery" && (
+            <GalleryView
+              items={filteredTodos.map(todo => ({
+                id: todo.id,
+                completed: todo.completed,
+                properties: {
+                  title: todo.title,
+                  status: todo.status || "todo",
+                  priority: todo.priority || null,
+                  type: todo.type,
+                  dueDate: todo.dueDate || null,
+                  createdAt: todo.createdAt,
+                }
+              }))}
+              properties={[
+                { id: "title", name: "Title", type: "title" },
+                { id: "status", name: "Status", type: "select" },
+                { id: "priority", name: "Priority", type: "select" },
+                { id: "type", name: "Type", type: "select" },
+                { id: "dueDate", name: "Due Date", type: "date" },
+                { id: "createdAt", name: "Created", type: "date" },
+              ]}
+              onUpdate={(id, value) => updateTodo(id, value)}
               onDelete={deleteTodo}
               onToggleComplete={toggleComplete}
               onUpdateProperties={updateTodoProperties}

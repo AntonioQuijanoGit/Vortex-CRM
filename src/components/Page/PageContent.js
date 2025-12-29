@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { TodoApp } from "../Todo";
 import { Dashboard } from "../Dashboard";
 import { BlockManager } from "../BlockManager";
+import { PageActions, Backlinks, TagSelector } from "../shared";
+import DatabaseView from "../Database/DatabaseView";
+import { usePages } from "../../hooks/usePages";
 import "./PageContent.css";
 
 export default function PageContent({
@@ -9,6 +12,8 @@ export default function PageContent({
   breadcrumbs,
   onNavigate,
   onUpdatePage,
+  onDeletePage,
+  onDuplicatePage,
 }) {
   // Show dashboard when no page or when on home page, but always show breadcrumbs
   const isDashboard = !page || page.id === "home" || page.id === "dashboard";
@@ -29,12 +34,17 @@ export default function PageContent({
   return (
     <div className="page-content" role="region" aria-live="polite">
       <BreadcrumbTrail items={breadcrumbs} onNavigate={onNavigate} />
-      <PageHero page={page} onUpdatePage={onUpdatePage} />
+      <PageHero 
+        page={page} 
+        onUpdatePage={onUpdatePage}
+        onDeletePage={onDeletePage}
+        onDuplicatePage={onDuplicatePage}
+      />
       <div className="page-body">
         {page.type === "database" ? (
-          <DatabaseView page={page} />
+          <DatabaseView page={page} onUpdatePage={onUpdatePage} />
         ) : (
-          <RegularPageView page={page} onUpdatePage={onUpdatePage} />
+          <RegularPageView page={page} onUpdatePage={onUpdatePage} onNavigate={onNavigate} />
         )}
       </div>
     </div>
@@ -69,9 +79,11 @@ function BreadcrumbTrail({ items, onNavigate }) {
   );
 }
 
-function PageHero({ page, onUpdatePage }) {
+function PageHero({ page, onUpdatePage, onDeletePage, onDuplicatePage }) {
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [editTitle, setEditTitle] = useState(page.title);
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [tags, setTags] = useState(page.tags || []);
 
   const handleTitleSave = () => {
     if (editTitle.trim() && editTitle !== page.title) {
@@ -116,39 +128,32 @@ function PageHero({ page, onUpdatePage }) {
             organization tools.
           </p>
         )}
+        <div className="page-hero-actions">
+          <PageActions
+            page={page}
+            onDuplicate={onDuplicatePage}
+            onMove={() => {}}
+            onDelete={onDeletePage}
+            onFavorite={() => setIsFavorite(true)}
+            onUnfavorite={() => setIsFavorite(false)}
+            isFavorite={isFavorite}
+          />
+        </div>
+        <div className="page-hero-tags">
+          <TagSelector
+            selectedTags={tags}
+            onChange={(newTags) => {
+              setTags(newTags);
+              onUpdatePage(page.id, { tags: newTags });
+            }}
+          />
+        </div>
       </div>
     </header>
   );
 }
 
-function DatabaseView({ page }) {
-  // Determine initial typeFilter based on page title
-  const getInitialTypeFilter = (title) => {
-    const lowerTitle = title.toLowerCase();
-    if (lowerTitle.includes("task") && !lowerTitle.includes("habit")) {
-      return "task";
-    }
-    if (lowerTitle.includes("habit")) {
-      return "habit";
-    }
-    return "all";
-  };
-
-  const initialTypeFilter = getInitialTypeFilter(page.title);
-
-  return (
-    <section
-      className="database-view"
-      aria-label={`${page.title} database view`}
-    >
-      <TodoApp 
-        pageId={page.id} 
-        viewType={page.viewType} 
-        initialTypeFilter={initialTypeFilter}
-      />
-    </section>
-  );
-}
+// DatabaseView is now imported from Database/DatabaseView.js
 
 function RegularPageView({ page, onUpdatePage }) {
   if (page.id === "welcome") {

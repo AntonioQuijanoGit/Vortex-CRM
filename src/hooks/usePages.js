@@ -129,7 +129,7 @@ export function usePages() {
   };
 
   // Add new page
-  const addPage = (title, parentId = null, type = "page", icon = Icons.page) => {
+  const addPage = (title, parentId = null, type = "page", icon = Icons.page, initialContent = null, template = null) => {
     const pageTitle = title.trim() || DEFAULTS.PAGE_TITLE;
     const validation = validateTitle(pageTitle);
     if (!validation.valid) {
@@ -144,7 +144,10 @@ export function usePages() {
       type,
       viewType: type === "database" ? "list" : undefined,
       createdAt: new Date().toISOString(),
-      content: [],
+      content: template?.content ? template.content.map(block => ({
+        ...block,
+        id: crypto.randomUUID(),
+      })) : (initialContent || []),
     };
 
     setPages((prev) => [...prev, newPage]);
@@ -199,6 +202,26 @@ export function usePages() {
     return false;
   };
 
+  // Duplicate page
+  const duplicatePage = (pageId) => {
+    const pageToDuplicate = getPage(pageId);
+    if (!pageToDuplicate) return null;
+
+    const duplicatedPage = {
+      ...pageToDuplicate,
+      id: crypto.randomUUID(),
+      title: `${pageToDuplicate.title} (Copy)`,
+      createdAt: new Date().toISOString(),
+      content: pageToDuplicate.content ? pageToDuplicate.content.map(block => ({
+        ...block,
+        id: crypto.randomUUID(),
+      })) : [],
+    };
+
+    setPages((prev) => [...prev, duplicatedPage]);
+    return duplicatedPage.id;
+  };
+
   // Delete page and its children
   const deletePage = (pageId, force = false) => {
     // If not forced and page has content, don't delete (should show confirmation first)
@@ -248,6 +271,16 @@ export function usePages() {
     return breadcrumbs;
   };
 
+  // Find page by title (case-insensitive, optional type filter)
+  const findPageByTitle = (title, type = null) => {
+    const normalizedTitle = title.trim().toLowerCase();
+    return pages.find(page => {
+      const titleMatch = page.title.trim().toLowerCase() === normalizedTitle;
+      const typeMatch = type ? page.type === type : true;
+      return titleMatch && typeMatch;
+    });
+  };
+
   return {
     pages,
     activePage,
@@ -258,8 +291,10 @@ export function usePages() {
     addPage,
     updatePage,
     deletePage,
+    duplicatePage,
     toggleExpanded,
     isExpanded,
     getBreadcrumbs,
+    findPageByTitle,
   };
 }

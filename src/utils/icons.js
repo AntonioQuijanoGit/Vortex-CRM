@@ -49,6 +49,8 @@ export const Icons = {
   date: "◉",
   stats: "◉",
   dashboard: "◉",
+  filter: "⚡",
+  sort: "⇅",
   
   // Board view states
   todo: "○",

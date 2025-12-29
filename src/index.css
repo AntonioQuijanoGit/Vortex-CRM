@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap");
+@import "./styles/breakpoints.css";
 
 :root {
   /* Typography */
@@ -40,16 +41,28 @@
   --color-shadow: rgba(0, 0, 0, 0.1);
   --color-shadow-strong: rgba(0, 0, 0, 0.2);
 
-  /* Compact Spacing System */
-  --spacing-xxs: 0.125rem;
-  --spacing-xs: 0.375rem;
-  --spacing-sm: 0.625rem;
-  --spacing-md: 1rem;
-  --spacing-lg: 1.5rem;
-  --spacing-xl: 2rem;
-  --spacing-2xl: 2.5rem;
-  --spacing-xxl: 3rem;
-  --spacing-3xl: 4rem;
+  /* Spacing System - 4px base (0.25rem) */
+  --spacing-1: 0.25rem;   /* 4px */
+  --spacing-2: 0.5rem;    /* 8px */
+  --spacing-3: 0.75rem;   /* 12px */
+  --spacing-4: 1rem;     /* 16px */
+  --spacing-5: 1.25rem;  /* 20px */
+  --spacing-6: 1.5rem;   /* 24px */
+  --spacing-8: 2rem;     /* 32px */
+  --spacing-10: 2.5rem;  /* 40px */
+  --spacing-12: 3rem;    /* 48px */
+  --spacing-16: 4rem;    /* 64px */
+
+  /* Legacy spacing (for backward compatibility) */
+  --spacing-xxs: 0.25rem;  /* 4px */
+  --spacing-xs: 0.5rem;    /* 8px */
+  --spacing-sm: 0.75rem;   /* 12px */
+  --spacing-md: 1rem;      /* 16px */
+  --spacing-lg: 1.5rem;    /* 24px */
+  --spacing-xl: 2rem;      /* 32px */
+  --spacing-2xl: 2.5rem;   /* 40px */
+  --spacing-xxl: 3rem;     /* 48px */
+  --spacing-3xl: 4rem;     /* 64px */
   
   /* Border Radius */
   --radius-sm: 4px;
@@ -212,6 +225,16 @@ button {
   border: none;
   background: none;
   padding: 0;
+  /* Ensure touch-friendly minimum size on mobile */
+  min-height: var(--touch-target-min);
+  min-width: var(--touch-target-min);
+}
+
+@media (min-width: 768px) {
+  button {
+    min-height: auto;
+    min-width: auto;
+  }
 }
 
 a {

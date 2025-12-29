@@ -3,7 +3,7 @@ import { Icons } from "../../../utils/icons";
 import "./TableView.css";
 
 export default function TableView({
-  todos,
+  todos = [],
   onUpdate,
   onDelete,
   onToggleComplete,

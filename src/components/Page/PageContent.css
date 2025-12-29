@@ -11,11 +11,40 @@
   animation: fadeInUp 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+@media (max-width: 768px) {
+  .page-content {
+    padding: var(--spacing-md) var(--spacing-sm);
+    padding-right: calc(var(--spacing-sm) + 50px);
+    gap: var(--spacing-sm);
+  }
+}
+
+@media (max-width: 480px) {
+  .page-content {
+    padding: var(--spacing-sm);
+    padding-right: calc(var(--spacing-sm) + 40px);
+  }
+}
+
 .page-content-dashboard {
   max-width: 100% !important;
-  padding: var(--spacing-2xl) var(--spacing-2xl) !important;
-  padding-right: calc(var(--spacing-2xl) + 60px) !important; /* Space for theme toggle */
+  padding: var(--spacing-lg) var(--spacing-md) !important;
+  padding-right: calc(var(--spacing-md) + 60px) !important; /* Space for theme toggle */
   width: 100% !important;
+}
+
+@media (max-width: 768px) {
+  .page-content-dashboard {
+    padding: var(--spacing-lg) var(--spacing-md) !important;
+    padding-right: calc(var(--spacing-md) + 50px) !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-content-dashboard {
+    padding: var(--spacing-md) var(--spacing-sm) !important;
+    padding-right: calc(var(--spacing-sm) + 40px) !important;
+  }
 }
 
 .breadcrumbs {

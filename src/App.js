@@ -18,6 +18,7 @@ function App() {
     addPage,
     updatePage,
     deletePage,
+    duplicatePage,
     toggleExpanded,
     isExpanded,
     getBreadcrumbs,
@@ -183,11 +184,13 @@ function App() {
         onCloseMobile={handleCloseMobileSidebar}
       />
       <main className="app-main">
-        <PageContent 
-          page={currentPage} 
+        <PageContent
+          page={currentPage}
           breadcrumbs={breadcrumbs}
           onNavigate={setActivePage}
           onUpdatePage={updatePage}
+          onDeletePage={deletePage}
+          onDuplicatePage={duplicatePage}
         />
       </main>
       {showOnboarding && (

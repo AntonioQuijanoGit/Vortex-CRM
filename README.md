@@ -1,155 +1,172 @@
-# Daily Productivity & Habit Tracker
+# CRM Application
 
-A minimalist, elegant productivity app for managing daily tasks and building consistent habits. Built with React, featuring a sophisticated black and white geometric design.
+A complete, production-ready CRM (Customer Relationship Management) application built with Next.js 14, TypeScript, and modern React patterns.
 
-## 🎯 Purpose
+## 🚀 Features
 
-**Daily Productivity** is designed to help you:
-- **Track daily tasks** - Manage your to-do list with full CRUD functionality
-- **Build habits** - Create daily habits with streak tracking to maintain consistency
-- **Monitor progress** - Visualize your productivity with metrics and calendar views
-- **Stay organized** - Filter, search, and organize your tasks and habits efficiently
+### Core Functionality
+- **Dashboard** - Comprehensive overview with stats, charts, and activity feed
+- **Contacts Management** - Full CRUD operations with search, filtering, and sorting
+- **Pipeline/Kanban Board** - Visual deal management with drag & drop
+- **Analytics** - Data visualization with charts and metrics
+- **Settings** - User preferences and data management
 
-## ✨ Features
+### Advanced Features
+- **Command Palette** (Cmd/Ctrl + K) - Quick navigation and search
+- **Keyboard Shortcuts** - Power user navigation
+- **Drag & Drop** - Intuitive deal status management
+- **Real-time Updates** - Optimistic UI updates
+- **Export/Import** - Data portability
+- **Responsive Design** - Works on mobile, tablet, and desktop
+- **Dark Mode** - Beautiful dark theme (light mode ready)
 
-### Core Functionality (CRUD)
-- ✅ **Create** tasks and habits
-- 📖 **Read** and view all items with filtering
-- ✏️ **Update** task/habit titles
-- 🗑️ **Delete** items
+## 🛠️ Tech Stack
 
-### Task Management
-- Normal tasks that can be completed and removed
-- Full editing capabilities
-- Search functionality
-- Date-based filtering (All, Today, This Week)
+- **Framework**: Next.js 15 (App Router)
+- **Language**: TypeScript (strict mode)
+- **Styling**: Tailwind CSS + CSS Variables
+- **UI Components**: Radix UI + Shadcn/ui
+- **State Management**: Zustand
+- **Forms**: React Hook Form + Zod validation
+- **Charts**: Recharts
+- **Drag & Drop**: @dnd-kit
+- **Icons**: Lucide React
+- **Notifications**: Sonner
+- **Mock Data**: @faker-js/faker
+- **Date Handling**: date-fns
 
-### Habit Tracking
-- Daily habits that reset automatically each day
-- **Streak tracking** - See your consecutive days
-- **Best streak** - Track your personal records
-- Visual indicators for active streaks
-- Calendar view showing completed habit days
+## 📦 Installation
 
-### Productivity Dashboard
-- Task completion rate
-- Daily habit completion percentage
-- Total streak counter
-- Weekly productivity summary
-- Visual progress bars
-
-### Additional Features
-- 📅 **Calendar view** - See your activity over time
-- 🔍 **Search** - Find tasks and habits quickly
-- 🎨 **Minimalist design** - Clean, geometric black and white interface
-- 💾 **Local storage** - All data persists automatically
-- ♿ **Accessible** - Full keyboard navigation and ARIA labels
-- 📱 **Responsive** - Works on all devices
-
-## 🚀 Getting Started
-
-### Prerequisites
-- Node.js (v14 or higher)
-- npm or yarn
-
-### Installation
-
-1. Clone the repository
-```bash
-git clone https://github.com/yourusername/daily-productivity.git
-cd daily-productivity
-```
-
-2. Install dependencies
+1. Install dependencies:
 ```bash
 npm install
 ```
 
-3. Start the development server
+2. Run the development server:
 ```bash
+npm run dev
+```
+
+3. Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+## 🏗️ Project Structure
+
+```
+├── app/                    # Next.js App Router pages
+│   ├── page.tsx           # Dashboard
+│   ├── contacts/          # Contacts pages
+│   ├── pipeline/          # Pipeline/Kanban page
+│   ├── analytics/         # Analytics page
+│   └── settings/          # Settings page
+├── components/
+│   ├── ui/                # Shadcn/ui components
+│   ├── layout/            # Layout components (sidebar, header)
+│   ├── dashboard/         # Dashboard components
+│   ├── contacts/          # Contact components
+│   ├── pipeline/          # Pipeline/Kanban components
+│   └── shared/            # Shared components (command palette, etc.)
+├── lib/
+│   ├── store.ts           # Zustand store
+│   ├── types.ts           # TypeScript types
+│   ├── constants.ts       # Constants
+│   ├── validations.ts     # Zod schemas
+│   ├── data-generator.ts  # Faker data generation
+│   └── utils.ts           # Utility functions
+└── hooks/                 # Custom React hooks
+```
+
+## 🎨 Design System
+
+The application uses a modern design system inspired by Vercel/Linear/Cal.com:
+
+- **Colors**: Dark mode optimized with carefully chosen palette
+- **Typography**: Inter font family
+- **Spacing**: 4px grid system
+- **Components**: Fully accessible with ARIA labels
+- **Animations**: Smooth transitions and micro-interactions
+
+## 📱 Pages
+
+### Dashboard (`/`)
+- Stats cards (Total Contacts, Active Deals, Monthly Revenue, Win Rate)
+- Revenue chart (last 6 months)
+- Recent activity feed
+- Quick actions
+
+### Contacts (`/contacts`)
+- List/table view with search and filters
+- Create, edit, delete contacts
+- Contact detail page with tabs (Overview, Deals, Activity, Notes)
+- Bulk operations support
+
+### Pipeline (`/pipeline`)
+- Kanban board with drag & drop
+- Deal management across statuses
+- Visual deal cards with key information
+- Deal creation and editing
+
+### Analytics (`/analytics`)
+- Revenue over time chart
+- Deals won vs lost (pie chart)
+- Top contacts by value (bar chart)
+- Key metrics and statistics
+
+### Settings (`/settings`)
+- Appearance preferences
+- Data export/import
+- Data management options
+
+## 🔑 Keyboard Shortcuts
+
+- `Cmd/Ctrl + K` - Open command palette
+- `Esc` - Close dialogs/modals
+- `/` - Focus search (on contacts page)
+- `N` - New contact (coming soon)
+- `D` - New deal (coming soon)
+
+## 💾 Data Storage
+
+All data is stored in localStorage. The application includes:
+- Automatic data seeding on first load (100 contacts, 60 deals, 200+ activities)
+- Data persistence across sessions
+- Export/import functionality
+- Version management for data migrations
+
+## 🚢 Deployment
+
+This application is ready to be deployed on Vercel:
+
+1. Push your code to GitHub
+2. Import the project in Vercel
+3. Deploy automatically on push
+
+Or deploy manually:
+```bash
+npm run build
 npm start
 ```
 
-4. Open [http://localhost:3000](http://localhost:3000) in your browser
+## 🔮 Future Improvements
 
-## 🛠️ Built With
-
-- **React** - UI library
-- **CSS3** - Styling with custom properties
-- **LocalStorage** - Data persistence
-- **Modern JavaScript** - ES6+ features
-
-## 📁 Project Structure
-
-```
-src/
-├── components/
-│   ├── TodoApp.js          # Main app component
-│   ├── TodoForm.js         # Task/habit creation form
-│   ├── Todo.js             # Individual task/habit item
-│   ├── TodoControls.js     # Search and filter controls
-│   ├── TodoFilters.js      # Filter buttons
-│   ├── TodoSearch.js       # Search input
-│   ├── TodoStats.js        # Statistics footer
-│   ├── ProductivityDashboard.js  # Productivity metrics
-│   ├── Calendar.js         # Calendar view
-│   └── EmptyState.js       # Empty state component
-├── App.js
-└── index.js
-```
-
-## 🎨 Design Philosophy
-
-- **Minimalist** - Clean, uncluttered interface
-- **Geometric** - Sharp edges, no border-radius
-- **Black & White** - Monochrome color scheme
-- **Brutalist shadows** - Offset box-shadows for depth
-- **Accessible** - WCAG AA compliant
-- **Responsive** - Mobile-first approach
-
-## 📝 Usage
-
-### Creating Tasks
-1. Type your task in the input field
-2. Select "Task" type (default)
-3. Click "Add" or press Enter
-
-### Creating Habits
-1. Type your habit name
-2. Select "Habit" type
-3. Click "Add"
-4. Mark it complete each day to build your streak
-
-### Tracking Progress
-- View the **Dashboard** for productivity metrics
-- Check the **Calendar** to see your activity history
-- Use **Filters** to view specific types or time periods
-- See **Streaks** on habit items to track consistency
-
-## 🔮 Future Enhancements
-
-Potential features for future versions:
-- Weekly/monthly goals
-- Export data functionality
-- Dark/light theme toggle
-- Categories and tags
-- Due dates for tasks
-- Notifications/reminders
+- [ ] Backend API integration
+- [ ] User authentication
+- [ ] Real-time collaboration
+- [ ] Advanced filtering and saved views
+- [ ] Email integration
+- [ ] Calendar integration
+- [ ] Advanced reporting
+- [ ] Mobile app
+- [ ] Multi-tenant support
+- [ ] Advanced permissions
 
 ## 📄 License
 
-This project is open source and available under the MIT License.
+This is a portfolio project. Feel free to use it as a reference or starting point for your own projects.
 
-## 👤 Author
+## 👨‍💻 Author
 
-**Antonio Quijano**
-
-## 🙏 Acknowledgments
-
-- Inspired by minimalist design principles
-- Built with accessibility in mind
-- Focused on productivity and habit formation
+Built as a portfolio demonstration of senior-level full-stack development skills.
 
 ---
 
-**Start building better habits today!** 🔥
+**Note**: This is a portfolio project demonstrating modern web development practices. For production use, consider adding backend API, authentication, and proper database integration.

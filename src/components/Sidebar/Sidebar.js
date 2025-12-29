@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { PageItem } from "../Page";
 import { Icons } from "../../utils/icons";
+import { TemplateSelector } from "../shared";
+import { getAllTemplates } from "../../utils/templates";
 import "./Sidebar.css";
 
 export default function Sidebar({
@@ -29,6 +31,7 @@ export default function Sidebar({
   };
   const [showNewPageInput, setShowNewPageInput] = useState(false);
   const [newPageTitle, setNewPageTitle] = useState("");
+  const [showTemplateSelector, setShowTemplateSelector] = useState(false);
 
   const rootPages = pages.filter(page => page.parentId === null);
 
@@ -38,6 +41,15 @@ export default function Sidebar({
       setNewPageTitle("");
       setShowNewPageInput(false);
     }
+  };
+
+  const handleAddPageWithTemplate = (template) => {
+    onAddPage(template.name, null, "page", Icons.page, null, template);
+    setShowTemplateSelector(false);
+  };
+
+  const handleShowTemplateSelector = () => {
+    setShowTemplateSelector(true);
   };
 
   return (
@@ -76,13 +88,24 @@ export default function Sidebar({
             <header className="pages-section">
               <div className="pages-header">
                 <h2 id="pages-title">Pages</h2>
-                <button
-                  className="add-page-button"
-                  onClick={() => setShowNewPageInput(true)}
-                  aria-label="Open new page input"
-                >
-                  {Icons.add}
-                </button>
+                <div className="add-page-buttons">
+                  <button
+                    className="add-page-button"
+                    onClick={handleShowTemplateSelector}
+                    aria-label="Add page with template"
+                    title="Add page with template"
+                  >
+                    {Icons.page}
+                  </button>
+                  <button
+                    className="add-page-button"
+                    onClick={() => setShowNewPageInput(true)}
+                    aria-label="Add blank page"
+                    title="Add blank page"
+                  >
+                    {Icons.add}
+                  </button>
+                </div>
               </div>
 
               {showNewPageInput && (
