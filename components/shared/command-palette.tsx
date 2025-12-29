@@ -32,8 +32,10 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
       }
     };
 
-    document.addEventListener("keydown", down);
-    return () => document.removeEventListener("keydown", down);
+    if (typeof document !== "undefined") {
+      document.addEventListener("keydown", down);
+      return () => document.removeEventListener("keydown", down);
+    }
   }, [open, onOpenChange]);
 
   // Search contacts and deals

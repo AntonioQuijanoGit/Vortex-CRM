@@ -18,8 +18,10 @@ export function CommandPaletteProvider({
       }
     };
 
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
+    if (typeof document !== "undefined") {
+      document.addEventListener("keydown", handleKeyDown);
+      return () => document.removeEventListener("keydown", handleKeyDown);
+    }
   }, []);
 
   return (

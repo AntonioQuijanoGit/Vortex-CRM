@@ -6,7 +6,7 @@ import { ThemeProvider } from "@/components/shared/theme-provider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "CRM Dashboard",
+  title: "Vortex Dashboard",
   description: "Customer Relationship Management System",
 };
 
@@ -23,11 +23,17 @@ export default function RootLayout({
             __html: `
               (function() {
                 try {
-                  var theme = localStorage.getItem('theme') || 'light';
-                  var root = document.documentElement;
-                  root.classList.remove('dark', 'light');
-                  root.classList.add(theme);
-                } catch (e) {}
+                  if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
+                    var theme = localStorage.getItem('theme') || 'light';
+                    var root = document.documentElement;
+                    if (root) {
+                      root.classList.remove('dark', 'light');
+                      root.classList.add(theme);
+                    }
+                  }
+                } catch (e) {
+                  // Silently fail if localStorage is not available
+                }
               })();
             `,
           }}

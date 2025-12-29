@@ -52,7 +52,8 @@ export function OnboardingTour() {
   const [dontShowAgain, setDontShowAgain] = useState(false);
 
   useEffect(() => {
-    const hasSeenTour = localStorage.getItem("crm-has-seen-tour");
+    if (typeof window === "undefined") return;
+    const hasSeenTour = localStorage.getItem("vortex-has-seen-tour");
     if (!hasSeenTour) {
       // Show tour after a short delay
       const timer = setTimeout(() => setIsOpen(true), 1000);
@@ -75,8 +76,8 @@ export function OnboardingTour() {
   };
 
   const handleFinish = () => {
-    if (dontShowAgain) {
-      localStorage.setItem("crm-has-seen-tour", "true");
+    if (dontShowAgain && typeof window !== "undefined") {
+      localStorage.setItem("vortex-has-seen-tour", "true");
     }
     setIsOpen(false);
   };
