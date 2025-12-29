@@ -29,7 +29,7 @@ export function Header() {
 
   return (
     <header className="flex h-16 items-center justify-between border-b border-border bg-background px-2 sm:px-4 md:px-6 gap-2 md:pl-6" role="banner">
-      <form onSubmit={handleSearch} className="flex-1 min-w-0 max-w-md ml-12 md:ml-0" role="search">
+      <form onSubmit={handleSearch} className="flex-1 min-w-0 max-w-md ml-16 md:ml-0" role="search">
         <div className="relative">
           <Search className="absolute left-2 sm:left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" aria-hidden="true" />
           <Input

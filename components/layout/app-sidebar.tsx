@@ -35,7 +35,7 @@ function SidebarContent({ onLinkClick }: { onLinkClick?: () => void }) {
   return (
     <>
       <div className="flex h-16 items-center border-b border-border px-6">
-        <h1 className="text-xl font-bold">CRM</h1>
+        <h1 className="text-xl font-bold">Vortex</h1>
       </div>
       <nav className="flex-1 space-y-1 px-3 py-4" aria-label="Primary navigation">
         {navigation.map((item) => {
@@ -85,7 +85,7 @@ export function AppSidebar() {
       <Button
         variant="ghost"
         size="icon"
-        className="md:hidden fixed top-4 left-4 z-50 bg-background/80 backdrop-blur-sm border border-border shadow-md"
+        className="md:hidden fixed top-3 left-4 z-50 bg-background/80 backdrop-blur-sm border border-border shadow-md"
         onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
         aria-label="Toggle menu"
       >
