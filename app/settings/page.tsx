@@ -1,6 +1,6 @@
 "use client";
-
 import { useEffect } from "react";
+import { useInitialize } from "@/hooks/use-initialize";
 import { useCRMStore } from "@/lib/store";
 import { AppSidebar } from "@/components/layout/app-sidebar";
 import { Header } from "@/components/layout/header";
@@ -16,18 +16,13 @@ import { toast } from "sonner";
 import { useState } from "react";
 
 export default function SettingsPage() {
-  const initialize = useCRMStore((state) => state.initialize);
+  useInitialize();
   const settings = useCRMStore((state) => state.settings);
   const updateSettings = useCRMStore((state) => state.updateSettings);
   const exportData = useCRMStore((state) => state.exportData);
   const importData = useCRMStore((state) => state.importData);
   const clearAllData = useCRMStore((state) => state.clearAllData);
   const [tagManagerOpen, setTagManagerOpen] = useState(false);
-
-  useEffect(() => {
-    initialize();
-  }, [initialize]);
-
   const handleExport = () => {
     const data = exportData();
     const blob = new Blob([data], { type: "application/json" });
@@ -39,7 +34,6 @@ export default function SettingsPage() {
     URL.revokeObjectURL(url);
     toast.success("Data exported successfully");
   };
-
   const handleImport = () => {
     const input = document.createElement("input");
     input.type = "file";
@@ -61,8 +55,6 @@ export default function SettingsPage() {
       }
     };
     input.click();
-  };
-
   const handleClearData = () => {
     if (
       confirm(
@@ -72,8 +64,6 @@ export default function SettingsPage() {
       clearAllData();
       toast.success("All data cleared");
     }
-  };
-
   return (
     <div className="flex h-screen bg-background">
       <AppSidebar />
@@ -87,7 +77,6 @@ export default function SettingsPage() {
                 Manage your CRM preferences
               </p>
             </div>
-
             <Card>
               <CardHeader>
                 <CardTitle>Tags Management</CardTitle>
@@ -102,14 +91,8 @@ export default function SettingsPage() {
                 <TagManager open={tagManagerOpen} onOpenChange={setTagManagerOpen} />
               </CardContent>
             </Card>
-
-            <Card>
-              <CardHeader>
                 <CardTitle>Appearance</CardTitle>
-                <CardDescription>
                   Customize the look and feel of your CRM
-                </CardDescription>
-              </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
@@ -128,17 +111,8 @@ export default function SettingsPage() {
                     }}
                   />
                 </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
                 <CardTitle>Preferences</CardTitle>
-                <CardDescription>
                   Configure default settings for your CRM
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="currency">Currency</Label>
                   <Input
@@ -148,69 +122,35 @@ export default function SettingsPage() {
                       updateSettings({ currency: e.target.value })
                     }
                     placeholder="USD"
-                  />
-                </div>
-                <div className="space-y-2">
                   <Label htmlFor="dateFormat">Date Format</Label>
-                  <Input
                     id="dateFormat"
                     value={settings.dateFormat}
-                    onChange={(e) =>
                       updateSettings({ dateFormat: e.target.value })
-                    }
                     placeholder="MMM dd, yyyy"
-                  />
-                </div>
-                <div className="flex items-center justify-between">
-                  <div className="space-y-0.5">
                     <Label>Notifications</Label>
-                    <p className="text-sm text-muted-foreground">
                       Enable notifications (mock)
-                    </p>
-                  </div>
                   <Switch
                     checked={settings.notifications}
                     onCheckedChange={(checked) =>
                       updateSettings({ notifications: checked })
-                    }
-                  />
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
                 <CardTitle>Data Management</CardTitle>
-                <CardDescription>
                   Export, import, or reset your CRM data
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
                 <div className="flex gap-4">
                   <Button variant="outline" onClick={handleExport}>
                     Export Data
                   </Button>
                   <Button variant="outline" onClick={handleImport}>
                     Import Data
-                  </Button>
-                </div>
                 <Separator />
                 <div className="space-y-3">
                   <div className="space-y-2">
                     <Button variant="destructive" onClick={handleClearData}>
                       Clear All Data
                     </Button>
-                    <p className="text-sm text-muted-foreground">
                       Permanently delete all contacts, deals, activities, and notes. This action cannot be undone.
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
           </div>
         </main>
       </div>
     </div>
   );
 }
-

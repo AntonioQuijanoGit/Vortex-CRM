@@ -7,6 +7,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -78,6 +79,9 @@ export function BulkEditDialog({
             Bulk Edit {selectedIds.length} {type === "contacts" ? "Contact" : "Deal"}
             {selectedIds.length > 1 ? "s" : ""}
           </DialogTitle>
+            <DialogDescription>
+              Edit multiple items at once
+            </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           {type === "contacts" ? (

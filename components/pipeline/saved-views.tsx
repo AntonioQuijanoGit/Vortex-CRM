@@ -17,6 +17,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import { Bookmark, Plus, Trash2, Save } from "lucide-react";
 import type { DealFilters } from "@/lib/types";
@@ -118,6 +119,9 @@ export function SavedViews({ filters, onFiltersChange }: SavedViewsProps) {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Save View</DialogTitle>
+            <DialogDescription>
+              Save your current view settings for quick access
+            </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             <div className="space-y-2">

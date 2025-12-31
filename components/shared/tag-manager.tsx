@@ -7,6 +7,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -65,6 +66,9 @@ export function TagManager({ open, onOpenChange }: TagManagerProps) {
       <DialogContent className="max-w-2xl">
         <DialogHeader>
           <DialogTitle>Manage Tags</DialogTitle>
+          <DialogDescription>
+            Add, edit, or delete tags for organizing your data
+          </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-6">

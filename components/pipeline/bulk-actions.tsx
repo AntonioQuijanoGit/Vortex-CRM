@@ -16,6 +16,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import {
   Select,
@@ -123,6 +124,9 @@ export function BulkActions({ selectedDealIds, onClearSelection }: BulkActionsPr
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Change Status for {selectedDealIds.length} Deals</DialogTitle>
+            <DialogDescription>
+              Select a new status for the selected deals
+            </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             <div className="space-y-2">
@@ -162,6 +166,9 @@ export function BulkActions({ selectedDealIds, onClearSelection }: BulkActionsPr
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Add Tags to {selectedDealIds.length} Deals</DialogTitle>
+            <DialogDescription>
+              Manage tags for the selected deals
+            </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             <p className="text-sm text-muted-foreground">

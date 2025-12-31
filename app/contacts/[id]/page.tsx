@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { useInitialize } from "@/hooks/use-initialize";
 import { useParams, useRouter } from "next/navigation";
 import { useCRMStore } from "@/lib/store";
 import { AppSidebar } from "@/components/layout/app-sidebar";
@@ -15,29 +16,21 @@ import Link from "next/link";
 import { toast } from "sonner";
 import { NotesSection } from "@/components/contacts/notes-section";
 import { EnhancedTimeline } from "@/components/shared/enhanced-timeline";
-
 export default function ContactDetailPage() {
   const params = useParams();
   const router = useRouter();
   const contactId = params.id as string;
-
-  const initialize = useCRMStore((state) => state.initialize);
   const getContact = useCRMStore((state) => state.getContact);
   const deleteContact = useCRMStore((state) => state.deleteContact);
   const getDealsByContact = useCRMStore((state) => state.getDealsByContact);
   const getActivitiesByContact = useCRMStore((state) => state.getActivitiesByContact);
   const getNotesByContact = useCRMStore((state) => state.getNotesByContact);
   const settings = useCRMStore((state) => state.settings);
-
-  useEffect(() => {
-    initialize();
-  }, [initialize]);
-
+  useInitialize();
   const contact = getContact(contactId);
   const deals = getDealsByContact(contactId);
   const activities = getActivitiesByContact(contactId);
   const notes = getNotesByContact(contactId);
-
   if (!contact) {
     return (
       <div className="flex h-screen bg-background">
@@ -53,7 +46,6 @@ export default function ContactDetailPage() {
       </div>
     );
   }
-
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat("en-US", {
       style: "currency",
@@ -61,15 +53,12 @@ export default function ContactDetailPage() {
       minimumFractionDigits: 0,
     }).format(value);
   };
-
   const handleDelete = () => {
     if (confirm(`Are you sure you want to delete ${contact.name}?`)) {
       deleteContact(contact.id);
       toast.success("Contact deleted");
       router.push("/contacts");
     }
-  };
-
   return (
     <div className="flex h-screen bg-background">
       <AppSidebar />
@@ -97,10 +86,6 @@ export default function ContactDetailPage() {
                 <Button variant="destructive" onClick={handleDelete}>
                   <Trash2 className="mr-2 h-4 w-4" />
                   Delete
-                </Button>
-              </div>
-            </div>
-
             <Tabs defaultValue="overview" className="space-y-4">
               <TabsList>
                 <TabsTrigger value="overview">Overview</TabsTrigger>
@@ -108,7 +93,6 @@ export default function ContactDetailPage() {
                 <TabsTrigger value="activity">Activity</TabsTrigger>
                 <TabsTrigger value="notes">Notes ({notes.length})</TabsTrigger>
               </TabsList>
-
               <TabsContent value="overview" className="space-y-4">
                 <div className="grid gap-4 md:grid-cols-2">
                   <Card>
@@ -120,33 +104,19 @@ export default function ContactDetailPage() {
                         <p className="text-sm text-muted-foreground">Email</p>
                         <p className="font-medium">{contact.email}</p>
                       </div>
-                      <div>
                         <p className="text-sm text-muted-foreground">Phone</p>
                         <p className="font-medium">{contact.phone}</p>
-                      </div>
-                      <div>
                         <p className="text-sm text-muted-foreground">Position</p>
                         <p className="font-medium">{contact.position}</p>
-                      </div>
-                      <div>
                         <p className="text-sm text-muted-foreground">Status</p>
                         <Badge variant="outline">{contact.status}</Badge>
-                      </div>
                     </CardContent>
                   </Card>
-
-                  <Card>
-                    <CardHeader>
                       <CardTitle>Details</CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div>
                         <p className="text-sm text-muted-foreground">Total Value</p>
                         <p className="text-2xl font-bold">
                           {formatCurrency(contact.value)}
                         </p>
-                      </div>
-                      <div>
                         <p className="text-sm text-muted-foreground">Tags</p>
                         <div className="flex flex-wrap gap-2 mt-2">
                           {contact.tags.map((tag) => (
@@ -155,29 +125,16 @@ export default function ContactDetailPage() {
                             </Badge>
                           ))}
                         </div>
-                      </div>
-                      <div>
                         <p className="text-sm text-muted-foreground">Created</p>
                         <p className="font-medium">
                           {format(new Date(contact.createdAt), "MMMM dd, yyyy")}
-                        </p>
-                      </div>
-                    </CardContent>
-                  </Card>
                 </div>
-
                 {contact.notes && (
-                  <Card>
-                    <CardHeader>
                       <CardTitle>Notes</CardTitle>
-                    </CardHeader>
                     <CardContent>
                       <p className="text-sm whitespace-pre-wrap">{contact.notes}</p>
-                    </CardContent>
-                  </Card>
                 )}
               </TabsContent>
-
               <TabsContent value="deals" className="space-y-4">
                 <Card>
                   <CardHeader>
@@ -208,35 +165,18 @@ export default function ContactDetailPage() {
                             </Link>
                           </div>
                         ))}
-                      </div>
                     )}
                   </CardContent>
                 </Card>
-              </TabsContent>
-
               <TabsContent value="activity" className="space-y-4">
-                <Card>
-                  <CardHeader>
                     <CardTitle>Activity Timeline</CardTitle>
-                  </CardHeader>
-                  <CardContent>
                     <EnhancedTimeline contactId={contactId} />
-                  </CardContent>
-                </Card>
-              </TabsContent>
-
               <TabsContent value="notes" className="space-y-4">
-                <Card>
                   <CardContent className="pt-6">
                     <NotesSection contactId={contactId} />
-                  </CardContent>
-                </Card>
-              </TabsContent>
             </Tabs>
           </div>
         </main>
-      </div>
     </div>
   );
 }
-

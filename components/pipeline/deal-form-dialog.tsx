@@ -9,6 +9,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -132,6 +133,9 @@ export function DealFormDialog({
       <DialogContent className="max-w-2xl">
         <DialogHeader>
           <DialogTitle className="text-lg sm:text-xl">{deal ? "Edit Deal" : "Add Deal"}</DialogTitle>
+          <DialogDescription>
+            {deal ? "Update deal information" : "Create a new deal in your pipeline"}
+          </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div className="grid gap-4 grid-cols-1 sm:grid-cols-2">
