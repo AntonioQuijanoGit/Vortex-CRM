@@ -7,6 +7,9 @@ import { useCRMStore } from "@/lib/store";
 import {
   Dialog,
   DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import { Search, Users, GitBranch, FileText, Info } from "lucide-react";
 import { useDebounce } from "@/hooks/use-debounce";
@@ -60,6 +63,10 @@ export function GlobalSearch({ open, onOpenChange }: GlobalSearchProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl p-0 overflow-hidden">
+        <DialogHeader className="sr-only">
+          <DialogTitle>Global Search</DialogTitle>
+          <DialogDescription>Search everything in your CRM</DialogDescription>
+        </DialogHeader>
         <Command className="rounded-lg border shadow-md" shouldFilter={false}>
           <div className="flex items-center border-b px-3">
             <Search className="mr-2 h-4 w-4 shrink-0 opacity-50" aria-hidden="true" />

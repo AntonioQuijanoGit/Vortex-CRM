@@ -7,6 +7,9 @@ import { Command } from "cmdk";
 import {
   Dialog,
   DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import { LayoutDashboard, Users, GitBranch, FileText, Calendar, CheckSquare, BarChart3, Settings } from "lucide-react";
 
@@ -64,6 +67,10 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl p-0 overflow-hidden">
+        <DialogHeader className="sr-only">
+          <DialogTitle>Command Palette</DialogTitle>
+          <DialogDescription>Search and navigate quickly</DialogDescription>
+        </DialogHeader>
         <Command className="rounded-lg" shouldFilter={false}>
           <div className="flex items-center border-b px-3">
             <Command.Input
