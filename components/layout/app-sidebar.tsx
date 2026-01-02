@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { VortexIcon } from "@/components/shared/vortex-icon";
 
 const navigation = [
   { name: "Dashboard", href: "/", icon: LayoutDashboard },
@@ -34,8 +35,11 @@ function SidebarContent({ onLinkClick }: { onLinkClick?: () => void }) {
 
   return (
     <>
-      <div className="flex h-16 items-center border-b border-border px-6">
-        <h1 className="text-xl font-bold">Vortex</h1>
+      <div className="flex h-16 items-center gap-3 border-b border-border px-6">
+        <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary/10">
+          <VortexIcon size={20} className="text-primary" />
+        </div>
+        <h1 className="text-xl font-semibold tracking-tight">Vortex</h1>
       </div>
       <nav className="flex-1 space-y-1 px-3 py-4" aria-label="Primary navigation">
         {navigation.map((item) => {
