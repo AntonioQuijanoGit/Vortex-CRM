@@ -59,6 +59,8 @@ export default function ContactDetailPage() {
       toast.success("Contact deleted");
       router.push("/contacts");
     }
+  };
+
   return (
     <div className="flex h-screen bg-background">
       <AppSidebar />

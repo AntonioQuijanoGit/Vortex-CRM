@@ -55,6 +55,8 @@ export default function SettingsPage() {
       }
     };
     input.click();
+  };
+
   const handleClearData = () => {
     if (
       confirm(
@@ -64,6 +66,8 @@ export default function SettingsPage() {
       clearAllData();
       toast.success("All data cleared");
     }
+  };
+
   return (
     <div className="flex h-screen bg-background">
       <AppSidebar />
