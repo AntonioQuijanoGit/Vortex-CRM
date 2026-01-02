@@ -35,11 +35,11 @@ export function WelcomeScreen() {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-background/95 backdrop-blur-sm animate-in fade-in duration-300"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-background/95 backdrop-blur-sm transition-opacity duration-300"
       onClick={closeWelcome}
     >
       <div
-        className="relative w-full max-w-6xl mx-4 bg-card border border-border rounded-2xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300"
+        className="relative w-full max-w-6xl mx-4 bg-card border border-border rounded-2xl shadow-2xl overflow-hidden transition-transform duration-300"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close button */}
@@ -60,8 +60,8 @@ export function WelcomeScreen() {
                 <div className="w-20 h-20 rounded-2xl bg-primary/10 flex items-center justify-center backdrop-blur-sm">
                   <VortexIcon size={48} className="text-primary" />
                 </div>
-                <div className="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-primary/20 backdrop-blur-sm flex items-center justify-center animate-pulse">
-                  <Sparkles className="h-3 w-3 text-primary" />
+                <div className="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-primary/20 backdrop-blur-sm flex items-center justify-center">
+                  <Sparkles className="h-3 w-3 text-primary animate-pulse" />
                 </div>
               </div>
             </div>
