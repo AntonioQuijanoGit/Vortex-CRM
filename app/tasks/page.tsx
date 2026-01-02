@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useExtendedStore } from "@/lib/store-extended";
+import { shallow } from "zustand/shallow";
 import { AppSidebar } from "@/components/layout/app-sidebar";
 import { Header } from "@/components/layout/header";
 import { Button } from "@/components/ui/button";
@@ -13,16 +14,38 @@ import { format } from "date-fns";
 import { TaskFormDialog } from "@/components/tasks/task-form-dialog";
 
 export default function TasksPage() {
-  const tasks = useExtendedStore((state) => state.tasks);
-  const pendingTasks = useExtendedStore((state) => state.getPendingTasks());
-  const completeTask = useExtendedStore((state) => state.completeTask);
-  const deleteTask = useExtendedStore((state) => state.deleteTask);
-  const loadExtendedData = useExtendedStore((state) => state.loadExtendedData);
+  const [mounted, setMounted] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
+  // Use shallow comparison to avoid unnecessary re-renders
+  const { tasks, completeTask, deleteTask, loadExtendedData } = useExtendedStore(
+    (state) => ({
+      tasks: state.tasks,
+      completeTask: state.completeTask,
+      deleteTask: state.deleteTask,
+      loadExtendedData: state.loadExtendedData,
+    }),
+    shallow
+  );
+
+  // Memoize pending tasks calculation
+  const pendingTasks = useMemo(() => {
+    return tasks.filter((task) => !task.completed);
+  }, [tasks]);
+
+  // Memoize completed tasks
+  const completedTasks = useMemo(() => {
+    return tasks.filter((task) => task.completed);
+  }, [tasks]);
+
   useEffect(() => {
-    loadExtendedData();
-  }, [loadExtendedData]);
+    setMounted(true);
+    if (typeof window !== "undefined" && tasks.length === 0) {
+      // Only load if data is not already loaded
+      loadExtendedData();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
@@ -36,6 +59,22 @@ export default function TasksPage() {
         return "secondary";
     }
   };
+
+  if (!mounted) {
+    return (
+      <div className="flex h-screen bg-background">
+        <AppSidebar />
+        <div className="flex flex-1 flex-col overflow-hidden">
+          <Header />
+          <main className="flex-1 overflow-y-auto p-6">
+            <div className="mx-auto max-w-4xl">
+              <div className="animate-pulse">Loading tasks...</div>
+            </div>
+          </main>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex h-screen bg-background">
@@ -113,29 +152,27 @@ export default function TasksPage() {
                   <CardTitle>Completed Tasks</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-2">
-                  {tasks.filter((t) => t.completed).length === 0 ? (
+                  {completedTasks.length === 0 ? (
                     <p className="text-sm text-muted-foreground text-center py-8">
                       No completed tasks
                     </p>
                   ) : (
-                    tasks
-                      .filter((t) => t.completed)
-                      .map((task) => (
-                        <div
-                          key={task.id}
-                          className="flex items-start gap-3 p-3 border rounded-lg opacity-60"
-                        >
-                          <Checkbox checked={true} disabled />
-                          <div className="flex-1">
-                            <p className="font-medium line-through">{task.title}</p>
-                            {task.description && (
-                              <p className="text-sm text-muted-foreground mt-1">
-                                {task.description}
-                              </p>
-                            )}
-                          </div>
+                    completedTasks.map((task) => (
+                      <div
+                        key={task.id}
+                        className="flex items-start gap-3 p-3 border rounded-lg opacity-60"
+                      >
+                        <Checkbox checked={true} disabled />
+                        <div className="flex-1">
+                          <p className="font-medium line-through">{task.title}</p>
+                          {task.description && (
+                            <p className="text-sm text-muted-foreground mt-1">
+                              {task.description}
+                            </p>
+                          )}
                         </div>
-                      ))
+                      </div>
+                    ))
                   )}
                 </CardContent>
               </Card>

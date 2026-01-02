@@ -28,7 +28,8 @@ export default function CalendarPage() {
 
   useEffect(() => {
     setMounted(true);
-    if (typeof window !== "undefined") {
+    if (typeof window !== "undefined" && events.length === 0) {
+      // Only load if data is not already loaded
       loadExtendedData();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

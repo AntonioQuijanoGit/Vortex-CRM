@@ -28,8 +28,12 @@ export default function ReportsPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   useEffect(() => {
-    loadExtendedData();
-  }, [loadExtendedData]);
+    if (typeof window !== "undefined" && customReports.length === 0) {
+      // Only load if data is not already loaded
+      loadExtendedData();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleExportReport = (report: typeof customReports[0]) => {
     if (report.type === "contacts") {
