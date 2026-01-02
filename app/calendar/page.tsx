@@ -39,7 +39,7 @@ export default function CalendarPage() {
 
   // Pre-calculate events by date for better performance
   const eventsByDate = useMemo(() => {
-    const map = new Map<string, typeof events>();
+    const map = new Map<string, Array<typeof events[0]>>();
     events.forEach((event) => {
       const eventDate = new Date(event.startDate);
       const dateKey = format(eventDate, "yyyy-MM-dd");
