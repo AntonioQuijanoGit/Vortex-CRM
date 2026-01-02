@@ -23,25 +23,36 @@ import { DealsTable } from "@/components/pipeline/deals-table";
 function PipelineContent() {
   const searchParams = useSearchParams();
   useInitialize();
-  const loadExtendedData = useExtendedStore((state) => state.loadExtendedData);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingDeal, setEditingDeal] = useState<string | null>(null);
   const [selectedDealId, setSelectedDealId] = useState<string | null>(null);
   const [selectedDealIds, setSelectedDealIds] = useState<string[]>([]);
   const [filters, setFilters] = useState<DealFilters>({});
   const [viewMode, setViewMode] = useState<"kanban" | "table">("kanban");
-  const duplicateDeal = useCRMStore((state) => state.duplicateDeal);
-  const deleteDeal = useCRMStore((state) => state.deleteDeal);
-  const getDeal = useCRMStore((state) => state.getDeal);
-  const deals = useCRMStore((state) => state.deals);
-  const filterDeals = useCRMStore((state) => state.filterDeals);
+  
+  // Use shallow comparison for store selectors to avoid unnecessary re-renders
+  const { duplicateDeal, deleteDeal, getDeal, deals, filterDeals } = useCRMStore(
+    (state) => ({
+      duplicateDeal: state.duplicateDeal,
+      deleteDeal: state.deleteDeal,
+      getDeal: state.getDeal,
+      deals: state.deals,
+      filterDeals: state.filterDeals,
+    }),
+    shallow
+  );
+  
+  const { loadExtendedData } = useExtendedStore(
+    (state) => ({ loadExtendedData: state.loadExtendedData }),
+    shallow
+  );
 
   useEffect(() => {
     // Pipeline page uses extended store features like saved views
     // Only load once per session if needed
     const loadOnce = () => {
       try {
-        const savedViews = localStorage.getItem("vortex-saved-views");
+        const savedViews = localStorage.getItem("crm-saved-views");
         if (!savedViews) {
           loadExtendedData();
         }
