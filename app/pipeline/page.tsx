@@ -15,6 +15,7 @@ import { Plus, Copy, LayoutGrid, Table as TableIcon } from "lucide-react";
 import { useInitialize } from "@/hooks/use-initialize";
 import { useCRMStore } from "@/lib/store";
 import { useExtendedStore } from "@/lib/store-extended";
+import { shallow } from "zustand/shallow";
 import { toast } from "sonner";
 import type { DealFilters, Deal } from "@/lib/types";
 import { DealsTable } from "@/components/pipeline/deals-table";
