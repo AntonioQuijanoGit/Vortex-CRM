@@ -51,12 +51,11 @@ export default function CalendarPage() {
     return map;
   }, [events]);
 
-  const getEventsForDate = useMemo(() => {
-    return (date: Date) => {
-      const dateKey = format(date, "yyyy-MM-dd");
-      return eventsByDate.get(dateKey) || [];
-    };
-  }, [eventsByDate]);
+  // Function to get events for a specific date (uses pre-calculated map)
+  const getEventsForDate = (date: Date) => {
+    const dateKey = format(date, "yyyy-MM-dd");
+    return eventsByDate.get(dateKey) || [];
+  };
 
   const handleDateClick = (date: Date) => {
     setSelectedDate(date);
