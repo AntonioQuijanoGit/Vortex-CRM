@@ -3,6 +3,7 @@
 import { useState, useEffect, useMemo, memo } from "react";
 import Link from "next/link";
 import { useCRMStore } from "@/lib/store";
+import { shallow } from "zustand/shallow";
 import {
   Table,
   TableBody,
@@ -59,12 +60,23 @@ interface ContactsTableProps {
 
 export const ContactsTable = memo(function ContactsTable({ contacts, onEdit }: ContactsTableProps) {
   const [isLoading, setIsLoading] = useState(true);
-  const deleteContact = useCRMStore((state) => state.deleteContact);
-  const selectedContactIds = useCRMStore((state) => state.selectedContactIds);
-  const toggleContactSelection = useCRMStore((state) => state.toggleContactSelection);
-  const selectAllContacts = useCRMStore((state) => state.selectAllContacts);
-  const clearContactSelection = useCRMStore((state) => state.clearContactSelection);
-  const settings = useCRMStore((state) => state.settings);
+  
+  // Use combined selector
+  const {
+    deleteContact,
+    selectedContactIds,
+    toggleContactSelection,
+    selectAllContacts,
+    clearContactSelection,
+    settings,
+  } = useCRMStore((state) => ({
+    deleteContact: state.deleteContact,
+    selectedContactIds: state.selectedContactIds,
+    toggleContactSelection: state.toggleContactSelection,
+    selectAllContacts: state.selectAllContacts,
+    clearContactSelection: state.clearContactSelection,
+    settings: state.settings,
+  }), shallow);
 
   useEffect(() => {
     const timer = setTimeout(() => setIsLoading(false), 100);

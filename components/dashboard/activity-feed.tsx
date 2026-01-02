@@ -2,15 +2,27 @@
 
 import { useMemo, memo, useState, useEffect } from "react";
 import { useCRMStore } from "@/lib/store";
+import { shallow } from "zustand/shallow";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatDistanceToNow } from "date-fns";
 import { CheckCircle2, XCircle, PlusCircle, ArrowRight, FileText, Edit } from "lucide-react";
 
 export const ActivityFeed = memo(function ActivityFeed() {
   const [mounted, setMounted] = useState(false);
-  const activities = useCRMStore((state) => state.getRecentActivities(10));
-  const contacts = useCRMStore((state) => state.contacts);
-  const deals = useCRMStore((state) => state.deals);
+  
+  // Use combined selector to get only what we need
+  const { activities, contactsMap, dealsMap } = useCRMStore((state) => {
+    const recentActivities = state.getRecentActivities(10);
+    // Create maps for efficient lookup
+    const contactsMap = new Map(state.contacts.map(c => [c.id, c]));
+    const dealsMap = new Map(state.deals.map(d => [d.id, d]));
+    
+    return {
+      activities: recentActivities,
+      contactsMap,
+      dealsMap,
+    };
+  }, shallow);
 
   useEffect(() => {
     setMounted(true);
@@ -19,12 +31,8 @@ export const ActivityFeed = memo(function ActivityFeed() {
   // Memoize activity descriptions
   const activityItems = useMemo(() => {
     return activities.map((activity) => {
-      const contact = activity.contactId
-        ? contacts.find((c) => c.id === activity.contactId)
-        : null;
-      const deal = activity.dealId
-        ? deals.find((d) => d.id === activity.dealId)
-        : null;
+      const contact = activity.contactId ? contactsMap.get(activity.contactId) : null;
+      const deal = activity.dealId ? dealsMap.get(activity.dealId) : null;
 
       let description: string;
       switch (activity.type) {
@@ -55,7 +63,7 @@ export const ActivityFeed = memo(function ActivityFeed() {
 
       return { ...activity, contact, description };
     });
-  }, [activities, contacts, deals]);
+  }, [activities, contactsMap, dealsMap]);
 
   if (!mounted) {
     return (

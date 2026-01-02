@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCRMStore } from "@/lib/store";
+import { shallow } from "zustand/shallow";
 import {
   Dialog,
   DialogContent,
@@ -39,10 +40,12 @@ export function DealFormDialog({
   dealId,
   onSuccess,
 }: DealFormDialogProps) {
-  const addDeal = useCRMStore((state) => state.addDeal);
-  const updateDeal = useCRMStore((state) => state.updateDeal);
-  const getDeal = useCRMStore((state) => state.getDeal);
-  const contacts = useCRMStore((state) => state.contacts);
+  const { addDeal, updateDeal, getDeal, contacts } = useCRMStore((state) => ({
+    addDeal: state.addDeal,
+    updateDeal: state.updateDeal,
+    getDeal: state.getDeal,
+    contacts: state.contacts,
+  }), shallow);
 
   const deal = dealId ? getDeal(dealId) : null;
 
