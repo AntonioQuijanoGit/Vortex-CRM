@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useExtendedStore } from "@/lib/store-extended";
 import { AppSidebar } from "@/components/layout/app-sidebar";
 import { Header } from "@/components/layout/header";
@@ -9,28 +9,54 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Plus, ChevronLeft, ChevronRight } from "lucide-react";
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSameDay, addMonths, subMonths } from "date-fns";
 import { EventFormDialog } from "@/components/calendar/event-form-dialog";
+import { shallow } from "zustand/shallow";
 
 export default function CalendarPage() {
   const [currentDate, setCurrentDate] = useState(new Date());
-  const events = useExtendedStore((state) => state.events);
-  const loadExtendedData = useExtendedStore((state) => state.loadExtendedData);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  
+  // Use shallow comparison to avoid unnecessary re-renders
+  const { events, loadExtendedData } = useExtendedStore(
+    (state) => ({
+      events: state.events,
+      loadExtendedData: state.loadExtendedData,
+    }),
+    shallow
+  );
 
   useEffect(() => {
     loadExtendedData();
-  }, [loadExtendedData]);
+  }, []); // Only run once on mount
 
-  const monthStart = startOfMonth(currentDate);
-  const monthEnd = endOfMonth(currentDate);
-  const daysInMonth = eachDayOfInterval({ start: monthStart, end: monthEnd });
+  // Memoize month calculations
+  const { monthStart, monthEnd, daysInMonth, today } = useMemo(() => ({
+    monthStart: startOfMonth(currentDate),
+    monthEnd: endOfMonth(currentDate),
+    daysInMonth: eachDayOfInterval({ start: startOfMonth(currentDate), end: endOfMonth(currentDate) }),
+    today: new Date(),
+  }), [currentDate]);
 
-  const getEventsForDate = (date: Date) => {
-    return events.filter((event) => {
+  // Pre-calculate events by date for better performance
+  const eventsByDate = useMemo(() => {
+    const map = new Map<string, typeof events>();
+    events.forEach((event) => {
       const eventDate = new Date(event.startDate);
-      return isSameDay(eventDate, date);
+      const dateKey = format(eventDate, "yyyy-MM-dd");
+      if (!map.has(dateKey)) {
+        map.set(dateKey, []);
+      }
+      map.get(dateKey)!.push(event);
     });
-  };
+    return map;
+  }, [events]);
+
+  const getEventsForDate = useMemo(() => {
+    return (date: Date) => {
+      const dateKey = format(date, "yyyy-MM-dd");
+      return eventsByDate.get(dateKey) || [];
+    };
+  }, [eventsByDate]);
 
   const handleDateClick = (date: Date) => {
     setSelectedDate(date);
@@ -98,7 +124,7 @@ export default function CalendarPage() {
                   {daysInMonth.map((day) => {
                     const dayEvents = getEventsForDate(day);
                     const isCurrentMonth = isSameMonth(day, currentDate);
-                    const isToday = isSameDay(day, new Date());
+                    const isToday = isSameDay(day, today);
 
                     return (
                       <button
@@ -148,13 +174,3 @@ export default function CalendarPage() {
     </div>
   );
 }
-
-
-
-
-
-
-
-
-
-
