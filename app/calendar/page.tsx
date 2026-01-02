@@ -15,6 +15,7 @@ export default function CalendarPage() {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [mounted, setMounted] = useState(false);
   
   // Use shallow comparison to avoid unnecessary re-renders
   const { events, loadExtendedData } = useExtendedStore(
@@ -26,10 +27,27 @@ export default function CalendarPage() {
   );
 
   useEffect(() => {
+    setMounted(true);
     if (typeof window !== "undefined") {
       loadExtendedData();
     }
   }, []); // Only run once on mount
+
+  if (!mounted) {
+    return (
+      <div className="flex h-screen bg-background">
+        <AppSidebar />
+        <div className="flex flex-1 flex-col overflow-hidden">
+          <Header />
+          <main className="flex-1 overflow-y-auto p-6">
+            <div className="mx-auto max-w-7xl">
+              <div className="animate-pulse">Loading calendar...</div>
+            </div>
+          </main>
+        </div>
+      </div>
+    );
+  }
 
   // Memoize month calculations
   const { monthStart, monthEnd, daysInMonth, today } = useMemo(() => ({
