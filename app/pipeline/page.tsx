@@ -36,8 +36,23 @@ function PipelineContent() {
   const filterDeals = useCRMStore((state) => state.filterDeals);
 
   useEffect(() => {
-    loadExtendedData();
-  }, [loadExtendedData]);
+    // Pipeline page uses extended store features like saved views
+    // Only load once per session if needed
+    const loadOnce = () => {
+      try {
+        const savedViews = localStorage.getItem("vortex-saved-views");
+        if (!savedViews) {
+          loadExtendedData();
+        }
+      } catch (e) {
+        // Silently fail
+      }
+    };
+    if (typeof window !== "undefined") {
+      loadOnce();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     const newParam = searchParams.get("new");
