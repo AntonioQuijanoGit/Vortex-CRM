@@ -31,6 +31,23 @@ export default function ContactDetailPage() {
   const deals = getDealsByContact(contactId);
   const activities = getActivitiesByContact(contactId);
   const notes = getNotesByContact(contactId);
+
+  const formatCurrency = (value: number) => {
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: settings.currency,
+      minimumFractionDigits: 0,
+    }).format(value);
+  };
+
+  const handleDelete = () => {
+    if (contact && confirm(`Are you sure you want to delete ${contact.name}?`)) {
+      deleteContact(contact.id);
+      toast.success("Contact deleted");
+      router.push("/contacts");
+    }
+  };
+
   if (!contact) {
     return (
       <div className="flex h-screen bg-background">
@@ -46,20 +63,6 @@ export default function ContactDetailPage() {
       </div>
     );
   }
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: settings.currency,
-      minimumFractionDigits: 0,
-    }).format(value);
-  };
-  const handleDelete = () => {
-    if (confirm(`Are you sure you want to delete ${contact.name}?`)) {
-      deleteContact(contact.id);
-      toast.success("Contact deleted");
-      router.push("/contacts");
-    }
-  };
 
   return (
     <div className="flex h-screen bg-background">
