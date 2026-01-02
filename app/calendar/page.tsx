@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 import { useExtendedStore } from "@/lib/store-extended";
 import { AppSidebar } from "@/components/layout/app-sidebar";
 import { Header } from "@/components/layout/header";
@@ -26,7 +26,9 @@ export default function CalendarPage() {
   );
 
   useEffect(() => {
-    loadExtendedData();
+    if (typeof window !== "undefined") {
+      loadExtendedData();
+    }
   }, []); // Only run once on mount
 
   // Memoize month calculations
@@ -52,10 +54,10 @@ export default function CalendarPage() {
   }, [events]);
 
   // Function to get events for a specific date (uses pre-calculated map)
-  const getEventsForDate = (date: Date) => {
+  const getEventsForDate = useCallback((date: Date) => {
     const dateKey = format(date, "yyyy-MM-dd");
     return eventsByDate.get(dateKey) || [];
-  };
+  }, [eventsByDate]);
 
   const handleDateClick = (date: Date) => {
     setSelectedDate(date);
