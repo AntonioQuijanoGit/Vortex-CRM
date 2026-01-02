@@ -31,23 +31,8 @@ export default function CalendarPage() {
     if (typeof window !== "undefined") {
       loadExtendedData();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Only run once on mount
-
-  if (!mounted) {
-    return (
-      <div className="flex h-screen bg-background">
-        <AppSidebar />
-        <div className="flex flex-1 flex-col overflow-hidden">
-          <Header />
-          <main className="flex-1 overflow-y-auto p-6">
-            <div className="mx-auto max-w-7xl">
-              <div className="animate-pulse">Loading calendar...</div>
-            </div>
-          </main>
-        </div>
-      </div>
-    );
-  }
 
   // Memoize month calculations
   const { monthStart, monthEnd, daysInMonth, today } = useMemo(() => ({
@@ -76,6 +61,22 @@ export default function CalendarPage() {
     const dateKey = format(date, "yyyy-MM-dd");
     return eventsByDate.get(dateKey) || [];
   }, [eventsByDate]);
+
+  if (!mounted) {
+    return (
+      <div className="flex h-screen bg-background">
+        <AppSidebar />
+        <div className="flex flex-1 flex-col overflow-hidden">
+          <Header />
+          <main className="flex-1 overflow-y-auto p-6">
+            <div className="mx-auto max-w-7xl">
+              <div className="animate-pulse">Loading calendar...</div>
+            </div>
+          </main>
+        </div>
+      </div>
+    );
+  }
 
   const handleDateClick = (date: Date) => {
     setSelectedDate(date);
