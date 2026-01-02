@@ -11,6 +11,7 @@ import { QuickActions } from "@/components/dashboard/quick-actions";
 import { NotificationManager } from "@/components/shared/notifications";
 import { useReminderNotifications } from "@/hooks/use-reminder-notifications";
 import { OnboardingTour } from "@/components/shared/onboarding-tour";
+import { WelcomeScreen } from "@/components/shared/welcome-screen";
 
 export default function DashboardPage() {
   const [mounted, setMounted] = useState(false);
@@ -48,6 +49,7 @@ export default function DashboardPage() {
 
   return (
     <>
+      <WelcomeScreen />
       <NotificationManager />
       <OnboardingTour />
       <div className="flex h-screen bg-background">
