@@ -68,7 +68,8 @@ interface ExtendedStore {
   saveExtendedData: () => void;
 }
 
-export const useExtendedStore = createWithEqualityFn<ExtendedStore>((set, get) => ({
+export const useExtendedStore = createWithEqualityFn<ExtendedStore>(
+  (set, get) => ({
   // Tags
   tags: [],
 
@@ -363,6 +364,8 @@ export const useExtendedStore = createWithEqualityFn<ExtendedStore>((set, get) =
       console.error("Error saving extended data:", error);
     }
   },
-}));
+  }),
+  Object.is
+);
 
 

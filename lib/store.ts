@@ -94,7 +94,8 @@ interface CRMStore {
 // Create debounced save function outside the store to avoid recreation
 let debouncedSaveFn: (() => void) | null = null;
 
-export const useCRMStore = createWithEqualityFn<CRMStore>((set, get) => {
+export const useCRMStore = createWithEqualityFn<CRMStore>(
+  (set, get) => {
   // Initialize debounced save function once
   if (!debouncedSaveFn && typeof window !== "undefined") {
     debouncedSaveFn = debounce(() => {
@@ -806,5 +807,7 @@ export const useCRMStore = createWithEqualityFn<CRMStore>((set, get) => {
     debouncedSaveFn?.();
   },
   };
-});
+  },
+  Object.is
+);
 
