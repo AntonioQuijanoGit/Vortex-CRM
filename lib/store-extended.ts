@@ -3,7 +3,7 @@
  * This extends the base store with tags, tasks, events, filter presets, etc.
  */
 
-import { create } from "zustand";
+import { createWithEqualityFn } from "zustand/traditional";
 import type {
   Tag,
   FilterPreset,
@@ -68,7 +68,7 @@ interface ExtendedStore {
   saveExtendedData: () => void;
 }
 
-export const useExtendedStore = create<ExtendedStore>((set, get) => ({
+export const useExtendedStore = createWithEqualityFn<ExtendedStore>((set, get) => ({
   // Tags
   tags: [],
 

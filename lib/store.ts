@@ -1,4 +1,4 @@
-import { create } from "zustand";
+import { createWithEqualityFn } from "zustand/traditional";
 import { shallow } from "zustand/shallow";
 import type {
   Contact,
@@ -94,7 +94,7 @@ interface CRMStore {
 // Create debounced save function outside the store to avoid recreation
 let debouncedSaveFn: (() => void) | null = null;
 
-export const useCRMStore = create<CRMStore>((set, get) => {
+export const useCRMStore = createWithEqualityFn<CRMStore>((set, get) => {
   // Initialize debounced save function once
   if (!debouncedSaveFn && typeof window !== "undefined") {
     debouncedSaveFn = debounce(() => {

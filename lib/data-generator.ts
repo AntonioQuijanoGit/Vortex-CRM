@@ -14,7 +14,7 @@ export function generateContact(): Contact {
     id: faker.string.uuid(),
     name,
     email: faker.internet.email({ firstName: name.split(" ")[0], lastName: name.split(" ")[1] }),
-    phone: faker.phone.number("###-###-####"),
+    phone: faker.phone.number(),
     company: faker.company.name(),
     position: faker.person.jobTitle(),
     avatar: "",
