@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useExtendedStore } from "@/lib/store-extended";
 import { useCRMStore } from "@/lib/store";
+import { shallow } from "zustand/shallow";
 import { AppSidebar } from "@/components/layout/app-sidebar";
 import { Header } from "@/components/layout/header";
 import { Button } from "@/components/ui/button";
@@ -12,20 +13,31 @@ import { CustomReportDialog } from "@/components/reports/custom-report-dialog";
 import { exportToCSV } from "@/lib/utils/csv-export";
 
 export default function ReportsPage() {
-  const customReports = useExtendedStore((state) => state.customReports);
-  const deleteCustomReport = useExtendedStore((state) => state.deleteCustomReport);
-  const loadExtendedData = useExtendedStore((state) => state.loadExtendedData);
-  const contacts = useCRMStore((state) => state.contacts);
-  const deals = useCRMStore((state) => state.deals);
+  // Use combined selectors to minimize re-renders
+  const { customReports, deleteCustomReport, loadExtendedData } = useExtendedStore((state) => ({
+    customReports: state.customReports,
+    deleteCustomReport: state.deleteCustomReport,
+    loadExtendedData: state.loadExtendedData,
+  }), shallow);
+
+  const { filterContacts, filterDeals } = useCRMStore((state) => ({
+    filterContacts: state.filterContacts,
+    filterDeals: state.filterDeals,
+  }), shallow);
+
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   useEffect(() => {
-    loadExtendedData();
-  }, [loadExtendedData]);
+    if (typeof window !== "undefined" && customReports.length === 0) {
+      // Only load if data is not already loaded
+      loadExtendedData();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleExportReport = (report: typeof customReports[0]) => {
     if (report.type === "contacts") {
-      const filtered = useCRMStore.getState().filterContacts(report.filters as any);
+      const filtered = filterContacts(report.filters as any);
       exportToCSV(filtered, report.name, [
         { key: "name", label: "Name" },
         { key: "email", label: "Email" },
@@ -34,7 +46,7 @@ export default function ReportsPage() {
         { key: "status", label: "Status" },
       ]);
     } else if (report.type === "deals") {
-      const filtered = useCRMStore.getState().filterDeals(report.filters as any);
+      const filtered = filterDeals(report.filters as any);
       exportToCSV(filtered, report.name, [
         { key: "title", label: "Title" },
         { key: "value", label: "Value" },
@@ -127,6 +139,7 @@ export default function ReportsPage() {
     </div>
   );
 }
+
 
 
 

@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useMemo, memo } from "react";
 import { useCRMStore } from "@/lib/store";
+import { shallow } from "zustand/shallow";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
@@ -27,8 +28,12 @@ function ChartSkeleton() {
 export const RevenueChart = memo(function RevenueChart() {
   const [isLoading, setIsLoading] = useState(true);
   const [mounted, setMounted] = useState(false);
-  const deals = useCRMStore((state) => state.deals);
-  const settings = useCRMStore((state) => state.settings);
+  
+  // Use combined selector
+  const { deals, settings } = useCRMStore((state) => ({
+    deals: state.deals,
+    settings: state.settings,
+  }), shallow);
 
   useEffect(() => {
     setMounted(true);

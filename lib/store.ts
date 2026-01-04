@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { shallow } from "zustand/shallow";
 import type {
   Contact,
   Deal,
@@ -12,7 +13,7 @@ import type {
 } from "./types";
 import { STORAGE_KEYS } from "./constants";
 import { seedDataIfNeeded } from "./data-generator";
-import { generateUUID } from "./utils";
+import { generateUUID, debounce } from "./utils";
 
 interface CRMStore {
   // Data
@@ -90,8 +91,28 @@ interface CRMStore {
   clearAllData: () => void;
 }
 
-export const useCRMStore = create<CRMStore>((set, get) => ({
-  // Initial state
+// Create debounced save function outside the store to avoid recreation
+let debouncedSaveFn: (() => void) | null = null;
+
+export const useCRMStore = create<CRMStore>((set, get) => {
+  // Initialize debounced save function once
+  if (!debouncedSaveFn && typeof window !== "undefined") {
+    debouncedSaveFn = debounce(() => {
+      const { contacts, deals, activities, notes, settings } = get();
+      try {
+        localStorage.setItem(STORAGE_KEYS.CONTACTS, JSON.stringify(contacts));
+        localStorage.setItem(STORAGE_KEYS.DEALS, JSON.stringify(deals));
+        localStorage.setItem(STORAGE_KEYS.ACTIVITIES, JSON.stringify(activities));
+        localStorage.setItem(STORAGE_KEYS.NOTES, JSON.stringify(notes));
+        localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(settings));
+      } catch (error) {
+        console.error("Error saving to storage:", error);
+      }
+    }, 500);
+  }
+
+  return {
+    // Initial state
   contacts: [],
   deals: [],
   activities: [],
@@ -216,7 +237,7 @@ export const useCRMStore = create<CRMStore>((set, get) => ({
       description: `${contact.name} was added as a contact`,
     });
 
-    get().saveToStorage();
+    debouncedSaveFn?.();
     return contact;
   },
 
@@ -233,7 +254,7 @@ export const useCRMStore = create<CRMStore>((set, get) => ({
       description: "Contact information was updated",
     });
 
-    get().saveToStorage();
+    debouncedSaveFn?.();
   },
 
   deleteContact: (id) => {
@@ -244,7 +265,7 @@ export const useCRMStore = create<CRMStore>((set, get) => ({
       activities: state.activities.filter((a) => a.contactId !== id),
     }));
 
-    get().saveToStorage();
+    debouncedSaveFn?.();
   },
 
   deleteContacts: (ids) => {
@@ -256,7 +277,7 @@ export const useCRMStore = create<CRMStore>((set, get) => ({
       selectedContactIds: [],
     }));
 
-    get().saveToStorage();
+    debouncedSaveFn?.();
   },
 
   getContact: (id) => {
@@ -290,7 +311,7 @@ export const useCRMStore = create<CRMStore>((set, get) => ({
       description: `Deal "${deal.title}" was created`,
     });
 
-    get().saveToStorage();
+    debouncedSaveFn?.();
     return deal;
   },
 
@@ -328,7 +349,7 @@ export const useCRMStore = create<CRMStore>((set, get) => ({
       }
     }
 
-    get().saveToStorage();
+    debouncedSaveFn?.();
   },
 
   deleteDeal: (id) => {
@@ -338,7 +359,7 @@ export const useCRMStore = create<CRMStore>((set, get) => ({
       activities: state.activities.filter((a) => a.dealId !== id),
     }));
 
-    get().saveToStorage();
+    debouncedSaveFn?.();
   },
 
   deleteDeals: (ids) => {
@@ -349,7 +370,7 @@ export const useCRMStore = create<CRMStore>((set, get) => ({
       selectedDealIds: [],
     }));
 
-    get().saveToStorage();
+    debouncedSaveFn?.();
   },
 
   getDeal: (id) => {
@@ -392,7 +413,7 @@ export const useCRMStore = create<CRMStore>((set, get) => ({
       description: `Deal "${duplicatedDeal.title}" was duplicated`,
     });
 
-    get().saveToStorage();
+    debouncedSaveFn?.();
     return duplicatedDeal;
   },
 
@@ -418,7 +439,7 @@ export const useCRMStore = create<CRMStore>((set, get) => ({
       activities: [activity, ...state.activities].slice(0, 1000), // Limit to 1000 activities
     }));
 
-    get().saveToStorage();
+    debouncedSaveFn?.();
     return activity;
   },
 
@@ -461,7 +482,7 @@ export const useCRMStore = create<CRMStore>((set, get) => ({
       description: "A note was added",
     });
 
-    get().saveToStorage();
+    debouncedSaveFn?.();
     return note;
   },
 
@@ -472,7 +493,7 @@ export const useCRMStore = create<CRMStore>((set, get) => ({
       ),
     }));
 
-    get().saveToStorage();
+    debouncedSaveFn?.();
   },
 
   deleteNote: (id) => {
@@ -480,7 +501,7 @@ export const useCRMStore = create<CRMStore>((set, get) => ({
       notes: state.notes.filter((n) => n.id !== id),
     }));
 
-    get().saveToStorage();
+    debouncedSaveFn?.();
   },
 
   getNotesByContact: (contactId) => {
@@ -501,7 +522,7 @@ export const useCRMStore = create<CRMStore>((set, get) => ({
       settings: { ...state.settings, ...updates },
     }));
 
-    get().saveToStorage();
+    debouncedSaveFn?.();
   },
 
   // Filters
@@ -762,7 +783,7 @@ export const useCRMStore = create<CRMStore>((set, get) => ({
         notes: data.notes || [],
         settings: data.settings || get().settings,
       });
-      get().saveToStorage();
+      debouncedSaveFn?.();
     } catch (error) {
       console.error("Error importing data:", error);
       throw new Error("Invalid data format");
@@ -778,7 +799,12 @@ export const useCRMStore = create<CRMStore>((set, get) => ({
       selectedContactIds: [],
       selectedDealIds: [],
     });
-    get().saveToStorage();
+    debouncedSaveFn?.();
   },
-}));
+
+  _debouncedSave: () => {
+    debouncedSaveFn?.();
+  },
+  };
+});
 

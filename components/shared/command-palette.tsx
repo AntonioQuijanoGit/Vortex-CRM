@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useCRMStore } from "@/lib/store";
+import { shallow } from "zustand/shallow";
 import { Command } from "cmdk";
 import {
   Dialog,

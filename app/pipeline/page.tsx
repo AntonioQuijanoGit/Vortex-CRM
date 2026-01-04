@@ -15,6 +15,7 @@ import { Plus, Copy, LayoutGrid, Table as TableIcon } from "lucide-react";
 import { useInitialize } from "@/hooks/use-initialize";
 import { useCRMStore } from "@/lib/store";
 import { useExtendedStore } from "@/lib/store-extended";
+import { shallow } from "zustand/shallow";
 import { toast } from "sonner";
 import type { DealFilters, Deal } from "@/lib/types";
 import { DealsTable } from "@/components/pipeline/deals-table";
@@ -22,22 +23,48 @@ import { DealsTable } from "@/components/pipeline/deals-table";
 function PipelineContent() {
   const searchParams = useSearchParams();
   useInitialize();
-  const loadExtendedData = useExtendedStore((state) => state.loadExtendedData);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingDeal, setEditingDeal] = useState<string | null>(null);
   const [selectedDealId, setSelectedDealId] = useState<string | null>(null);
   const [selectedDealIds, setSelectedDealIds] = useState<string[]>([]);
   const [filters, setFilters] = useState<DealFilters>({});
   const [viewMode, setViewMode] = useState<"kanban" | "table">("kanban");
-  const duplicateDeal = useCRMStore((state) => state.duplicateDeal);
-  const deleteDeal = useCRMStore((state) => state.deleteDeal);
-  const getDeal = useCRMStore((state) => state.getDeal);
-  const deals = useCRMStore((state) => state.deals);
-  const filterDeals = useCRMStore((state) => state.filterDeals);
+  
+  // Use shallow comparison for store selectors to avoid unnecessary re-renders
+  const { duplicateDeal, deleteDeal, getDeal, deals, filterDeals } = useCRMStore(
+    (state) => ({
+      duplicateDeal: state.duplicateDeal,
+      deleteDeal: state.deleteDeal,
+      getDeal: state.getDeal,
+      deals: state.deals,
+      filterDeals: state.filterDeals,
+    }),
+    shallow
+  );
+  
+  const { loadExtendedData } = useExtendedStore(
+    (state) => ({ loadExtendedData: state.loadExtendedData }),
+    shallow
+  );
 
   useEffect(() => {
-    loadExtendedData();
-  }, [loadExtendedData]);
+    // Pipeline page uses extended store features like saved views
+    // Only load once per session if needed
+    const loadOnce = () => {
+      try {
+        const savedViews = localStorage.getItem("crm-saved-views");
+        if (!savedViews) {
+          loadExtendedData();
+        }
+      } catch (e) {
+        // Silently fail
+      }
+    };
+    if (typeof window !== "undefined") {
+      loadOnce();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     const newParam = searchParams.get("new");

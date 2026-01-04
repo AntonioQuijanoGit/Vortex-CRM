@@ -12,6 +12,7 @@ import {
   DragOverEvent,
 } from "@dnd-kit/core";
 import { useCRMStore } from "@/lib/store";
+import { shallow } from "zustand/shallow";
 import { KanbanColumn } from "@/components/pipeline/kanban-column";
 import { DEAL_STATUSES } from "@/lib/constants";
 import type { DealStatus, DealFilters } from "@/lib/types";
@@ -25,9 +26,11 @@ interface KanbanBoardProps {
 }
 
 export function KanbanBoard({ onDealClick, selectedDealId, onDealSelect, selectedDealIds = [], filters }: KanbanBoardProps) {
-  const deals = useCRMStore((state) => state.deals);
-  const filterDeals = useCRMStore((state) => state.filterDeals);
-  const updateDeal = useCRMStore((state) => state.updateDeal);
+  const { deals, filterDeals, updateDeal } = useCRMStore((state) => ({
+    deals: state.deals,
+    filterDeals: state.filterDeals,
+    updateDeal: state.updateDeal,
+  }), shallow);
 
   // Apply filters if provided
   const filteredDeals = filters && Object.keys(filters).length > 0

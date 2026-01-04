@@ -10,7 +10,6 @@ import { ActivityFeed } from "@/components/dashboard/activity-feed";
 import { QuickActions } from "@/components/dashboard/quick-actions";
 import { NotificationManager } from "@/components/shared/notifications";
 import { useReminderNotifications } from "@/hooks/use-reminder-notifications";
-import { OnboardingTour } from "@/components/shared/onboarding-tour";
 import { WelcomeScreen } from "@/components/shared/welcome-screen";
 
 export default function DashboardPage() {
@@ -51,7 +50,6 @@ export default function DashboardPage() {
     <>
       <WelcomeScreen />
       <NotificationManager />
-      <OnboardingTour />
       <div className="flex h-screen bg-background">
         <AppSidebar />
         <div className="flex flex-1 flex-col overflow-hidden">

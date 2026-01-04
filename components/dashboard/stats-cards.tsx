@@ -2,6 +2,7 @@
 
 import { useState, useEffect, memo, useMemo } from "react";
 import { useCRMStore } from "@/lib/store";
+import { shallow } from "zustand/shallow";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Users, GitBranch, DollarSign, TrendingUp } from "lucide-react";
@@ -29,10 +30,12 @@ function StatsCardSkeleton() {
 export const DashboardStats = memo(function DashboardStats() {
   const [isLoading, setIsLoading] = useState(true);
   const [mounted, setMounted] = useState(false);
-  const contacts = useCRMStore((state) => state.contacts);
-  const deals = useCRMStore((state) => state.deals);
-  const settings = useCRMStore((state) => state.settings);
-  const getDashboardStats = useCRMStore((state) => state.getDashboardStats);
+  
+  // Use combined selector to minimize re-renders
+  const { stats, settings } = useCRMStore((state) => ({
+    stats: state.getDashboardStats(),
+    settings: state.settings,
+  }), shallow);
 
   useEffect(() => {
     setMounted(true);
@@ -41,8 +44,8 @@ export const DashboardStats = memo(function DashboardStats() {
     return () => clearTimeout(timer);
   }, []);
 
-  // Memoize stats calculation - only calculate after mount
-  const stats = useMemo(() => {
+  // Use stats directly from selector
+  const displayStats = useMemo(() => {
     if (!mounted) {
       return {
         totalContacts: 0,
@@ -55,8 +58,8 @@ export const DashboardStats = memo(function DashboardStats() {
         winRateChange: 0,
       };
     }
-    return getDashboardStats();
-  }, [getDashboardStats, contacts.length, deals.length, mounted]);
+    return stats;
+  }, [stats, mounted]);
   
   // Memoize currency formatter
   const formatCurrency = useMemo(() => {
@@ -72,33 +75,33 @@ export const DashboardStats = memo(function DashboardStats() {
   const statCards = useMemo(() => [
     {
       title: "Total Contacts",
-      value: stats.totalContacts.toLocaleString(),
-      change: stats.contactsChange,
+      value: displayStats.totalContacts.toLocaleString(),
+      change: displayStats.contactsChange,
       icon: Users,
       description: "All contacts",
     },
     {
       title: "Active Deals",
-      value: stats.activeDeals.toString(),
-      change: stats.dealsChange,
+      value: displayStats.activeDeals.toString(),
+      change: displayStats.dealsChange,
       icon: GitBranch,
       description: "In pipeline",
     },
     {
       title: "Monthly Revenue",
-      value: formatCurrency(stats.monthlyRevenue),
-      change: stats.revenueChange,
+      value: formatCurrency(displayStats.monthlyRevenue),
+      change: displayStats.revenueChange,
       icon: DollarSign,
       description: "This month",
     },
     {
       title: "Win Rate",
-      value: `${stats.winRate.toFixed(1)}%`,
-      change: stats.winRateChange,
+      value: `${displayStats.winRate.toFixed(1)}%`,
+      change: displayStats.winRateChange,
       icon: TrendingUp,
       description: "Success rate",
     },
-  ], [stats, formatCurrency]);
+  ], [displayStats, formatCurrency]);
 
   if (isLoading || !mounted) {
     return (
