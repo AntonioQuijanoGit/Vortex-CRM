@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { X, ArrowRight, Users, TrendingUp, BarChart3, Briefcase } from "lucide-react";
+import { X, ArrowRight, Users, TrendingUp, BarChart3, LayoutDashboard, Sparkles, Zap } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import "./welcome-screen.css";
 
@@ -52,16 +52,10 @@ export function WelcomeScreen() {
         >
           {/* Background decorative elements */}
           <div className="welcome-bg crm-bg">
-            <div className="crm-grid-lines">
-              <div className="grid-line line-1"></div>
-              <div className="grid-line line-2"></div>
-              <div className="grid-line line-3"></div>
-            </div>
-            <div className="crm-geometric-shapes">
-              <div className="shape shape-1"></div>
-              <div className="shape shape-2"></div>
-              <div className="shape shape-3"></div>
-            </div>
+            <div className="crm-gradient-orb orb-1"></div>
+            <div className="crm-gradient-orb orb-2"></div>
+            <div className="crm-gradient-orb orb-3"></div>
+            <div className="crm-grid-pattern"></div>
           </div>
 
           {/* Close button */}
@@ -70,31 +64,67 @@ export function WelcomeScreen() {
             onClick={closeWelcome}
             aria-label="Close welcome screen"
           >
-            <X size={20} strokeWidth={2} />
+            <X size={20} strokeWidth={2.5} />
           </button>
 
           {/* Content */}
           <div className="welcome-content">
-            <div className="welcome-icon-wrapper crm-icon-wrapper">
-              <div className="crm-icon-large">📊</div>
-              <div className="crm-pulse-dots">
-                <div className="pulse-dot"></div>
-                <div className="pulse-dot"></div>
-                <div className="pulse-dot"></div>
-              </div>
-            </div>
+            {/* Main Icon */}
+            <motion.div 
+              className="welcome-icon-wrapper crm-icon-wrapper"
+              initial={{ scale: 0, rotate: -180 }}
+              animate={{ scale: 1, rotate: 0 }}
+              transition={{ 
+                type: "spring", 
+                damping: 15, 
+                stiffness: 200,
+                delay: 0.2
+              }}
+            >
+              <div className="crm-icon-bg"></div>
+              <LayoutDashboard className="crm-icon-large" size={64} strokeWidth={1.5} />
+              <motion.div
+                className="crm-icon-glow"
+                animate={{
+                  scale: [1, 1.2, 1],
+                  opacity: [0.5, 0.8, 0.5],
+                }}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+              />
+            </motion.div>
 
-            <h1 className="welcome-title">Vortex CRM</h1>
+            <motion.h1 
+              className="welcome-title"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3, duration: 0.5 }}
+            >
+              Vortex CRM
+            </motion.h1>
 
-            <p className="welcome-description">
-              Manage contacts, track deals, and analyze sales performance. Streamline your 
-              customer relationship management with powerful tools and enterprise-level architecture.
-            </p>
+            <motion.p 
+              className="welcome-description"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4, duration: 0.5 }}
+            >
+              Modern CRM platform to manage contacts, track deals, and analyze sales performance. 
+              Built with Next.js, TypeScript, and Tailwind CSS.
+            </motion.p>
 
             <div className="welcome-features">
-              <div className="welcome-feature crm-feature">
+              <motion.div 
+                className="welcome-feature crm-feature"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5, duration: 0.5 }}
+              >
                 <div className="feature-icon-wrapper crm-icon">
-                  <Users size={20} strokeWidth={2} />
+                  <Users size={18} strokeWidth={2} />
                 </div>
                 <div className="feature-content">
                   <h3 className="feature-title">Contact Management</h3>
@@ -102,11 +132,16 @@ export function WelcomeScreen() {
                     Comprehensive contact profiles with notes and interaction history
                   </p>
                 </div>
-              </div>
+              </motion.div>
 
-              <div className="welcome-feature crm-feature">
+              <motion.div 
+                className="welcome-feature crm-feature"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.6, duration: 0.5 }}
+              >
                 <div className="feature-icon-wrapper crm-icon">
-                  <TrendingUp size={20} strokeWidth={2} />
+                  <TrendingUp size={18} strokeWidth={2} />
                 </div>
                 <div className="feature-content">
                   <h3 className="feature-title">Sales Pipeline</h3>
@@ -114,11 +149,16 @@ export function WelcomeScreen() {
                     Visual pipeline with drag-and-drop deal management
                   </p>
                 </div>
-              </div>
+              </motion.div>
 
-              <div className="welcome-feature crm-feature">
+              <motion.div 
+                className="welcome-feature crm-feature"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.7, duration: 0.5 }}
+              >
                 <div className="feature-icon-wrapper crm-icon">
-                  <BarChart3 size={20} strokeWidth={2} />
+                  <BarChart3 size={18} strokeWidth={2} />
                 </div>
                 <div className="feature-content">
                   <h3 className="feature-title">Analytics Dashboard</h3>
@@ -126,17 +166,26 @@ export function WelcomeScreen() {
                     Real-time metrics, charts, and performance indicators
                   </p>
                 </div>
-              </div>
+              </motion.div>
             </div>
 
-            <button className="welcome-button crm-button" onClick={getStarted}>
+            <motion.button 
+              className="welcome-button crm-button" 
+              onClick={getStarted}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.8, duration: 0.5 }}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
               Get Started
-              <ArrowRight size={18} strokeWidth={2} />
-            </button>
+              <ArrowRight size={18} strokeWidth={2.5} />
+            </motion.button>
           </div>
         </motion.div>
       </motion.div>
     </AnimatePresence>
   );
 }
+
 

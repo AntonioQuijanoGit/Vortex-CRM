@@ -24,7 +24,7 @@ export default function RootLayout({
               (function() {
                 try {
                   if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
-                    var theme = localStorage.getItem('theme') || 'light';
+                    var theme = localStorage.getItem('theme') || 'dark';
                     var root = document.documentElement;
                     if (root) {
                       root.classList.remove('dark', 'light');
@@ -42,7 +42,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <ThemeProvider
           attribute="class"
-          defaultTheme="light"
+          defaultTheme="dark"
           enableSystem={false}
           disableTransitionOnChange
           storageKey="theme"
