@@ -76,16 +76,24 @@ export function OnboardingTour() {
   };
 
   const handleFinish = () => {
-    if (dontShowAgain && typeof window !== "undefined") {
+    if (typeof window !== "undefined") {
       localStorage.setItem("vortex-has-seen-tour", "true");
     }
     setIsOpen(false);
   };
 
+  const handleClose = (open: boolean) => {
+    if (!open) {
+      handleFinish();
+    } else {
+      setIsOpen(open);
+    }
+  };
+
   const currentStepData = tourSteps[currentStep];
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle>{currentStepData.title}</DialogTitle>
