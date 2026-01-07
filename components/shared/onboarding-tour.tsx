@@ -13,6 +13,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { ArrowRight, ArrowLeft, X } from "lucide-react";
+import { safeLocalStorageGetItem, safeLocalStorageSetItem } from "@/lib/utils";
 
 interface TourStep {
   title: string;
@@ -53,11 +54,16 @@ export function OnboardingTour() {
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const hasSeenTour = localStorage.getItem("vortex-has-seen-tour");
-    if (!hasSeenTour) {
-      // Show tour after a short delay
-      const timer = setTimeout(() => setIsOpen(true), 1000);
-      return () => clearTimeout(timer);
+    try {
+      const hasSeenTour = safeLocalStorageGetItem("vortex-has-seen-tour");
+      if (!hasSeenTour) {
+        // Show tour after a short delay
+        const timer = setTimeout(() => setIsOpen(true), 1000);
+        return () => clearTimeout(timer);
+      }
+    } catch (error) {
+      // Silently fail - show tour if localStorage is not available
+      console.warn("Could not check tour status:", error);
     }
   }, []);
 
@@ -76,8 +82,13 @@ export function OnboardingTour() {
   };
 
   const handleFinish = () => {
-    if (typeof window !== "undefined") {
-      localStorage.setItem("vortex-has-seen-tour", "true");
+    try {
+      if (typeof window !== "undefined") {
+        safeLocalStorageSetItem("vortex-has-seen-tour", "true");
+      }
+    } catch (error) {
+      // Silently fail - localStorage might not be available
+      console.warn("Could not save tour status:", error);
     }
     setIsOpen(false);
   };

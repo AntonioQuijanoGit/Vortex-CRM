@@ -13,7 +13,7 @@ import type {
 } from "./types";
 import { STORAGE_KEYS } from "./constants";
 import { seedDataIfNeeded } from "./data-generator";
-import { generateUUID, debounce } from "./utils";
+import { generateUUID, debounce, safeLocalStorageGetItem, safeLocalStorageSetItem } from "./utils";
 
 interface CRMStore {
   // Data
@@ -101,13 +101,14 @@ export const useCRMStore = createWithEqualityFn<CRMStore>(
     debouncedSaveFn = debounce(() => {
       const { contacts, deals, activities, notes, settings } = get();
       try {
-        localStorage.setItem(STORAGE_KEYS.CONTACTS, JSON.stringify(contacts));
-        localStorage.setItem(STORAGE_KEYS.DEALS, JSON.stringify(deals));
-        localStorage.setItem(STORAGE_KEYS.ACTIVITIES, JSON.stringify(activities));
-        localStorage.setItem(STORAGE_KEYS.NOTES, JSON.stringify(notes));
-        localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(settings));
+        safeLocalStorageSetItem(STORAGE_KEYS.CONTACTS, JSON.stringify(contacts));
+        safeLocalStorageSetItem(STORAGE_KEYS.DEALS, JSON.stringify(deals));
+        safeLocalStorageSetItem(STORAGE_KEYS.ACTIVITIES, JSON.stringify(activities));
+        safeLocalStorageSetItem(STORAGE_KEYS.NOTES, JSON.stringify(notes));
+        safeLocalStorageSetItem(STORAGE_KEYS.SETTINGS, JSON.stringify(settings));
       } catch (error) {
-        console.error("Error saving to storage:", error);
+        // Silently fail - localStorage might not be available
+        console.warn("Error saving to storage:", error);
       }
     }, 500);
   }
@@ -133,8 +134,8 @@ export const useCRMStore = createWithEqualityFn<CRMStore>(
     
     try {
       const state = get();
-      // Check if data exists in localStorage first
-      const hasStoredData = localStorage.getItem(STORAGE_KEYS.CONTACTS) || localStorage.getItem(STORAGE_KEYS.DEALS);
+      // Check if data exists in localStorage first (using safe helper)
+      const hasStoredData = safeLocalStorageGetItem(STORAGE_KEYS.CONTACTS) || safeLocalStorageGetItem(STORAGE_KEYS.DEALS);
       
       // Only prevent initialization if we have data in both store AND localStorage
       if ((state.contacts.length > 0 || state.deals.length > 0) && hasStoredData) {
@@ -148,6 +149,7 @@ export const useCRMStore = createWithEqualityFn<CRMStore>(
       state.loadFromStorage();
       state.initializeExtended();
     } catch (error) {
+      // Don't throw - allow app to continue even if initialization fails
       console.error("Error initializing store:", error);
     }
   },
@@ -173,19 +175,19 @@ export const useCRMStore = createWithEqualityFn<CRMStore>(
 
     try {
       const contacts = JSON.parse(
-        localStorage.getItem(STORAGE_KEYS.CONTACTS) || "[]"
+        safeLocalStorageGetItem(STORAGE_KEYS.CONTACTS) || "[]"
       );
       const deals = JSON.parse(
-        localStorage.getItem(STORAGE_KEYS.DEALS) || "[]"
+        safeLocalStorageGetItem(STORAGE_KEYS.DEALS) || "[]"
       );
       const activities = JSON.parse(
-        localStorage.getItem(STORAGE_KEYS.ACTIVITIES) || "[]"
+        safeLocalStorageGetItem(STORAGE_KEYS.ACTIVITIES) || "[]"
       );
       const notes = JSON.parse(
-        localStorage.getItem(STORAGE_KEYS.NOTES) || "[]"
+        safeLocalStorageGetItem(STORAGE_KEYS.NOTES) || "[]"
       );
       const settings = JSON.parse(
-        localStorage.getItem(STORAGE_KEYS.SETTINGS) || JSON.stringify(get().settings)
+        safeLocalStorageGetItem(STORAGE_KEYS.SETTINGS) || JSON.stringify(get().settings)
       );
 
       set({ 
@@ -197,7 +199,8 @@ export const useCRMStore = createWithEqualityFn<CRMStore>(
       });
       console.log(`✅ Loaded from storage: ${contacts.length} contacts, ${deals.length} deals`);
     } catch (error) {
-      console.error("Error loading from storage:", error);
+      // Don't throw - allow app to continue with empty state
+      console.warn("Error loading from storage:", error);
     }
   },
 
@@ -207,13 +210,14 @@ export const useCRMStore = createWithEqualityFn<CRMStore>(
     const { contacts, deals, activities, notes, settings } = get();
     
     try {
-      localStorage.setItem(STORAGE_KEYS.CONTACTS, JSON.stringify(contacts));
-      localStorage.setItem(STORAGE_KEYS.DEALS, JSON.stringify(deals));
-      localStorage.setItem(STORAGE_KEYS.ACTIVITIES, JSON.stringify(activities));
-      localStorage.setItem(STORAGE_KEYS.NOTES, JSON.stringify(notes));
-      localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(settings));
+      safeLocalStorageSetItem(STORAGE_KEYS.CONTACTS, JSON.stringify(contacts));
+      safeLocalStorageSetItem(STORAGE_KEYS.DEALS, JSON.stringify(deals));
+      safeLocalStorageSetItem(STORAGE_KEYS.ACTIVITIES, JSON.stringify(activities));
+      safeLocalStorageSetItem(STORAGE_KEYS.NOTES, JSON.stringify(notes));
+      safeLocalStorageSetItem(STORAGE_KEYS.SETTINGS, JSON.stringify(settings));
     } catch (error) {
-      console.error("Error saving to storage:", error);
+      // Silently fail - localStorage might not be available
+      console.warn("Error saving to storage:", error);
     }
   },
 

@@ -3,21 +3,36 @@
 import { useState, useEffect } from "react";
 import { X, ArrowRight, Users, TrendingUp, BarChart3, LayoutDashboard, Sparkles, Zap } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { safeLocalStorageGetItem, safeLocalStorageSetItem } from "@/lib/utils";
 import "./welcome-screen.css";
 
 export function WelcomeScreen() {
   const [showWelcome, setShowWelcome] = useState(true);
 
   useEffect(() => {
-    const hasSeenWelcome = localStorage.getItem("vortex-crm-welcome-seen");
-    if (hasSeenWelcome === "true") {
-      setShowWelcome(false);
+    try {
+      if (typeof window !== "undefined") {
+        const hasSeenWelcome = safeLocalStorageGetItem("vortex-crm-welcome-seen");
+        if (hasSeenWelcome === "true") {
+          setShowWelcome(false);
+        }
+      }
+    } catch (error) {
+      // Silently fail - show welcome screen if localStorage is not available
+      console.warn("Could not check welcome screen status:", error);
     }
   }, []);
 
   const closeWelcome = () => {
     setShowWelcome(false);
-    localStorage.setItem("vortex-crm-welcome-seen", "true");
+    try {
+      if (typeof window !== "undefined") {
+        safeLocalStorageSetItem("vortex-crm-welcome-seen", "true");
+      }
+    } catch (error) {
+      // Silently fail - localStorage might not be available
+      console.warn("Could not save welcome screen status:", error);
+    }
   };
 
   const getStarted = () => {

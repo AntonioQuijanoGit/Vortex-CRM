@@ -15,7 +15,7 @@ import type {
   SavedView,
 } from "./types";
 import { STORAGE_KEYS, TAG_COLORS } from "./constants";
-import { generateUUID } from "./utils";
+import { generateUUID, safeLocalStorageGetItem, safeLocalStorageSetItem } from "./utils";
 
 interface ExtendedStore {
   // Tags
@@ -335,16 +335,17 @@ export const useExtendedStore = createWithEqualityFn<ExtendedStore>(
     if (typeof window === "undefined") return;
 
     try {
-      const tags = JSON.parse(localStorage.getItem(STORAGE_KEYS.TAGS) || "[]");
-      const filterPresets = JSON.parse(localStorage.getItem(STORAGE_KEYS.FILTER_PRESETS) || "[]");
-      const tasks = JSON.parse(localStorage.getItem(STORAGE_KEYS.TASKS) || "[]");
-      const events = JSON.parse(localStorage.getItem(STORAGE_KEYS.EVENTS) || "[]");
-      const customReports = JSON.parse(localStorage.getItem(STORAGE_KEYS.CUSTOM_REPORTS) || "[]");
-      const savedViews = JSON.parse(localStorage.getItem(STORAGE_KEYS.SAVED_VIEWS) || "[]");
+      const tags = JSON.parse(safeLocalStorageGetItem(STORAGE_KEYS.TAGS) || "[]");
+      const filterPresets = JSON.parse(safeLocalStorageGetItem(STORAGE_KEYS.FILTER_PRESETS) || "[]");
+      const tasks = JSON.parse(safeLocalStorageGetItem(STORAGE_KEYS.TASKS) || "[]");
+      const events = JSON.parse(safeLocalStorageGetItem(STORAGE_KEYS.EVENTS) || "[]");
+      const customReports = JSON.parse(safeLocalStorageGetItem(STORAGE_KEYS.CUSTOM_REPORTS) || "[]");
+      const savedViews = JSON.parse(safeLocalStorageGetItem(STORAGE_KEYS.SAVED_VIEWS) || "[]");
 
       set({ tags, filterPresets, tasks, events, customReports, savedViews });
     } catch (error) {
-      console.error("Error loading extended data:", error);
+      // Don't throw - allow app to continue with empty extended data
+      console.warn("Error loading extended data:", error);
     }
   },
 
@@ -354,14 +355,15 @@ export const useExtendedStore = createWithEqualityFn<ExtendedStore>(
     const { tags, filterPresets, tasks, events, customReports, savedViews } = get();
 
     try {
-      localStorage.setItem(STORAGE_KEYS.TAGS, JSON.stringify(tags));
-      localStorage.setItem(STORAGE_KEYS.FILTER_PRESETS, JSON.stringify(filterPresets));
-      localStorage.setItem(STORAGE_KEYS.TASKS, JSON.stringify(tasks));
-      localStorage.setItem(STORAGE_KEYS.EVENTS, JSON.stringify(events));
-      localStorage.setItem(STORAGE_KEYS.CUSTOM_REPORTS, JSON.stringify(customReports));
-      localStorage.setItem(STORAGE_KEYS.SAVED_VIEWS, JSON.stringify(savedViews));
+      safeLocalStorageSetItem(STORAGE_KEYS.TAGS, JSON.stringify(tags));
+      safeLocalStorageSetItem(STORAGE_KEYS.FILTER_PRESETS, JSON.stringify(filterPresets));
+      safeLocalStorageSetItem(STORAGE_KEYS.TASKS, JSON.stringify(tasks));
+      safeLocalStorageSetItem(STORAGE_KEYS.EVENTS, JSON.stringify(events));
+      safeLocalStorageSetItem(STORAGE_KEYS.CUSTOM_REPORTS, JSON.stringify(customReports));
+      safeLocalStorageSetItem(STORAGE_KEYS.SAVED_VIEWS, JSON.stringify(savedViews));
     } catch (error) {
-      console.error("Error saving extended data:", error);
+      // Silently fail - localStorage might not be available
+      console.warn("Error saving extended data:", error);
     }
   },
   }),

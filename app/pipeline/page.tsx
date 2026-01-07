@@ -52,12 +52,15 @@ function PipelineContent() {
     // Only load once per session if needed
     const loadOnce = () => {
       try {
-        const savedViews = localStorage.getItem("crm-saved-views");
-        if (!savedViews) {
-          loadExtendedData();
+        if (typeof window !== "undefined" && typeof localStorage !== "undefined") {
+          const savedViews = localStorage.getItem("crm-saved-views");
+          if (!savedViews) {
+            loadExtendedData();
+          }
         }
       } catch (e) {
-        // Silently fail
+        // Silently fail - localStorage might not be available (mobile private mode, etc.)
+        console.warn("Could not access localStorage:", e);
       }
     };
     if (typeof window !== "undefined") {

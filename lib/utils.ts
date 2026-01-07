@@ -43,6 +43,47 @@ export function debounce<T extends (...args: any[]) => any>(
   };
 }
 
+/**
+ * Safe localStorage helper functions
+ * Handles cases where localStorage might not be available (mobile private mode, etc.)
+ */
+export function safeLocalStorageGetItem(key: string, defaultValue: string | null = null): string | null {
+  if (typeof window === "undefined") return defaultValue;
+  
+  try {
+    return localStorage.getItem(key);
+  } catch (error) {
+    // localStorage might be disabled or quota exceeded
+    console.warn(`localStorage.getItem failed for key "${key}":`, error);
+    return defaultValue;
+  }
+}
+
+export function safeLocalStorageSetItem(key: string, value: string): boolean {
+  if (typeof window === "undefined") return false;
+  
+  try {
+    localStorage.setItem(key, value);
+    return true;
+  } catch (error) {
+    // localStorage might be disabled, quota exceeded, or in private mode
+    console.warn(`localStorage.setItem failed for key "${key}":`, error);
+    return false;
+  }
+}
+
+export function safeLocalStorageRemoveItem(key: string): boolean {
+  if (typeof window === "undefined") return false;
+  
+  try {
+    localStorage.removeItem(key);
+    return true;
+  } catch (error) {
+    console.warn(`localStorage.removeItem failed for key "${key}":`, error);
+    return false;
+  }
+}
+
 
 
 

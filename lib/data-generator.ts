@@ -1,6 +1,7 @@
 import { faker } from "@faker-js/faker";
 import type { Contact, Deal, Activity, Note } from "./types";
 import { DEAL_STATUSES, CONTACT_STATUSES, DEFAULT_TAGS, STORAGE_KEYS, DATA_VERSION } from "./constants";
+import { safeLocalStorageGetItem, safeLocalStorageSetItem, safeLocalStorageRemoveItem } from "./utils";
 
 export function generateAvatar(name: string): string {
   return `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(name)}`;
@@ -270,43 +271,48 @@ export function seedDataIfNeeded() {
   if (typeof window === "undefined") return;
 
   try {
-    const currentVersion = localStorage.getItem(STORAGE_KEYS.DATA_VERSION);
-    const hasContacts = localStorage.getItem(STORAGE_KEYS.CONTACTS);
+    const currentVersion = safeLocalStorageGetItem(STORAGE_KEYS.DATA_VERSION);
+    const hasContacts = safeLocalStorageGetItem(STORAGE_KEYS.CONTACTS);
     
     // If version changed or no data exists, regenerate
     if (currentVersion !== DATA_VERSION || !hasContacts) {
       // Clear old data if version changed
       if (currentVersion && currentVersion !== DATA_VERSION) {
-        localStorage.removeItem(STORAGE_KEYS.CONTACTS);
-        localStorage.removeItem(STORAGE_KEYS.DEALS);
-        localStorage.removeItem(STORAGE_KEYS.ACTIVITIES);
-        localStorage.removeItem(STORAGE_KEYS.NOTES);
+        safeLocalStorageRemoveItem(STORAGE_KEYS.CONTACTS);
+        safeLocalStorageRemoveItem(STORAGE_KEYS.DEALS);
+        safeLocalStorageRemoveItem(STORAGE_KEYS.ACTIVITIES);
+        safeLocalStorageRemoveItem(STORAGE_KEYS.NOTES);
       }
 
       const data = generateSeedData();
       
-      localStorage.setItem(STORAGE_KEYS.CONTACTS, JSON.stringify(data.contacts));
-      localStorage.setItem(STORAGE_KEYS.DEALS, JSON.stringify(data.deals));
-      localStorage.setItem(STORAGE_KEYS.ACTIVITIES, JSON.stringify(data.activities));
-      localStorage.setItem(STORAGE_KEYS.NOTES, JSON.stringify(data.notes));
-      localStorage.setItem(STORAGE_KEYS.DATA_VERSION, DATA_VERSION);
+      safeLocalStorageSetItem(STORAGE_KEYS.CONTACTS, JSON.stringify(data.contacts));
+      safeLocalStorageSetItem(STORAGE_KEYS.DEALS, JSON.stringify(data.deals));
+      safeLocalStorageSetItem(STORAGE_KEYS.ACTIVITIES, JSON.stringify(data.activities));
+      safeLocalStorageSetItem(STORAGE_KEYS.NOTES, JSON.stringify(data.notes));
+      safeLocalStorageSetItem(STORAGE_KEYS.DATA_VERSION, DATA_VERSION);
       
       console.log(`✅ Generated seed data: ${data.contacts.length} contacts, ${data.deals.length} deals`);
     }
   } catch (error) {
-    console.error("Error in seedDataIfNeeded:", error);
-    // Don't throw - allow app to continue
+    // Don't throw - allow app to continue even if seeding fails
+    console.warn("Error in seedDataIfNeeded:", error);
   }
   
   // Initialize settings if not present
-  if (!localStorage.getItem(STORAGE_KEYS.SETTINGS)) {
-    const defaultSettings = {
-      theme: "dark" as const,
-      currency: "USD",
-      dateFormat: "MMM dd, yyyy",
-      notifications: true,
-    };
-    localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(defaultSettings));
+  try {
+    if (!safeLocalStorageGetItem(STORAGE_KEYS.SETTINGS)) {
+      const defaultSettings = {
+        theme: "dark" as const,
+        currency: "USD",
+        dateFormat: "MMM dd, yyyy",
+        notifications: true,
+      };
+      safeLocalStorageSetItem(STORAGE_KEYS.SETTINGS, JSON.stringify(defaultSettings));
+    }
+  } catch (error) {
+    // Silently fail - settings will use defaults
+    console.warn("Error initializing settings:", error);
   }
 }
 
