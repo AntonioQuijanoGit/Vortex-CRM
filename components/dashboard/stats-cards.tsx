@@ -105,7 +105,7 @@ export const DashboardStats = memo(function DashboardStats() {
 
   if (isLoading || !mounted) {
     return (
-      <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4">
         {Array.from({ length: 4 }).map((_, i) => (
           <StatsCardSkeleton key={i} />
         ))}
@@ -114,7 +114,7 @@ export const DashboardStats = memo(function DashboardStats() {
   }
 
   return (
-    <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+    <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4">
       {statCards.map((stat, index) => {
         const Icon = stat.icon;
         const isPositive = stat.change >= 0;

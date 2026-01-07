@@ -28,6 +28,7 @@ function ChartSkeleton() {
 export const RevenueChart = memo(function RevenueChart() {
   const [isLoading, setIsLoading] = useState(true);
   const [mounted, setMounted] = useState(false);
+  const [chartHeight, setChartHeight] = useState(300);
   
   // Use combined selector
   const { deals, settings } = useCRMStore((state) => ({
@@ -38,7 +39,21 @@ export const RevenueChart = memo(function RevenueChart() {
   useEffect(() => {
     setMounted(true);
     const timer = setTimeout(() => setIsLoading(false), 200);
-    return () => clearTimeout(timer);
+    
+    // Set responsive chart height
+    const updateHeight = () => {
+      if (typeof window !== 'undefined') {
+        setChartHeight(window.innerWidth < 640 ? 250 : window.innerWidth < 1024 ? 280 : 300);
+      }
+    };
+    
+    updateHeight();
+    window.addEventListener('resize', updateHeight);
+    
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('resize', updateHeight);
+    };
   }, []);
 
   // Memoize revenue calculation
@@ -94,7 +109,7 @@ export const RevenueChart = memo(function RevenueChart() {
         <CardTitle>Revenue Over Time</CardTitle>
       </CardHeader>
       <CardContent>
-        <ResponsiveContainer width="100%" height={300}>
+        <ResponsiveContainer width="100%" height={chartHeight}>
           <LineChart data={months}>
             <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
             <XAxis

@@ -156,7 +156,7 @@ export const ActivityFeed = memo(function ActivityFeed() {
                     {getActivityIcon()}
                   </div>
                   <div className="flex-1 space-y-1">
-                    <p className="text-sm">{item.description}</p>
+                    <p className="text-sm truncate">{item.description}</p>
                     <p className="text-xs text-muted-foreground">
                       {formatDistanceToNow(new Date(item.createdAt), {
                         addSuffix: true,

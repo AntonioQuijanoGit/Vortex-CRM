@@ -65,8 +65,8 @@ export default function DashboardPage() {
                 <div className="relative z-10">
                   <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     <div className="space-y-2">
-                      <div className="flex items-center gap-3">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
+                      <div className="flex items-center gap-2 sm:gap-3">
+                        <div className="flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-lg sm:rounded-xl bg-primary/10 flex-shrink-0">
                           <svg
                             className="h-6 w-6 text-primary"
                             fill="none"
@@ -81,13 +81,13 @@ export default function DashboardPage() {
                             />
                           </svg>
                         </div>
-                        <div>
-                          <h1 className="text-3xl sm:text-4xl font-bold tracking-tight bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
+                        <div className="min-w-0 flex-1">
+                          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent truncate">
                             Dashboard
                           </h1>
                         </div>
                       </div>
-                      <p className="text-muted-foreground text-sm sm:text-base pl-[52px]">
+                      <p className="text-muted-foreground text-xs sm:text-sm md:text-base pl-0 sm:pl-[52px]">
                         Overview of your CRM activity and performance metrics
                       </p>
                     </div>
