@@ -89,7 +89,7 @@ export function AppSidebar() {
       <Button
         variant="ghost"
         size="icon"
-        className="md:hidden fixed top-3 left-4 z-50 bg-background/80 backdrop-blur-sm border border-border shadow-md"
+        className="md:hidden fixed top-2.5 left-2.5 z-50 bg-background/95 backdrop-blur-sm border border-border shadow-lg h-10 w-10"
         onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
         aria-label="Toggle menu"
       >
