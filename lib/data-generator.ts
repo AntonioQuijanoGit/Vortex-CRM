@@ -8,24 +8,45 @@ export function generateAvatar(name: string): string {
 }
 
 export function generateContact(): Contact {
-  const name = faker.person.fullName();
-  const createdAt = faker.date.past({ years: 1 }).toISOString();
-  
-  return {
-    id: faker.string.uuid(),
-    name,
-    email: faker.internet.email({ firstName: name.split(" ")[0], lastName: name.split(" ")[1] }),
-    phone: faker.phone.number(),
-    company: faker.company.name(),
-    position: faker.person.jobTitle(),
-    avatar: "",
-    value: faker.number.int({ min: 1000, max: 100000 }),
-    status: faker.helpers.arrayElement(["active", "inactive", "lead"] as const),
-    tags: faker.helpers.arrayElements(DEFAULT_TAGS, { min: 0, max: 3 }),
-    notes: faker.helpers.maybe(() => faker.lorem.sentence(), { probability: 0.3 }) || "",
-    createdAt,
-    updatedAt: createdAt,
-  };
+  try {
+    const name = faker.person.fullName();
+    const createdAt = faker.date.past({ years: 1 }).toISOString();
+    
+    return {
+      id: faker.string.uuid(),
+      name,
+      email: faker.internet.email({ firstName: name.split(" ")[0], lastName: name.split(" ")[1] }),
+      phone: faker.phone.number(),
+      company: faker.company.name(),
+      position: faker.person.jobTitle(),
+      avatar: "",
+      value: faker.number.int({ min: 1000, max: 100000 }),
+      status: faker.helpers.arrayElement(["active", "inactive", "lead"] as const),
+      tags: faker.helpers.arrayElements(DEFAULT_TAGS, { min: 0, max: 3 }),
+      notes: faker.helpers.maybe(() => faker.lorem.sentence(), { probability: 0.3 }) || "",
+      createdAt,
+      updatedAt: createdAt,
+    };
+  } catch (error) {
+    // Fallback if faker fails
+    console.warn("Error generating contact with faker, using fallback:", error);
+    const timestamp = new Date().toISOString();
+    return {
+      id: `contact-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      name: "Contact",
+      email: "contact@example.com",
+      phone: "000-000-0000",
+      company: "Company",
+      position: "Position",
+      avatar: "",
+      value: 0,
+      status: "active" as const,
+      tags: [],
+      notes: "",
+      createdAt: timestamp,
+      updatedAt: timestamp,
+    };
+  }
 }
 
 export function generateDeal(contactId: string, status?: Deal["status"]): Deal {
@@ -174,7 +195,8 @@ export function generateSeedData() {
   const activities: Activity[] = [];
   const notes: Note[] = [];
 
-  // Generate 100 contacts with more realistic distribution
+  try {
+    // Generate 100 contacts with more realistic distribution
   for (let i = 0; i < 100; i++) {
     const contact = generateContact();
     contacts.push(contact);
@@ -259,12 +281,22 @@ export function generateSeedData() {
     ));
   }
 
-  return {
-    contacts,
-    deals,
-    activities,
-    notes,
-  };
+    return {
+      contacts,
+      deals,
+      activities,
+      notes,
+    };
+  } catch (error) {
+    // If faker fails, return empty arrays instead of crashing
+    console.error("Error generating seed data:", error);
+    return {
+      contacts: [],
+      deals: [],
+      activities: [],
+      notes: [],
+    };
+  }
 }
 
 export function seedDataIfNeeded() {

@@ -11,8 +11,14 @@ export function useInitialize() {
 
   useEffect(() => {
     if (!initialized.current && typeof window !== "undefined") {
-      initialize();
-      initialized.current = true;
+      try {
+        initialize();
+        initialized.current = true;
+      } catch (error) {
+        // Don't throw - allow app to continue even if initialization fails
+        console.error("Error during initialization:", error);
+        initialized.current = true; // Mark as initialized to prevent retry loops
+      }
     }
   }, [initialize]);
 }
